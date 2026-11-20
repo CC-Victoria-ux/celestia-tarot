@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#171126">
-<title>Celestia 3.2.1 · 天使秘境</title>
+<title>Celestia 3.3 · 天使秘境</title>
 <style>
 :root{--night:#171126;--violet:#302044;--plum:#49345f;--lav:#d9c0f4;--gold:#e8ce9b;--cream:#fff5df;--muted:#c8b8d9;--line:#dfc58b66}
 *{box-sizing:border-box}
@@ -453,6 +453,24 @@ body.reading-mode main{padding-top:22px}
 @media(max-width:600px){#slots.single-card{max-width:260px}#slots.single-card .slot-frame{height:238px}}
 </style>
 
+
+<style>
+.card-reading{padding:clamp(20px,3vw,30px);margin-bottom:22px}
+.card-reading h3{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.scene-reading,.personal-reading{padding:16px 0;border-top:1px solid #e8ce9b24}
+.scene-reading{background:linear-gradient(90deg,#b58bda12,transparent);padding:16px 18px;margin:8px -18px 0;border-left:2px solid #d6b4ed}
+.scene-reading p,.personal-reading p{line-height:2.05;font-size:14px;color:#e8deef}
+.layer-label{font:10px Arial,sans-serif;letter-spacing:2.4px;color:#e5c99c;margin-bottom:8px}
+.position-context{color:#f1d9ad!important}
+.image-question{margin-top:14px;padding:12px 15px;border-left:2px solid #d6b4ed;background:#c6a4e80c;color:#e6d3f4!important}
+.pair-count{font:11px Arial,sans-serif;letter-spacing:1px;color:#c6afd8;margin:14px 0}
+.pair-list{list-style:none;padding:0;margin:12px 0;display:grid;gap:12px}
+.pair-list li{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;padding:13px 14px;border:1px solid #d8b7eb33;border-radius:13px;background:linear-gradient(120deg,#ffffff09,#ffffff02)}
+.pair-index{font:12px Georgia,serif;color:#f0d7a2;border:1px solid #e8ce9b77;border-radius:50%;width:28px;height:28px;display:grid;place-items:center}
+.pair-list p{margin:0;line-height:1.95;font-size:13px;color:#e9dfef}
+.pair-reading>p{line-height:2}
+@media(max-width:560px){.scene-reading,.personal-reading p{font-size:13px}.pair-list li{padding:11px}}
+</style>
 </head>
 <body>
 <div id="ambient" aria-hidden="true"></div>
@@ -866,14 +884,16 @@ function suitCounts(){
  const counts={"权杖":0,"圣杯":0,"宝剑":0,"星币":0};drawn.forEach(x=>{if(x.card.suit)counts[x.card.suit]++});return counts;
 }
 function overallText(){
- const major=drawn.filter(x=>x.card.major).length,rev=drawn.filter(x=>x.reversed).length,counts=suitCounts();
- const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0],low=Object.entries(counts).sort((a,b)=>a[1]-b[1])[0];
- let p1=major>=4?"这组牌中大阿尔卡那占比很高，说明你问到的可能不只是某个短期事件，而是一段更深的成长课题、价值选择或人生阶段。它值得被认真对待，但不代表结果已经被命定。":major>=2?"大阿尔卡那与小阿尔卡那同时出现，像是提醒你：眼前的具体事件背后，也有更深层的态度与选择正在形成。既要处理现实细节，也要留意这件事正在教会你的东西。":"这组牌以小阿尔卡那为主，焦点更靠近日常互动、行动方式与现实选择。改变未必需要戏剧性的转折，持续而具体的小调整同样重要。";
- let p2=rev>=Math.ceil(drawn.length*.55)?"逆位较多，提示目前有些能量尚未顺畅表达。它们可能指向内在顾虑、延迟、尚未说清的需求，或需要重新调整的旧习惯；不必把逆位理解成坏结果。":rev>0?"正逆位交错，呈现出机会与顾虑并存的状态。你并非完全没有选择，只是需要分辨哪些部分可以主动推进，哪些部分仍需要时间与澄清。":"牌面全部以正位出现，整体表达较为直接。它更像是在强调可被看见、可付诸行动的资源，但仍需要现实中的投入与判断。";
- let focus=top[1]>=2?`四个花色中，${top[0]}的能量最突出。它对应${SUITS[top[0]].focus}，说明这次问题很可能需要优先从这个领域理解。`:"四个花色分布较平均，说明这件事牵涉多个层面，不能只用单一角度解释。";
- let missing=low[1]===0?`这组牌没有出现${low[0]}，它所代表的${SUITS[low[0]].focus}或许尚未被充分纳入考虑。可以问问自己：我是否忽略了这一面？`:"";
- return `<div class="reading"><div class="badge">THE OVERALL WEATHER · 整体气候</div><h3>这组牌共同呈现的底色</h3><p>${p1}</p><p>${p2}</p><p>${focus}${missing}</p><div class="suit-meter">${Object.entries(counts).map(([s,n])=>`<span class="suit-chip">${s} ${n} 张 · ${SUITS[s].element}</span>`).join("")}<span class="suit-chip">大阿尔卡那 ${major} 张</span><span class="suit-chip">逆位 ${rev} 张</span></div></div>`;
+ const counts=suitCounts(),major=drawn.filter(x=>x.card.major),reversed=drawn.filter(x=>x.reversed);
+ const active=Object.entries(counts).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+ const first=drawn[0],last=drawn[drawn.length-1];
+ const majorLine=major.length?`大阿尔卡那出现了${major.map(x=>x.card.name).join("、")}，它们把这件事从单纯的日常事件推向更深的选择或阶段变化。`:`这组牌没有大阿尔卡那，叙事更贴近具体的人、沟通、安排与现实行动。`;
+ const reverseLine=reversed.length?`逆位落在${reversed.map(x=>x.card.name).join("、")}：这些牌的力量并非消失，而是表现得不顺、过量、延迟，或暂时难以被当事人承认。`:`本次没有逆位，牌面表达较直接；真正要辨认的是这些资源能否在现实里落实。`;
+ const suitLine=active.length?active.map(([s,n])=>`${s}${n}张，涉及${SUITS[s].focus}`).join("；"):"";
+ const sequence=drawn.length>1?`从第一张${first.card.name}走到最后一张${last.card.name}，这组牌的重点会从「${(cardThemes(first.card).slice(0,2)).join("、")}」移动到「${cardThemes(last.card).slice(0,2).join("、")}」。`:`${first.card.name}是这次牌阵唯一的焦点，值得把它的画面、位置和你提问时最在意的部分放在一起看。`;
+ return `<div class="reading"><div class="badge">THE WHOLE PICTURE · 整体脉络</div><h3>这组牌真正把焦点放在哪里</h3><p>${safe(majorLine)}</p><p>${safe(reverseLine)}</p><p>${safe(suitLine)}</p><p>${safe(sequence)}</p></div>`;
 }
+
 function positionNarrative(pos,idx){
  const name=pos[0];
  const map={
@@ -935,55 +955,187 @@ function traditionalMeaning(card, reversed){
   : `${rank.key}；在${card.suit}领域中体现为${suit.focus}，并可发展出${suit.gift}`;
 }
 
+
+const RWS_SCENES = {
+ "愚者":"青年站在悬崖边，白玫瑰握在手中，小狗正抬头提醒他；太阳照亮前路，行囊却轻得近乎空白。画面同时有勇气与天真，也有尚未估量的风险。",
+ "魔术师":"桌上摆着权杖、圣杯、宝剑与星币，一只手指向天空，另一只指向大地；头顶的无限符号把灵感与实践连在一起。关键不是凭空变出奇迹，而是把手里的资源真正用起来。",
+ "女祭司":"她坐在黑白双柱之间，身后帷幕绣着石榴，膝上半掩着卷轴，脚边有新月。她守着尚未完全揭开的知识；沉默可能有价值，但不能把未知自动解释成秘密。",
+ "皇后":"她坐在麦田与繁茂林木之间，身边的流水滋养土地，王冠与金星盾牌呼应丰饶。画面谈的是生长、感官、照料和创造，也提醒滋养需要土壤与边界。",
+ "皇帝":"石座上的公羊纹章、远处的荒山和手中的权杖，构成坚硬而稳定的秩序。这里的力量来自规则、责任和边界；阴影则是把秩序误当成控制。",
+ "教皇":"两名学徒坐在阶前，教皇举手祝福，脚边交叉的钥匙象征传统知识与制度入口。它既可能是可靠的指导，也可能提醒你辨别规则究竟在帮助成长，还是要求盲从。",
+ "恋人":"天使立于男女之间，背后分别是燃烧的树与结着果实的树，远处山峰清晰可见。画面不是单纯的浪漫，而是吸引、坦诚、选择，以及选择之后愿意承担的价值。",
+ "战车":"战车上的人立于黑白 sphinx 之间，星辰 canopy 覆顶，城墙留在身后。两股相反的力量都在场，胜负取决于能否让它们朝同一方向，而不是一味加速。",
+ "力量":"女子没有用武器制服狮子，而是以平静的手势触碰它；头顶无限符号，腰间花环柔软。它讲的是驯服冲动、与本能建立关系，而非压抑情绪。",
+ "隐士":"老人独立于雪山之巅，手提六芒星灯，另一手握杖。灯只照亮眼前几步，不会一次照出整条路；独处的价值在于辨认方向，而不是把自己与世界隔绝。",
+ "命运之轮":"轮盘上升降着不同生灵，顶部的狮身人面像持剑守望，四角的生物各自阅读书卷。变化并非完全由人掌控，但你可以理解周期、抓住窗口，并对变化作出回应。",
+ "正义":"女子端坐双柱之间，一手天平、一手直剑；紫色帷幕垂在身后。天平要求衡量事实，剑要求作出判断；这张牌关心责任与后果，不只是抽象的公平口号。",
+ "倒吊人":"倒悬的人被一条腿系在木架上，另一腿弯曲，头后有光环，神情却并不惊慌。暂停让他看见原先看不到的角度；若牺牲没有带来理解，它也可能只是无止境的等待。",
+ "死神":"骷髅骑白马穿过人群，黑旗上有白玫瑰，远处太阳从双塔之间升起。旧阶段确实正在结束，但画面同时保留了黎明；重点是无法再维持的事，以及结束后腾出的空间。",
+ "节制":"天使一脚踩在水中、一脚立于岸上，把液体在两只杯间调和；远处小径通往山间光芒。它不是折中敷衍，而是找到恰当比例，让不同需求能够共同运作。",
+ "恶魔":"男女被锁链系在恶魔座前，但链条并不紧到无法取下；火炬向下，额上的倒五芒星指向失衡的欲望。它问的是依附如何形成、自己在哪些地方交出了选择权。",
+ "高塔":"闪电击中塔冠，火焰从窗中喷出，人物从高处坠落。被击碎的不只是外在安排，也可能是一直靠否认维持的信念；冲击之后，才有机会看清结构是否本就不稳。",
+ "星星":"女子跪在水边，一只脚触水、一只脚踏地，向池中与土地倾倒水流；天空有一颗大星与七颗小星。希望不是空想，而是身心重新获得滋养、愿意再次相信的能力。",
+ "月亮":"两座塔之间有小径通向远方，狗与狼对月而鸣，水中生物爬上岸。熟悉与野性、事实与想象同时出现；这张牌要求慢一点，不要在光线不足时把影子认成答案。",
+ "太阳":"孩子骑白马穿过花园，红旗迎风，向日葵朝向阳光。它带来坦率、生命力与被看见的喜悦；简单不等于浅薄，清晰本身就是一种力量。",
+ "审判":"天使吹响号角，棺木中的人们起身回应召唤。过去的经验重新被听见，重要的是你是否愿意承认已经知道的事，并据此作出改变。",
+ "世界":"舞者置身花环之中，四角的天使、鹰、牛与狮子共同围绕她。旅程完成并非停止，而是把分散的经验整合成新的整体，准备进入下一轮循环。"
+};
+const MINOR_SCENES = {
+ "权杖":["云中之手递出新生的权杖，枝头仍长着嫩叶：灵感刚刚落地，值得试着点燃。","人物站在城墙上望向海面，一手握杖、一手持地球：机会已出现，但下一步要先选方向。","人物背对观者眺望海上船只，手扶权杖：事情已发出，正在等待外部世界回应。","四根权杖搭成花门，远处人群庆祝：阶段成果值得庆贺，也适合建立稳定的合作空间。","五名年轻人交错挥舞权杖：意见和野心相撞，争执可能是磨合，也可能只是各说各话。","胜利者骑马戴着月桂，众人举杖相迎：努力得到承认，但别让掌声替代真正目标。","人物站在高处举杖防守：你已经占据位置，接下来要守住立场，同时辨认哪些战斗值得打。","八根权杖掠过天空：消息、进展或行动突然加速，事情可能比预想更快抵达。","负伤者仍握着权杖守望：经历消耗后仍有韧性，但防备心也可能让你难以放松。","人物背负十根权杖艰难前行：责任堆叠到视线都被遮住，问题不是不够努力，而是负担是否该重新分配。","侍从凝视手中的权杖，像第一次发现它会发芽：新念头、新兴趣或一条值得探索的消息。","骑士骑马举杖向前，衣袍带着火焰纹样：热情推动行动，也容易因为急于证明而忽略节奏。","王后坐在向日葵与狮子纹饰之间，手握权杖：自信、温暖和创造力并存，能鼓舞别人，也要守住自己的中心。","国王端坐火蜥蜴纹饰的王座，手握权杖：远见与行动力结合，适合把热情变成清晰的方向。"],
+ "圣杯":["云中之手托起溢满的圣杯，水流向下倾泻：情感、灵感或关系的新入口正在打开。","两人交换圣杯，头顶有双蛇权杖与狮首：情感回应、互相看见，或一次值得认真对待的结盟。","三位女子举杯共舞：喜悦来自分享，友谊、社群与共同庆祝是这张牌的核心。","树下的人望着递来的第四只杯，却没有伸手：机会或情感邀请就在眼前，但心可能疲惫、失望，暂时无法回应。","黑衣人凝视倒下的三只杯，身后仍有两只立着：失落真实存在，但并非所有连接都已消失。","孩子在花园里把盛花的杯子递给另一人：旧日记忆、纯真善意与熟悉的情感重新浮现。","七只杯漂浮着宝物、面具与幻象：选择很多，诱惑也多；先分辨真实可得的东西和投射出来的愿望。","披斗篷的人离开整齐排列的八只杯，走向远山：已有之物未必足够，离开可能源于更深层的寻找。","人物满足地坐在九只杯前：愿望得到满足、享受成果，但也要问满足是否只是暂时的自我安慰。","彩虹下十只杯高悬，家人张开双臂：情感归属、共享幸福与长久的支持网络。","侍从凝视杯中探出的鱼：情感讯息带着意外和新鲜感，保持好奇，但先弄清它意味着什么。","骑士举杯缓缓前行：以温柔、邀请或理想靠近；浪漫之外，还需要持续的行动。","王后凝视装饰繁复的圣杯：情绪细腻、共情力强，能够容纳感受，但不必替所有人承担情绪。","国王端坐海面上的石座，海浪与鱼船在身后：情感成熟不等于没有波动，而是能在波动中保持稳定。"],
+ "宝剑":["云中之手举起宝剑，剑尖顶着王冠：真相、决断或清晰表达出现，锋利也意味着责任。","蒙眼女子交叉双剑坐在海边：两种选择僵持不下，暂时的平衡可能来自拒绝看见关键事实。","红心被三把剑刺穿，雨云压在背景：伤害与失望不能被粉饰；说清痛处，才有可能开始处理。","骑士躺在墓床上，三把剑悬挂墙上：休息、沉静与暂时退出冲突，是恢复判断力的必要部分。","一人带走数把剑，远处有人回望：策略、隐瞒或不光彩的胜利；得到想要的东西，不代表没有代价。","船载着乘客驶离岸边，六把剑插在船头：从动荡走向较平静处，改变可能缓慢，却已经发生。","人物悄悄带走五把剑，远处营帐仍有人：试探、保留或绕开正面冲突；要分辨机敏与失信的界线。","蒙眼女子被松散绳索束缚，八把剑围在周围：限制感强烈，但部分出口可能被恐惧遮住；先确认哪些障碍真实存在。","人物坐在床上掩面，九把剑悬在黑暗墙面：夜间反复思虑、内疚或恐惧放大；担忧是真实感受，却不一定是事实预告。","人物倒在地上，十把剑刺入背部，远方天色微亮：一个痛苦阶段走到尽头，承认结束比继续假装无事更有力量。","侍从举剑迎风，云层快速移动：观察敏锐、消息来得快，也可能言语急切、尚未理解全貌。","骑士举剑疾驰，马匹与云都向前冲：果断推进、争取答案，但速度可能压过倾听与周全。","王后端坐云端，剑直立在手，另一手向前：清醒、独立、直言不讳；她要求诚实，也要求表达有分寸。","国王举剑端坐高处，目光直接：理性、判断与规则带来秩序；要防止把逻辑变成冷酷或不容质疑。"],
+ "星币":["云中之手托出一枚星币，花园小径通向远方：具体机会已经出现，需要时间、技能和资源把它养大。","杂耍者在海边抛接两枚星币，身后船只随浪起伏：多任务与现实变化并存，灵活是能力，失衡也是风险。","工匠在教堂里雕刻星币，旁人审视作品：专业能力在合作中被看见，成果来自练习和分工。","人物紧抱一枚星币，脚下与头顶也各守着星币：安全感来自积累，也可能因害怕失去而拒绝流动。","两名贫困者在雪夜经过教堂彩窗：资源匮乏、被排除在外的感受很真实；求助与支持可能比独自硬撑更重要。","富人手持天平分发钱币：资源、帮助与公平分配成为主题；施与受之间要保留尊严和边界。","农夫扶着锄头凝视藤蔓上的星币：投入已经发生，成果尚在成熟；现在需要评估，而不是一味加码。","工匠专注敲打星币，成品一枚枚排列：技能、耐心与重复练习带来稳定进步。","女子站在葡萄园中，手停在驯鹰上：独立、生活品质与自我掌控；享受成果，也要知道自己真正珍视什么。","家族在拱门下相聚，老人、孩童与犬只同框：财富不只是金钱，也包括传承、归属与长期建立的安全网。","侍从双手托着星币专注端详：学习现实技能、规划资源或收到务实消息，机会需要认真对待。","骑士停在田野中端详星币：稳定、耐心、按部就班；进展不快，但可靠性可能正是优势。","王后坐在繁花与兔子之间，低头凝视星币：善于经营资源与生活，务实中有温柔，也懂得让成果滋养自己。","国王坐在葡萄藤与公牛纹饰的王座上，手握星币：成熟的资源管理、长期建设与责任；真正的富足需要稳健而非炫耀。"]
+};
+function sceneForCard(c){
+ if(c.major)return RWS_SCENES[c.name]||c.image||"这张牌的图像细节需要结合传统牌面观察。";
+ const list=MINOR_SCENES[c.suit]||[];
+ return list[(c.rankIndex||1)-1]||c.image||"观察牌面中的人物、器物与背景，寻找它们之间的关系。";
+}
+
 function interpretItem(item,pos,idx){
- const c=item.card,reverse=item.reversed,meaning=reverse?c.rev:c.up;
- const orientation=reverse?"逆位":"正位";
- const intro=`在「${pos[0]}」的位置上，${c.name} ${orientation}并不是孤立的一句牌义。${positionNarrative(pos,idx)}`;
- const image=c.image?`牌面意象：${c.image}。这些象征提醒你把注意力放回到${c.keywords||c.suit+"的能量"}。`:"";
- const prompt=reverse?"可以问问自己：我正在回避哪一个需要被看见的部分？如果不急着做决定，我还需要确认什么？":"可以问问自己：这张牌指出的资源，我现在可以怎样在现实里使用？哪一个小行动最能回应它？";
- const advice=c.advice||(c.suit?SUITS[c.suit].advice:"先观察事实与感受，再决定下一步。");
- const traditional=traditionalMeaning(c,reverse);
- return `<div class="reading">
+ const c=item.card,reverse=item.reversed,orientation=reverse?"逆位":"正位";
+ const authored=reverse?c.rev:c.up;
+ const standard=reverse?(c.standardRev||traditionalMeaning(c,true)):(c.standardUp||traditionalMeaning(c,false));
+ const keywords=Array.isArray(c.standardKeywords)?c.standardKeywords.join(" · "):c.keywords;
+ const scene=sceneForCard(c);
+ const placeText=pos[1]||positionNarrative(pos,idx);
+ const suitContext=c.major?"这张大阿尔卡那把焦点放在一个更大的心理阶段或人生课题上。":`作为${c.suit}牌，它把故事落在${SUITS[c.suit].focus}：${SUITS[c.suit].gift}，但也要留意${SUITS[c.suit].shadow}。`;
+ const reversedNuance=reverse?`逆位不等于把正位简单改成坏事。这里更像是这股力量受阻、过量、向内收缩，或尚未找到合适出口；要看它落在哪个位置，以及周围的牌怎样回应。`:"正位让这股力量较容易被看见和使用，但不代表事情会自动发生；它仍需要现实中的选择与行动。";
+ const reflection=reverse?"这张牌最值得追问的不是“是不是要失败”，而是：我在哪个环节失去了主动权？有什么事实还没问清？":"这张牌最值得追问的是：它指出的机会或能力，已经在哪里出现？我能否把它变成一个具体行动？";
+ return `<article class="reading card-reading">
   <div class="badge">CARD ${String(idx+1).padStart(2,"0")} · ${safe(pos[0])}</div>
-  <h3>${safe(c.name)}　<span style="font-size:12px;color:#c9b8d8">${orientation}</span></h3>
+  <h3>${safe(c.name)} <span class="orientation-tag">${orientation}</span></h3>
   <div class="traditional-note">
    <div class="traditional-label">✧ 传统牌意 · 初学者参考</div>
-   <p><b>核心关键词：</b>${safe(c.keywords)}</p>
-   <p><b>${orientation}常见牌意：</b>${safe(traditional)}</p>
+   <p><b>关键词：</b>${safe(keywords)}</p>
+   <p><b>${orientation}常见含义：</b>${safe(standard)}</p>
   </div>
-  <p><b style="color:#e9d3a5">核心主题：</b>${safe(c.keywords)}</p>
-  <p>${safe(intro)}</p>
-  <p>${safe(meaning)}</p>
-  <p>${safe(image)}</p>
-  <p><b style="color:#e9d3a5">给你的行动建议：</b>${safe(advice)}</p>
-  <p class="prompt">${safe(prompt)}</p>
- </div>`;
+  <div class="scene-reading">
+   <div class="layer-label">THE RIDER–WAITE–SMITH IMAGE · 牌面图像</div>
+   <p>${safe(scene)}</p>
+  </div>
+  <div class="personal-reading">
+   <div class="layer-label">IN THIS SPREAD · 放回你的牌阵</div>
+   <p class="position-context">${safe(placeText)}</p>
+   <p>${safe(suitContext)}${safe(reversedNuance)}</p>
+   <p>${safe(authored)}</p>
+   <p class="image-question">${safe(reflection)}</p>
+  </div>
+ </article>`;
 }
-function connectionsText(){
- const names=drawn.map(x=>x.card.name),positions=SPREADS[spread].positions;
- let pairs=[];
- for(let i=0;i<drawn.length-1;i++){
-  const a=drawn[i].card,b=drawn[i+1].card;
-  const shared=a.suit&&a.suit===b.suit?`两张${a.suit}连续出现，强化了${SUITS[a.suit].focus}这一主题。`:"";
-  const contrast=a.suit&&b.suit&&a.suit!==b.suit?`从${a.suit}的${SUITS[a.suit].element}元素转向${b.suit}的${SUITS[b.suit].element}元素，像是从${SUITS[a.suit].focus.split("、").slice(0,2).join("与")}转向${SUITS[b.suit].focus.split("、").slice(0,2).join("与")}，提醒你转换观察角度。`:"";
-  if(shared||contrast)pairs.push(shared+contrast);
+
+
+const MAJOR_THEMES = {
+ "愚者":["开始","自由","冒险","未知"],"魔术师":["意志","技能","行动","表达"],"女祭司":["直觉","秘密","等待","内在"],"皇后":["滋养","创造","丰盛","身体"],"皇帝":["秩序","边界","责任","控制"],"教皇":["传统","学习","制度","信念"],"恋人":["关系","选择","价值","结合"],"战车":["推进","方向","自律","胜利"],"力量":["勇气","温柔","调节","本能"],"隐士":["独处","研究","内省","指引"],"命运之轮":["变化","时机","周期","转折"],"正义":["公平","判断","责任","真相"],"倒吊人":["暂停","牺牲","视角","等待"],"死神":["结束","转化","放下","更新"],"节制":["平衡","整合","耐心","调和"],"恶魔":["欲望","依附","束缚","诱惑"],"高塔":["崩塌","冲击","真相","突变"],"星星":["希望","疗愈","信任","灵感"],"月亮":["迷雾","恐惧","潜意识","投射"],"太阳":["清晰","喜悦","成功","活力"],"审判":["觉醒","召唤","复盘","重生"],"世界":["完成","整合","圆满","抵达"]
+};
+const ELEMENT_RELATIONS = {
+ "火-风":"风助火势：想法、表达或消息会推动行动，但也可能让节奏过快。",
+ "风-火":"风助火势：想法、表达或消息会推动行动，但也可能让节奏过快。",
+ "水-土":"水滋养土：感受若能得到稳定照料，就有机会变成长期关系或具体成果。",
+ "土-水":"水滋养土：现实条件为情绪提供容器，关系也更容易落到日常。",
+ "火-水":"火水相遇：热情与感受同时升高，吸引力可能很强，也容易出现情绪过载。",
+ "水-火":"火水相遇：感受与冲动彼此牵动，先辨认真实需要，再决定要不要推进。",
+ "火-土":"火土相遇：愿望需要接受现实检验；热情能启动事情，耐心才能把它建成。",
+ "土-火":"火土相遇：现实基础限制速度，但也能让热情有落脚处。",
+ "风-水":"风水相遇：想法与感受互相影响，沟通能澄清情绪，也可能让猜测变多。",
+ "水-风":"风水相遇：感受需要被说出来，语言也需要顾及情绪。",
+ "风-土":"风土相遇：计划必须经过现实条件检验；细节、资源和时间表会决定成败。",
+ "土-风":"风土相遇：务实经验帮助想法落地，但过度求稳也可能压住新思路。",
+ "火-火":"双火叠加：行动力、竞争心或创造欲增强；留意急于求成和精力透支。",
+ "水-水":"双水叠加：情感浓度升高，共情与亲密感增强；也要防止理想化或情绪淹没。",
+ "风-风":"双风叠加：思考、谈判、消息与判断成为主轴；信息很多时更要核对事实。",
+ "土-土":"双土叠加：现实、工作、金钱或长期安排被放大；进展慢，但能检验稳定性。"
+};
+function cardThemes(c){
+ if(c.major)return MAJOR_THEMES[c.name]||[];
+ const suitTheme={
+  "权杖":["行动","热情","创造","事业"],
+  "圣杯":["情感","关系","直觉","想象"],
+  "宝剑":["思想","沟通","判断","冲突"],
+  "星币":["现实","工作","资源","长期积累"]
+ };
+ const rankTheme={
+  "王牌":["开端","机会"],"二":["选择","平衡"],"三":["成长","协作"],"四":["稳定","结构"],"五":["冲突","考验"],"六":["回应","交换"],"七":["评估","坚持"],"八":["推进","练习"],"九":["成熟","压力"],"十":["完成","负担"],"侍从":["学习","消息"],"骑士":["行动","追求"],"王后":["掌握","照料"],"国王":["责任","整合"]
+ };
+ return [...(suitTheme[c.suit]||[]),...(rankTheme[c.rank]||[])];
+}
+function pairReading(aItem,bItem,aPos,bPos){
+ const a=aItem.card,b=bItem.card,ta=cardThemes(a),tb=cardThemes(b);
+ const common=ta.filter(x=>tb.includes(x));
+ const ea=a.element||(a.suit?SUITS[a.suit].element:"");
+ const eb=b.element||(b.suit?SUITS[b.suit].element:"");
+ const pairKey=[a.name,b.name].sort().join("|");
+ const classic={
+  "恋人|恶魔":"恋人与恶魔同场时，吸引力和依附需要分开看：一边是清醒地选择彼此，一边是被欲望、恐惧或不对等牵住。关键不是判断这段关系“好或坏”，而是看双方是否仍有自由说不、说真话。",
+  "星星|高塔":"高塔之后出现星星，常像灾后重新看见天空：旧结构已经裂开，但恢复并非空谈。先处理损失，再慢慢建立新的信任，不必急着假装一切如常。",
+  "月亮|太阳":"月亮与太阳并列，模糊与清晰同时存在。事情可能正从猜测走向可验证的事实；不要只挑自己想相信的部分，等光线真正照到细节。",
+  "死神|世界":"死神与世界相遇，结束和完成形成强烈呼应。某个阶段可能已经走到尽头，真正的任务是完成收尾，而不是把旧身份带进新阶段。",
+  "恶魔|高塔":"恶魔与高塔相遇，原本维持依附或控制的结构可能经不起现实冲击。它指出的不是惩罚，而是看清自己被什么牵制，以及代价已经累积到什么程度。",
+  "女祭司|月亮":"女祭司与月亮让直觉、沉默和不确定感变得浓厚。此时适合观察和核实，不宜把每个细节都解释成暗示；未知仍然是未知。",
+  "皇帝|皇后":"皇帝与皇后并列，结构与滋养需要共同存在。只有规则没有照料会变得僵硬，只有付出没有边界又会耗尽；关系或计划需要两者互相支撑。",
+  "战车|力量":"战车与力量把重点放在驾驭：向前推进需要意志，也需要情绪调节。真正的掌控不是压过所有阻力，而是知道何时用力、何时收住。",
+  "隐士|星星":"隐士与星星把独处和希望连在一起。暂时退后未必是退缩，也可能是为了找回自己的方向；但独处之后，仍要允许自己重新与世界连接。",
+  "高塔|审判":"高塔与审判常带来无法再忽略的醒悟。某件事的真相或后果已经摆到面前，接下来需要回应，而不是继续沿用旧解释。",
+  "愚者|世界":"愚者与世界形成旅程的两端：一个刚刚启程，一个已经完成整合。它们一起出现时，结束也可能是下一段旅程的入口。",
+  "倒吊人|战车":"倒吊人与战车的节奏相反：一个要求暂停，一个要求推进。先确认眼前的停滞是在积累新视角，还是已经变成拖延，再决定何时重新出发。",
+  "正义|月亮":"正义与月亮提示事实和感受尚未对齐。把证据、猜测、恐惧分开，尤其不要在信息不完整时急着判定谁对谁错。",
+  "节制|恶魔":"节制与恶魔相遇，主题是欲望的管理而非否认。找到适当的界线，才能分清享受、依赖与失去自主之间的差别。"
+ };
+ let special=classic[pairKey]||"";
+ let relation="";
+ if(common.length>=2) relation=`两张牌共同触及${common.slice(0,3).join("、")}，这不是简单重复，而是同一主题从两个角度被照亮。`;
+ else if(ea&&eb&&ELEMENT_RELATIONS[ea+"-"+eb]) relation=ELEMENT_RELATIONS[ea+"-"+eb];
+ else if(a.major&&b.major) relation=`两张大阿尔卡那把视线从「${ta.slice(0,2).join("、")}」推向「${tb.slice(0,2).join("、")}」：这更像两个阶段或两种内在力量之间的对话。`;
+ else if(a.major||b.major) relation=`大阿尔卡那「${a.major?a.name:b.name}」给这组小阿尔卡那的日常事件加上更深的背景；${a.major?b.name:a.name}则把课题落实到具体的${(a.major?b.suit:a.suit)||"生活"}层面。`;
+ else relation=`一张牌谈${ta.slice(0,2).join("与")}，另一张谈${tb.slice(0,2).join("与")}；两者分别指出内在动机与现实表现，不宜只取其中一张当结论。`;
+ const orientation=(aItem.reversed?"前牌逆位":"前牌正位")+"，"+(bItem.reversed?"后牌逆位":"后牌正位");
+ let nuance="";
+ if(aItem.reversed&&bItem.reversed)nuance="两张都逆位，相关主题可能暂时向内收缩，或在同一处反复打结；先找出共同卡点，比急着推进更重要。";
+ else if(aItem.reversed&&!bItem.reversed)nuance="前一张逆位、后一张正位，像是先有阻滞，随后出现出口；后牌提供的方向值得尝试，但不能跳过前面的原因。";
+ else if(!aItem.reversed&&bItem.reversed)nuance="前一张正位、后一张逆位，说明起点或资源并不差，困难可能出在后续执行、承接或结果预期。";
+ else nuance="两张都正位，彼此的力量较容易直接表达；仍需看它们是否指向同一目标，而不是只因为都正位就视为顺利。";
+ const positional=`「${aPos[0]}」的${a.name}与「${bPos[0]}」的${b.name}形成前后关系。`;
+ return {score:(common.length*3)+(a.major||b.major?2:0)+(ea&&eb&&ea===eb?2:0)+(special?5:0)+(aItem.reversed!==bItem.reversed?1:0),text:`${positional}${special||relation} ${nuance}`,orientation};
+}
+function evaluateAllPairs(){
+ const positions=SPREADS[spread].positions;
+ const pairs=[];
+ for(let i=0;i<drawn.length;i++){
+  for(let j=i+1;j<drawn.length;j++){
+   pairs.push(pairReading(drawn[i],drawn[j],positions[i],positions[j]));
+  }
  }
- let base=spread==="three"?`时间之流的重点在于变化：过去的「${names[0]}」提供背景，现在的「${names[1]}」指出核心，未来位置的「${names[2]}」则显示当前路径可能延伸的方向。三张牌不是三个互不相干的结论，而是一段连续的过程。`:
- spread==="love"?`关系牌阵里，你的位置是「${names[0]}」，对方状态的位置是「${names[1]}」，两者之间的连接由「${names[2]}」呈现；阻碍与趋势分别落在「${names[3]}」和「${names[4]}」。这提醒你既要照顾自己的感受，也要观察双方是否有真实、持续的互动。`:
- spread==="cross"?`凯尔特十字中，现状「${names[0]}」与挑战「${names[1]}」构成眼前的主轴；深层根基「${names[2]}」和过去影响「${names[3]}」解释了它如何形成。目标「${names[4]}」与近期趋势「${names[5]}」呈现你想去的方向和可能的下一步，后四张则把个人状态、外部环境、希望恐惧与整体趋势补充完整。`:
- `单张牌「${names[0]}」是这次抽牌的中心象征。它值得慢慢体会，不必急着把它翻译成一个简单的“好”或“不好”。`;
- const relation=pairs.length?pairs.slice(0,3).join(""):"这组牌的花色与象征没有形成特别强烈的重复，反而提醒你不要只抓住一个关键词。各张牌分别照见不同层面，理解它们的先后与位置，比单独寻找吉凶更有帮助。";
- return `<div class="reading"><div class="badge">THE CONVERSATION · 牌与牌之间</div><h3>把它们放在一起看</h3><p>${safe(base)}</p><p>${safe(relation)}</p><p>这组牌更适合被看成一张“当下状态地图”：它指出值得留意的主题，却没有替你取消选择。你可以回到问题本身，看看哪一张牌最让你停顿，那里往往有值得进一步探索的线索。</p></div>`;
+ return pairs.sort((a,b)=>b.score-a.score);
 }
+
+function connectionsText(){
+ const positions=SPREADS[spread].positions;
+ const pairs=evaluateAllPairs();
+ const selected=pairs.slice(0,Math.min(4,pairs.length));
+ const total=pairs.length;
+ const majorCount=drawn.filter(x=>x.card.major).length;
+ const suitCountsLocal=suitCounts();
+ const strongest=Object.entries(suitCountsLocal).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1])[0];
+ const opening=spread==="three"
+  ? `这三张牌不是三个独立预言：过去位置解释事情从哪里来，现在位置说明力量如何交锋，未来位置则呈现当前路径继续下去的方向。`
+  : spread==="love"
+  ? `这组关系牌要同时看双方位置和关系本身：一方的感受不能替代另一方的行动，连接牌与阻碍牌尤其重要。`
+  : spread==="cross"
+  ? `凯尔特十字的重点不是十张牌各说一句，而是现状与挑战、深层根基与显意识目标、外部环境与内心期待之间如何互相牵动。`
+  : `单张牌没有组合关系可供比较，因此重点放在牌面细节、正逆位和它所处的问题语境。`;
+ const lines=selected.length?selected.map((p,i)=>`<li><span class="pair-index">0${i+1}</span><p>${safe(p.text)}</p></li>`).join(""):"";
+ const pattern=strongest?`本次出现最多的是${strongest[0]}（${strongest[1]}张），所以${SUITS[strongest[0]].element}元素所代表的${SUITS[strongest[0]].focus}是理解整组牌的重要入口。`:
+ `这组牌以大阿尔卡那为主，讨论的是阶段、选择与内在转变，而不只是某个日常细节。`;
+ return `<div class="reading pair-reading"><div class="badge">THE CARD DIALOGUE · 牌与牌之间</div><h3>把牌放在一起读</h3><p>${safe(opening)}</p>${total?`<div class="pair-count">本次共检视 ${total} 组两两关系，以下列出关联度较高的几组。</div><ol class="pair-list">${lines}</ol>`:""}<p>${safe(pattern)}</p></div>`;
+}
+
 function actionText(){
- const lead=drawn[drawn.length-1].card;
- const suitAdvice=lead.suit?SUITS[lead.suit].advice:lead.advice;
- const steps=[
- "先写下目前已经确认的事实，以及仍然不确定的部分。不要让猜测冒充证据。",
- "选择一个在 24 至 72 小时内可以完成的小行动，让思考开始落地。",
- "为自己设一个复盘时间，观察行动后的真实反馈，再决定是否调整方向。"
- ];
- return `<div class="analysis-grid"><div class="insight"><h4>现在可以做的第一件事</h4><p>${safe(lead.advice||suitAdvice)} 不需要一次解决全部问题，先完成最小而真实的一步。</p></div><div class="insight"><h4>值得留意的盲点</h4><p>${safe(drawn.some(x=>x.reversed)?"牌中出现逆位，提醒你留意尚未说清、尚未准备好或需要重新调整的部分。不要因此否定自己。":"即使牌面整体较顺，也要避免把希望当成保证。持续观察现实反馈，给计划留出修正空间。")}</p></div><div class="insight"><h4>给自己的三个小步骤</h4><p>① ${safe(steps[0])}<br>② ${safe(steps[1])}<br>③ ${safe(steps[2])}</p></div><div class="insight"><h4>这次占卜可以带走的问题</h4><p>如果不急着知道最终结果，我现在最需要理解的是什么？我可以怎样在尊重自己与现实的前提下，做出下一步选择？</p></div></div>`;
+ const positions=SPREADS[spread].positions;
+ const lead=drawn[0],tail=drawn[drawn.length-1];
+ const advice=tail.card.advice||(tail.card.suit?SUITS[tail.card.suit].advice:"先把最重要的事实弄清楚，再决定下一步。");
+ const caution=drawn.find(x=>x.reversed);
+ const cautionText=caution?`${caution.card.name}逆位是这组牌里需要留意的地方：${caution.card.rev}`:`这组牌没有明显逆位，不必额外制造阻碍；更值得做的是把牌面提示落实到具体情境。`;
+ return `<div class="analysis-grid"><div class="insight"><h4>牌面给出的行动方向</h4><p>${safe(advice)}</p></div><div class="insight"><h4>最需要留意的部分</h4><p>${safe(cautionText)}</p></div><div class="insight"><h4>从第一张走到最后一张</h4><p>${safe(lead.card.name)}位于「${positions[0][0]}」，而${tail.card.name}落在「${positions[drawn.length-1][0]}」。先回应前者指出的处境，再用后者提示的方向检验下一步是否合适。</p></div></div>`;
 }
 
 function isBinaryQuestion(q){
@@ -1009,32 +1161,16 @@ function oracleChibi(mood="hope"){
 }
 
 function questionVerdict(){
- if(!question.trim())return "";
- const positions=SPREADS[spread].positions;
- const binary=isBinaryQuestion(question);
+ if(!question.trim()||!isBinaryQuestion(question))return "";
  const verdicts=drawn.map(item=>item.card.yesNo?.[item.reversed?"reversed":"upright"]||"").filter(v=>["yes","no","maybe"].includes(v));
- if(binary&&verdicts.length){
-  const yes=verdicts.filter(v=>v==="yes").length;
-  const no=verdicts.filter(v=>v==="no").length;
-  const maybe=verdicts.filter(v=>v==="maybe").length;
-  let label="仍有变数",tone="hope",detail="支持与阻碍的象征同时存在，结果仍受现实条件和后续行动影响。";
-  if(yes>no){label="目前偏向肯定";tone="hope";detail="支持推进的象征稍多。可以留意哪些现实条件正在配合，也别忽略自己能主动创造的部分。";}
-  if(no>yes){label="目前偏向否定或延迟";tone="caution";detail="阻碍或延迟的象征更明显。与其把它理解成绝对不可能，不如先看清最需要调整的条件。";}
-  return `<div class="verdict-card"><div class="verdict-eyebrow">✧ THE CARDS ANSWER ✧</div><div class="verdict-label">针对这次提问的牌面倾向</div>${oracleChibi(tone)}<div class="verdict-answer">${label}</div><p>${safe(detail)}</p><div class="verdict-stats"><span>支持 ${yes}</span><span>观望 ${maybe}</span><span>阻碍 ${no}</span></div><p class="verdict-disclaimer">这是对本次牌面象征的归纳，不是现实事件的统计概率或保证。</p></div>`;
- }
- // Open questions receive a reading built from the actual drawn cards, not a generic fallback paragraph.
- const first=drawn[0],firstPos=positions[0]||["核心位置"];
- const firstMeaning=first.reversed?first.card.rev:first.card.up;
- const firstName=first.card.name;
- let body=`牌面先把焦点放在「${firstPos[0]}」的${firstName}。${firstMeaning}`;
- if(drawn.length>1){
-  const last=drawn[drawn.length-1],lastPos=positions[drawn.length-1]||["后续位置"];
-  const lastMeaning=last.reversed?last.card.rev:last.card.up;
-  body+=` 而落在「${lastPos[0]}」的${last.card.name}，把这份讯息延伸到下一层：${lastMeaning}`;
- }
- const focusNames=drawn.slice(0,Math.min(3,drawn.length)).map(x=>x.card.name).join("、");
- return `<div class="verdict-card open-verdict"><div class="verdict-eyebrow">✧ A READING FOR YOUR QUESTION ✧</div><div class="verdict-label">围绕「${safe(question)}」</div>${oracleChibi("hope")}<div class="question-reading-text"><p>${safe(body)}</p><p class="verdict-disclaimer">这段回应取自本次实际抽到的牌及其牌阵位置（${safe(focusNames)}），不是预设的通用答案。更完整的脉络请结合下方逐张解读与牌间关系一起阅读。</p></div></div>`;
+ if(!verdicts.length)return "";
+ const yes=verdicts.filter(v=>v==="yes").length,no=verdicts.filter(v=>v==="no").length,maybe=verdicts.filter(v=>v==="maybe").length;
+ let label="倾向尚不明朗",tone="hope",detail="牌面同时出现支持与保留的讯号。与其急着把它压成肯定或否定，不如看清哪一个条件仍未成熟。";
+ if(yes>no){label="目前偏向肯定";tone="hope";detail="支持这件事发生的牌面讯号较多。它更像一扇打开的门，而不是自动兑现的承诺；接下来要看你是否能接住机会。";}
+ if(no>yes){label="目前偏向暂缓";tone="caution";detail="阻力、延迟或条件不足的讯号较多。与其把它当成永远不可能，不如先辨认最具体的阻碍是什么。";}
+ return `<div class="verdict-card"><div class="verdict-eyebrow">✧ THE CARDS ANSWER ✧</div><div class="verdict-label">针对「${safe(question)}」的牌面倾向</div>${oracleChibi(tone)}<div class="verdict-answer">${label}</div><p>${safe(detail)}</p><div class="verdict-stats"><span>支持 ${yes}</span><span>未定 ${maybe}</span><span>阻力 ${no}</span></div><p class="verdict-disclaimer">倾向来自本次牌面象征的归纳，不是现实概率或结果保证。</p></div>`;
 }
+
 function showResults(){
  showSection("result");
  $("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 留给内心的一次探索";
