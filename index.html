@@ -1,85 +1,488 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#211735">
-<title>Celestia · 天使秘境塔罗</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171126">
+<title>Celestia 2.0 · 天使秘境</title>
 <style>
-:root{--bg:#171126;--panel:#241a38;--panel2:#302244;--gold:#e8cf9b;--lilac:#d8bafa;--muted:#c3b4d5;--white:#fbf5ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#654b83 0,#2b2040 36%,#171126 75%);color:var(--white);font-family:"Noto Serif SC","Songti SC",Georgia,serif;min-height:100vh}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:radial-gradient(1px 1px at 12% 18%,#fff 98%,transparent),radial-gradient(2px 2px at 78% 14%,#f4dcae 98%,transparent),radial-gradient(1px 1px at 88% 70%,#fff 98%,transparent),radial-gradient(1px 1px at 30% 82%,#dcbaff 98%,transparent);background-size:230px 210px}
-header{text-align:center;padding:38px 18px 22px;position:relative}.wings{font-size:38px;color:#f0dcae;text-shadow:0 0 25px #d9b8ff}.brand{font-size:clamp(27px,5vw,42px);letter-spacing:8px;margin:8px 0}.en{font:11px Arial,sans-serif;letter-spacing:5px;color:#d6c0e8}.tagline{font-size:13px;color:#d9cce7;line-height:2;margin:18px auto 0;max-width:600px}
-main{max-width:1050px;margin:auto;padding:0 18px 60px;position:relative}.panel{background:#ffffff0a;border:1px solid #d9c2ee35;border-radius:18px;padding:22px;margin:16px 0;box-shadow:0 14px 40px #09061330;backdrop-filter:blur(8px)}
-.kicker{text-align:center;color:var(--lilac);font:10px Arial,sans-serif;letter-spacing:3px;margin-bottom:15px}
-label{display:block;color:#e8d9f4;font-size:13px;margin-bottom:9px}input{width:100%;padding:13px 14px;background:#100c1c88;border:1px solid #b99bd355;border-radius:10px;color:white;font-size:14px;outline:none}input:focus{border-color:var(--gold)}
-.spreads{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.spread{background:#ffffff08;color:#f6edff;border:1px solid #c7a7df55;border-radius:12px;padding:15px 8px;cursor:pointer;min-height:105px}.spread.active{background:#b38bd42c;border-color:var(--gold);box-shadow:0 0 20px #d6b4f32a}.spread b{display:block;font-size:13px;font-weight:normal;margin:8px 0 4px}.spread small{color:#c7b5d8;font:10px Arial}
-button{font-family:inherit}.primary{background:linear-gradient(135deg,#f0d8a5,#c6a3e8);color:#281b37;border:0;border-radius:30px;padding:13px 27px;letter-spacing:2px;cursor:pointer;font-size:13px;box-shadow:0 6px 20px #100a1d66}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.secondary{border:1px solid #c6a6dd88;background:#ffffff0a;color:#f4eaff;border-radius:25px;padding:10px 20px;cursor:pointer}
-.center{text-align:center}.deck{display:flex;justify-content:center;gap:9px;margin:22px auto}.back{height:135px;width:88px;border:1px solid #e4c98e;border-radius:9px;background:repeating-linear-gradient(45deg,#45305e,#45305e 5px,#50396b 5px,#50396b 6px);display:grid;place-items:center;color:#eed49e;font-size:32px;box-shadow:0 10px 25px #08051188;position:relative}.back:after{content:"";position:absolute;inset:6px;border:1px solid #dfc38b88;border-radius:5px}
-.hidden{display:none!important}.muted{color:#c5b5d5;font-size:12px;line-height:1.8}.progress{height:3px;background:#ffffff20;max-width:350px;margin:15px auto;border-radius:9px}.progress span{display:block;height:3px;background:var(--gold);width:0;transition:.3s}
-.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:13px;margin:24px 0}.tarot-card{width:145px;text-align:center;animation:appear .45s ease both}.face{height:214px;border:1px solid #e5c98f;border-radius:9px;padding:8px;background:linear-gradient(155deg,#594477,#251c3b 75%);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 9px 22px #08051188}.face:before{content:"";position:absolute;inset:5px;border:1px solid #d8bd8c88;border-radius:5px}.face:after{content:"✧  ·  ☾  ·  ✧";position:absolute;top:12px;font-size:9px;color:#e9d4a8;letter-spacing:3px}.glyph{font-size:57px;color:#f0d9aa;text-shadow:0 0 18px #d5aef8;z-index:1}.face .name{position:absolute;bottom:13px;font-size:10px;letter-spacing:1px;color:#fff0d2;z-index:1}.face.reversed .glyph{transform:rotate(180deg)}.cname{font-size:12px;margin-top:9px}.position{font:10px Arial;color:#c7b2db;margin-top:4px}
-.reading{background:#ffffff0a;border:1px solid #c5a5dc44;border-radius:13px;padding:16px;margin:11px 0}.reading h3{font-weight:normal;color:var(--gold);font-size:15px;margin:0 0 9px}.reading p{font:12px/1.9 Arial,"Noto Sans SC",sans-serif;color:#e0d4eb;margin:6px 0}.badge{font:10px Arial;color:var(--lilac);letter-spacing:2px;margin-bottom:8px}.resultTitle{text-align:center;font-size:23px;letter-spacing:3px;font-weight:normal;margin:25px 0 8px}
-footer{text-align:center;color:#9f8daf;font:10px Arial;letter-spacing:2px;padding:20px}
-@keyframes appear{from{opacity:0;transform:translateY(16px) rotateY(20deg)}to{opacity:1;transform:none}}
-@media(max-width:650px){.spreads{grid-template-columns:repeat(2,1fr)}.panel{padding:17px}.tarot-card{width:calc(33.33% - 10px);min-width:95px}.face{height:165px}.glyph{font-size:42px}.back{width:72px;height:115px}}
+:root{--night:#171126;--violet:#302044;--plum:#49345f;--lav:#d9c0f4;--gold:#e8ce9b;--cream:#fff5df;--muted:#c8b8d9;--line:#dfc58b66}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:#fbf5ff;background:radial-gradient(ellipse at 50% -15%,#775c91 0,#3c2a53 29%,#21182f 60%,#14101f 100%);font-family:"Noto Serif SC","Songti SC","STSong",Georgia,serif;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0}
+body:before{opacity:.48;background-image:radial-gradient(1px 1px at 12% 18%,#fff 98%,transparent),radial-gradient(2px 2px at 78% 14%,#f4dcae 98%,transparent),radial-gradient(1px 1px at 88% 70%,#fff 98%,transparent),radial-gradient(1px 1px at 30% 82%,#dcbaff 98%,transparent),radial-gradient(1px 1px at 54% 44%,#fff 98%,transparent);background-size:230px 210px}
+body:after{background:radial-gradient(ellipse at 50% 48%,transparent 20%,#100b1b55 100%)}
+#ambient{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff4d8;box-shadow:0 0 12px 3px #d8b7ff88;animation:floatSpark var(--dur) ease-in-out infinite;opacity:0}
+@keyframes floatSpark{0%,100%{transform:translate3d(0,15px,0) scale(.4);opacity:0}35%{opacity:.9}70%{transform:translate3d(var(--dx),-65px,0) scale(1.5);opacity:.35}}
+header,main,footer{position:relative;z-index:1}
+header{text-align:center;padding:34px 16px 20px}
+.crest{width:88px;height:88px;margin:auto;display:grid;place-items:center;position:relative}
+.crest:before,.crest:after{content:"";position:absolute;border:1px solid #e9d3a5aa;border-radius:50%;inset:4px;box-shadow:0 0 24px #d4b0f455}
+.crest:after{inset:13px;border-style:dashed;animation:slowSpin 30s linear infinite}
+.crest svg{width:66px;filter:drop-shadow(0 0 12px #e4c4ff88)}
+@keyframes slowSpin{to{transform:rotate(360deg)}}
+.brand{font-size:clamp(28px,5vw,43px);letter-spacing:10px;margin:8px 0 7px;text-shadow:0 0 24px #d8b4ff66}
+.en{font:10px Arial,sans-serif;letter-spacing:5px;color:#dbc8ec}
+.tagline{font-size:13px;color:#e1d3eb;line-height:2;margin:16px auto 0;max-width:640px}
+main{max-width:1120px;margin:auto;padding:0 18px 56px}
+.panel{background:linear-gradient(145deg,#ffffff0d,#ffffff06);border:1px solid #d9c2ee35;border-radius:20px;padding:23px;margin:15px 0;box-shadow:0 18px 50px #09061342;backdrop-filter:blur(10px)}
+.kicker{text-align:center;color:var(--lav);font:10px Arial,sans-serif;letter-spacing:3px;margin-bottom:15px}
+.section-title{text-align:center;font-size:21px;letter-spacing:3px;font-weight:400;margin:4px 0 10px}
+.muted{color:#c9bad8;font-size:12px;line-height:1.9}
+.center{text-align:center}
+label{display:block;color:#f0e3f8;font-size:13px;margin-bottom:9px}
+input{width:100%;padding:14px 15px;background:#100c1c99;border:1px solid #b99bd366;border-radius:11px;color:white;font:13px Arial,"Noto Sans SC",sans-serif;outline:none}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #e8ce9b18}
+.spreads{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.spread{background:#ffffff08;color:#f7efff;border:1px solid #c7a7df55;border-radius:14px;padding:16px 10px;cursor:pointer;min-height:112px;transition:.25s;position:relative;overflow:hidden}
+.spread:hover{transform:translateY(-3px);border-color:#dfc58b}
+.spread.active{background:linear-gradient(145deg,#a47dc13a,#e8ce9b12);border-color:var(--gold);box-shadow:0 0 24px #d6b4f32a,inset 0 0 20px #d6b4f311}
+.spread .sigil{font-size:24px;color:var(--gold);display:block}
+.spread b{display:block;font-size:13px;font-weight:400;margin:8px 0 4px}
+.spread small{color:#c7b5d8;font:10px Arial}
+button{font-family:inherit}
+button:focus-visible{outline:2px solid #f4d99f;outline-offset:4px}
+.primary{background:linear-gradient(125deg,#f1dba9,#d9b7f0 58%,#b18ad0);color:#281b37;border:1px solid #f5dfb4;border-radius:30px;padding:13px 29px;letter-spacing:2px;cursor:pointer;font-size:13px;box-shadow:0 7px 24px #100a1d77;transition:.25s}
+.primary:hover{filter:brightness(1.12);transform:translateY(-2px);box-shadow:0 10px 30px #d8b5ef35}
+.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.secondary{border:1px solid #c6a6dd88;background:#ffffff0a;color:#f4eaff;border-radius:25px;padding:10px 20px;cursor:pointer;transition:.2s}
+.secondary:hover{background:#ffffff18;border-color:var(--gold)}
+.deck-showcase{height:190px;display:flex;justify-content:center;align-items:center;position:relative;margin:8px auto 5px;max-width:430px}
+.deck-back{width:105px;height:158px;border:1px solid #e8ce9b;border-radius:10px;position:absolute;display:grid;place-items:center;background:linear-gradient(145deg,#55406d,#241a39);box-shadow:0 13px 30px #09051199;transition:.3s;overflow:hidden}
+.deck-back:before{content:"";position:absolute;inset:6px;border:1px solid #e8ce9b99;border-radius:6px}
+.deck-back:after{content:"";position:absolute;inset:13px;border:1px dashed #e8ce9b66;border-radius:4px}
+.deck-back svg{width:76%;position:relative;z-index:1}
+.deck-back:nth-child(1){transform:translateX(-29px) rotate(-12deg)}
+.deck-back:nth-child(2){transform:translateY(-8px);z-index:2}
+.deck-back:nth-child(3){transform:translateX(29px) rotate(12deg)}
+.deck-showcase:hover .deck-back:nth-child(1){transform:translate(-45px,-12px) rotate(-19deg)}
+.deck-showcase:hover .deck-back:nth-child(3){transform:translate(45px,-12px) rotate(19deg)}
+.hidden{display:none!important}
+#ritual .panel{min-height:390px}
+.ritual-orb{width:170px;height:170px;margin:25px auto 18px;border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle,#d8b6f044 0,#a77bd11c 40%,transparent 70%)}
+.ritual-orb:before,.ritual-orb:after{content:"";position:absolute;inset:7px;border:1px solid #e8ce9b77;border-radius:50%;animation:slowSpin 14s linear infinite}
+.ritual-orb:after{inset:22px;border-style:dashed;animation-direction:reverse;animation-duration:22s}
+.ritual-orb svg{width:112px;filter:drop-shadow(0 0 15px #e7c7ff88)}
+.shuffling .ritual-orb svg{animation:wingBeat .32s ease-in-out infinite alternate}
+@keyframes wingBeat{to{transform:scale(1.12) rotate(3deg)}}
+.progress{height:3px;background:#ffffff20;max-width:360px;margin:18px auto;border-radius:9px;overflow:hidden}
+.progress span{display:block;height:3px;background:linear-gradient(90deg,#c49ce9,#f0d79d);width:0;transition:width .5s}
+.pick-instruction{margin:8px 0 18px;color:#e4d5ef;font-size:13px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:12px;margin:22px auto;max-width:950px}
+.slot{min-width:0;text-align:center}
+.slot-frame{height:164px;border:1px dashed #d8bd8c77;border-radius:9px;background:#ffffff06;display:grid;place-items:center;color:#c9b2df;position:relative;overflow:hidden}
+.slot-frame .slot-num{font-size:26px;color:#e6d09f}
+.slot-frame .slot-label{position:absolute;bottom:10px;left:4px;right:4px;font-size:10px;color:#cbb9da}
+.slot.filled .slot-frame{border:0;background:transparent;overflow:visible}
+.slot.filled .slot-frame .tarot-card{width:100%;margin:0}
+.slot.filled .slot-frame .card-face{height:164px}
+.slot-name{font-size:11px;color:#e4d5ef;margin-top:7px}
+.pick-deck-wrap{padding:18px 10px 15px;border-top:1px solid #ffffff1b;margin-top:15px}
+.pick-deck{display:grid;grid-template-columns:repeat(12,minmax(48px,1fr));gap:7px;max-width:850px;margin:12px auto 0}
+.pick-card{border:0;background:transparent;padding:0;cursor:pointer;perspective:700px;min-width:0;transition:transform .22s}
+.pick-card:hover{transform:translateY(-12px) scale(1.06);z-index:3}
+.pick-card:disabled{opacity:.15;cursor:default;transform:scale(.92)}
+.pick-card svg{width:100%;display:block;filter:drop-shadow(0 5px 8px #09051188)}
+.pick-card .back-svg{transition:filter .2s}
+.pick-card:hover .back-svg{filter:drop-shadow(0 0 10px #e7ce9d99)}
+.tarot-card{width:145px;text-align:center;animation:cardArrive .65s cubic-bezier(.2,.8,.2,1) both}
+@keyframes cardArrive{from{opacity:0;transform:translateY(25px) rotateY(85deg) scale(.88)}to{opacity:1;transform:none}}
+.card-flip{perspective:1000px}
+.card-inner{position:relative;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.2,.75,.2,1)}
+.card-inner.flipped{transform:rotateY(180deg)}
+.card-back,.card-front{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-back{position:absolute;inset:0;transform:rotateY(0deg)}
+.card-front{transform:rotateY(180deg)}
+.card-face{height:218px;border:1px solid #e8ce9b;border-radius:9px;overflow:hidden;background:#261b39;box-shadow:0 10px 28px #08051199;position:relative}
+.card-face svg{width:100%;height:100%;display:block}
+.card-face.reversed svg{transform:rotate(180deg)}
+.card-caption{font-size:12px;margin-top:9px;color:#f6eafa}
+.card-position{font:10px Arial,"Noto Sans SC",sans-serif;color:#c9b5db;margin-top:5px}
+.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:15px;margin:24px 0}
+.pick-note{text-align:center;color:#c8b8d9;font:11px/1.8 Arial,"Noto Sans SC",sans-serif}
+.result-head{text-align:center;margin:12px 0 20px}
+.result-title{text-align:center;font-size:24px;letter-spacing:4px;font-weight:400;margin:8px 0 9px}
+.result-subtitle{font-size:12px;color:#cbb9dc;line-height:1.8}
+.reading{background:linear-gradient(145deg,#ffffff0d,#ffffff06);border:1px solid #c5a5dc44;border-radius:15px;padding:19px;margin:13px 0}
+.reading h3{font-weight:400;color:var(--gold);font-size:16px;margin:0 0 10px}
+.reading p{font:13px/2 Arial,"Noto Sans SC",sans-serif;color:#e3d8ec;margin:8px 0}
+.reading .badge{font:10px Arial,sans-serif;color:var(--lav);letter-spacing:2px;margin-bottom:9px}
+.reading .prompt{color:#e9d2a5;border-left:2px solid #e8ce9b;padding-left:12px;margin-top:12px}
+.analysis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.insight{border:1px solid #d9c2ee33;background:#ffffff08;border-radius:13px;padding:16px}
+.insight h4{font-size:13px;color:var(--gold);font-weight:400;margin:0 0 8px}
+.insight p{font:12px/1.9 Arial,"Noto Sans SC",sans-serif;color:#d9cde4;margin:0}
+.suit-meter{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.suit-chip{font:11px Arial,"Noto Sans SC",sans-serif;border:1px solid #d9c2ee44;border-radius:20px;padding:7px 11px;color:#e6d9ef;background:#ffffff08}
+.final-note{text-align:center;padding:24px 18px;background:radial-gradient(ellipse,#a17bc02b,transparent 70%);margin-top:20px}
+.final-note .angel{font-size:25px;color:var(--gold)}
+footer{text-align:center;color:#a995bc;font:10px Arial,sans-serif;letter-spacing:2px;padding:20px 10px 30px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#332447;border:1px solid #e8ce9b88;border-radius:24px;padding:10px 17px;color:#fff0d6;font:12px Arial,"Noto Sans SC",sans-serif;z-index:20;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:720px){.spreads{grid-template-columns:repeat(2,1fr)}.pick-deck{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;max-width:440px}.slots{grid-template-columns:repeat(3,minmax(0,1fr))}.slot-frame{height:145px}.slot.filled .slot-frame .card-face{height:145px}}
+@media(max-width:480px){header{padding-top:25px}.brand{letter-spacing:6px}.panel{padding:16px}.tarot-card{width:calc(33.33% - 10px);min-width:94px}.card-face{height:170px}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.slot-frame{height:160px}.slot.filled .slot-frame .card-face{height:160px}.analysis-grid{grid-template-columns:1fr}.pick-deck{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<header><div class="wings">༺ 🪽 ༻</div><div class="brand">天 使 秘 境</div><div class="en">CELESTIA · ANGEL TAROT SANCTUARY</div><p class="tagline">愿羽翼与星光，为你照亮心中的问题。<br>静下心来，选择牌阵，让 78 张塔罗牌带你探索另一种可能。</p></header>
+<div id="ambient" aria-hidden="true"></div>
+<header>
+ <div class="crest" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none"><path d="M48 52C27 13 9 24 21 51c7 15 17 18 27 14M52 52c21-39 39-28 27-1-7 15-17 18-27 14" stroke="#ecd7a8" stroke-width="2.5"/><path d="M50 35c-8 12-9 29 0 43 9-14 8-31 0-43Z" fill="#d9b9f1" stroke="#f4dfb2" stroke-width="1.5"/><circle cx="50" cy="48" r="5" fill="#fff0ca"/><path d="M35 78h30M42 84h16" stroke="#e8ce9b" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+ <div class="brand">天 使 秘 境</div><div class="en">CELESTIA · ANGEL TAROT SANCTUARY</div>
+ <p class="tagline">在羽翼与星光之间，留一刻给自己。<br>让古老的象征语言，温柔地照见你正在经历的事。</p>
+</header>
 <main>
 <section id="setup">
- <div class="panel"><div class="kicker">✧ YOUR QUESTION ✧</div><label for="question">在心中默念你的问题（选填）</label><input id="question" maxlength="120" placeholder="例如：我该如何面对最近的变化？"></div>
+ <div class="panel"><div class="kicker">✧ YOUR QUESTION ✧</div><label for="question">在心中默念你的问题（选填）</label><input id="question" maxlength="140" placeholder="例如：这段关系正在经历什么？我该如何面对最近的变化？"></div>
  <div class="panel"><div class="kicker">✧ CHOOSE YOUR SPREAD · 选择牌阵 ✧</div><div class="spreads" id="spreads">
- <button class="spread active" data-id="one"><span>☾</span><b>单张指引</b><small>1 张 · 当下启示</small></button>
- <button class="spread" data-id="three"><span>✧</span><b>时间之流</b><small>3 张 · 过去现在未来</small></button>
- <button class="spread" data-id="love"><span>♡</span><b>爱情关系</b><small>5 张 · 双向关系</small></button>
- <button class="spread" data-id="cross"><span>✥</span><b>凯尔特十字</b><small>10 张 · 深度探索</small></button></div></div>
- <div class="panel center"><div class="kicker">✧ THE DECK OF 78 ✧</div><div class="deck"><div class="back">☾</div><div class="back" style="transform:rotate(-8deg) translateY(-8px)">🪽</div><div class="back" style="transform:rotate(8deg)">✧</div></div><p class="muted">22 张大阿尔卡那 · 56 张小阿尔卡那<br>权杖、圣杯、宝剑、星币四个花色</p><button class="primary" id="start">✧　洗牌并开始　✧</button></div>
+  <button class="spread active" data-id="one"><span class="sigil">☾</span><b>单张指引</b><small>1 张 · 此刻的核心讯息</small></button>
+  <button class="spread" data-id="three"><span class="sigil">✧</span><b>时间之流</b><small>3 张 · 过去 / 现在 / 未来</small></button>
+  <button class="spread" data-id="love"><span class="sigil">♡</span><b>爱情关系</b><small>5 张 · 看见关系的两面</small></button>
+  <button class="spread" data-id="cross"><span class="sigil">✥</span><b>凯尔特十字</b><small>10 张 · 深入探索全貌</small></button>
+ </div></div>
+ <div class="panel center"><div class="kicker">✧ THE COMPLETE DECK · 78 CARDS ✧</div>
+  <div class="deck-showcase" aria-hidden="true"><div class="deck-back"></div><div class="deck-back"></div><div class="deck-back"></div></div>
+  <p class="muted">22 张大阿尔卡那 · 56 张小阿尔卡那<br>权杖、圣杯、宝剑、星币四个花色。每一次抽取都会重新洗牌。</p>
+  <button class="primary" id="begin">✧　进入抽牌仪式　✧</button>
+ </div>
 </section>
-<section id="draw" class="hidden"><div class="panel center"><div class="kicker">✧ REVEAL YOUR CARDS ✧</div><h2 class="resultTitle" id="drawTitle"></h2><p class="muted" id="drawDesc"></p><div class="progress"><span id="bar"></span></div><div class="deck"><div class="back">🪽</div><div class="back" style="transform:rotate(8deg)">☾</div><div class="back" style="transform:rotate(-8deg)">✧</div></div><p class="muted" id="instruction">集中精神，翻开第一张牌</p><div class="cards" id="drawn"></div><button class="primary" id="next">翻开第一张牌　✧</button></div></section>
-<section id="result" class="hidden"><div class="panel"><div class="kicker">✧ A MESSAGE FROM THE STARS ✧</div><h2 class="resultTitle">你的专属塔罗解读</h2><p class="muted center" id="qtext"></p><div class="cards" id="allcards"></div><div id="meanings"></div><div class="reading center"><div class="badge">✧ ANGEL'S GENTLE REMINDER ✧</div><h3>来自天使秘境的温柔提醒</h3><p id="summary"></p></div><p class="muted center">塔罗是一种象征性自我探索工具，并非确定预言。请将解读作为思考参考，重要决定仍应结合现实信息与自己的判断。</p><div class="center"><button class="primary" id="again">重新占卜　☾</button></div></div></section>
-<footer>CELESTIA · FOLLOW THE LIGHT WITHIN YOU</footer>
+
+<section id="ritual" class="hidden">
+ <div class="panel center">
+  <div class="kicker">✧ A MOMENT OF STILLNESS ✧</div>
+  <h2 class="section-title" id="ritualTitle">让心慢慢安静下来</h2>
+  <p class="muted" id="ritualText">呼吸，想起你的问题。牌正在被重新洗匀。</p>
+  <div class="ritual-orb" id="orb"><svg viewBox="0 0 120 120" fill="none"><path d="M58 63C39 24 11 31 23 60c8 19 22 24 35 17M62 63c19-39 47-32 35-3-8 19-22 24-35 17" stroke="#ead4a7" stroke-width="3"/><path d="M60 37c-12 16-13 37 0 54 13-17 12-38 0-54Z" fill="#d9b9f1" stroke="#fff0cb" stroke-width="2"/><circle cx="60" cy="52" r="7" fill="#fff0cf"/><path d="M38 96h44" stroke="#e8ce9b" stroke-width="2"/></svg></div>
+  <div class="progress"><span id="ritualBar"></span></div>
+  <button class="primary hidden" id="cutDeck">完成切牌，开始抽取　✧</button>
+ </div>
+</section>
+
+<section id="draw" class="hidden">
+ <div class="panel center">
+  <div class="kicker">✧ CHOOSE YOUR CARDS ✧</div>
+  <h2 class="section-title" id="drawTitle"></h2>
+  <p class="muted" id="drawDesc"></p>
+  <div class="progress"><span id="drawBar"></span></div>
+  <p class="pick-instruction" id="pickInstruction">请凭直觉，点击下方任意一张牌背。</p>
+  <div class="slots" id="slots"></div>
+  <div class="pick-deck-wrap"><div class="kicker">✧ TOUCH A CARD TO REVEAL ✧</div><p class="pick-note" id="pickNote">不必计算，也不必猜测。让目光停留在你想选择的那一张上。</p><div class="pick-deck" id="pickDeck"></div></div>
+  <button class="primary hidden" id="readNow">揭晓全部牌意　☾</button>
+ </div>
+</section>
+
+<section id="result" class="hidden">
+ <div class="panel">
+  <div class="result-head"><div class="kicker">✧ THE LANGUAGE OF THE CARDS ✧</div><h2 class="result-title">你的专属塔罗解读</h2><p class="result-subtitle" id="qtext"></p></div>
+  <div class="cards" id="allcards"></div>
+  <div id="overall"></div>
+  <div class="kicker" style="margin-top:28px">✧ CARD BY CARD · 逐张解读 ✧</div>
+  <div id="meanings"></div>
+  <div class="kicker" style="margin-top:28px">✧ THE PATTERN BETWEEN THE CARDS ✧</div>
+  <div id="connections"></div>
+  <div class="kicker" style="margin-top:28px">✧ A GENTLE WAY FORWARD ✧</div>
+  <div id="actions"></div>
+  <div class="final-note"><div class="angel">༺ 🪽 ༻</div><h3 style="font-weight:400;color:var(--gold)">来自天使秘境的温柔提醒</h3><p class="muted" id="summary"></p></div>
+  <p class="muted center" style="margin-top:22px">塔罗是一种象征性自我探索工具，不是对未来的确定预言。请将牌面作为整理感受与思路的参考；涉及健康、法律、财务或人身安全的重要决定，请结合现实信息并寻求适当的专业帮助。</p>
+  <div class="center" style="margin-top:25px"><button class="primary" id="again">重新开始一场占卜　☾</button></div>
+ </div>
+</section>
 </main>
+<footer>CELESTIA · FOLLOW THE LIGHT WITHIN YOU</footer>
+<div class="toast" id="toast"></div>
+
 <script>
-const majors=[
-["愚者","0","🪽","新的开始、自由、冒险","勇敢迈出第一步，给未知一点空间。","先确认准备是否充分，避免一时冲动。"],
-["魔术师","I","✦","行动力、创造力、资源","你拥有启动计划所需的能力与资源。","能力尚未充分发挥，留意分心或沟通落差。"],
-["女祭司","II","☾","直觉、秘密、内在智慧","安静下来，倾听直觉，也留意尚未明朗的信息。","信息仍有遮蔽，避免只凭猜测下结论。"],
-["皇后","III","❀","丰盛、滋养、创造","让关系与计划自然生长，也别忘了照顾自己。","留意过度付出，重新平衡给予与接收。"],
-["皇帝","IV","♜","秩序、稳定、责任","建立清晰边界与计划，稳健行动会带来安全感。","避免过度控制，给变化留一点余地。"],
-["教皇","V","✧","传统、学习、指引","从经验、学习与可靠建议中寻找方向。","重新审视旧规则，选择真正适合自己的方式。"],
-["恋人","VI","♡","选择、吸引、契合","真诚沟通，关注彼此价值观是否一致。","关系或选择中存在分歧，需要诚实面对。"],
-["战车","VII","✧","意志、前进、胜利","明确方向并保持行动，你比想象中更有力量。","方向可能分散，先找回节奏再加速。"],
-["力量","VIII","🦁","勇气、温柔、内在力量","温柔而坚定地面对挑战，不必用强硬证明自己。","给自己更多耐心，照顾情绪与自信。"],
-["隐士","IX","☾","独处、思考、寻找答案","暂时放慢脚步，独立思考会带来清晰。","不要把自己封闭太久，适时寻求支持。"],
-["命运之轮","X","☸","转变、机遇、周期","局势正在变化，保持开放，留意新的可能。","面对变化感到不安时，先专注可掌控之事。"],
-["正义","XI","⚖","公平、理性、因果","诚实面对事实，理性选择并承担相应责任。","信息或判断可能失衡，重新核对事实。"],
-["倒吊人","XII","◇","暂停、换位思考、等待","换个角度看问题，暂时停顿也有价值。","避免无谓牺牲，考虑调整当前做法。"],
-["死神","XIII","🦋","结束、蜕变、重生","一个阶段正在落幕，结束也为新生腾出空间。","抗拒改变会消耗力量，尝试逐步放下旧模式。"],
-["节制","XIV","☯","平衡、疗愈、协调","找到适合自己的节奏，让不同部分慢慢协调。","生活节奏可能失衡，先从小处调整。"],
-["恶魔","XV","♧","欲望、束缚、执念","看见让自己受困的模式，你仍然拥有选择权。","正在辨认依赖与束缚，练习建立健康界限。"],
-["高塔","XVI","⚡","突破、真相、结构变化","旧有结构受到挑战，真实会帮助你重新建立基础。","变化带来不安时，先稳住自己，再逐步修复。"],
-["星星","XVII","☆","希望、疗愈、灵感","经历低谷后仍有光亮，给希望一点生长的时间。","信心暂时不足，允许自己慢慢恢复。"],
-["月亮","XVIII","☾","潜意识、迷雾、情绪","未知尚未散去，别让猜测替代真实信息。","逐渐识别恐惧与误解，寻找清晰证据。"],
-["太阳","XIX","☀","快乐、成功、活力","坦然接纳积极时刻，让热情照亮行动。","短暂挫折不代表失败，重新找回轻盈感。"],
-["审判","XX","🕊","觉醒、反思、新阶段","回顾过去，听见内心真正重视的召唤。","放下过度自责，允许自己重新选择。"],
-["世界","XXI","🌐","完成、圆满、整合","一个阶段有望收尾，你正在走向更完整的自己。","仍有细节待完成，耐心收尾再开启下一程。"]
+/* Celestia 2.0 — original angelic tarot artwork and interpretive text.
+   Interpretations are inspired by traditional tarot symbolism; no deck artwork or guidebook text is reproduced. */
+const MAJORS = [
+{n:"愚者",r:"0",k:"启程 · 信任 · 未知",motif:"butterfly",up:"愚者站在旅程的边缘，身后是尚未被走过的道路。它不是要求你毫无准备地冒险，而是在提醒：过度等待一个绝对安全的时机，也可能让你错过真正想体验的生活。此刻最重要的不是掌握所有答案，而是辨认什么让你心里重新亮起来。",rev:"逆位的愚者像是脚步已经迈出，心却还没有跟上。你可能在冲动与迟疑之间摇摆，也可能把自由误认为不必承担后果。先区分：你是在回应真实的召唤，还是只想逃离眼前的不舒服？",advice:"给新计划一个小而真实的起点。出发前确认底线与必要准备，但不要要求自己预先消除所有不确定。",image:"悬崖、远方的晨光、白花与轻盈的羽翼"},
+{n:"魔术师",r:"I",k:"意志 · 创造 · 资源",motif:"wand",up:"魔术师让不同的工具汇聚在同一张桌面上，象征想法、情感、行动与现实资源可以被你组织起来。你未必缺少能力，真正的问题可能是有没有把注意力集中在最重要的一件事上。它鼓励你从“我希望发生”走向“我准备怎样促成”。",rev:"逆位时，工具仍在桌上，却没有被有效使用。你可能分散精力、怀疑自己的能力，或被漂亮的承诺吸引而忽略实际行动。也要留意沟通中的夸大与模糊，不要只听说法，要看持续的行动。",advice:"把目标写成一个可验证的步骤，先动用手边已有的资源。清楚表达意图，也为自己的承诺负责。",image:"四元素圣器、桌面、炼金术光环与引导之手"},
+{n:"女祭司",r:"II",k:"直觉 · 静默 · 潜意识",motif:"moon",up:"女祭司守在可见与不可见的门槛之间。她提醒你，有些事情尚未适合仓促定论：身体的感受、没有说出口的情绪、细节之间的矛盾，都值得被认真听见。直觉可以成为线索，但仍需要事实来帮助它落地。",rev:"逆位可能表示你把真实感受压得太深，或把担忧误认成预感。也可能有重要信息尚未被说清楚。不要用猜测填补沉默，适合的时候，温和而直接地询问。",advice:"留出安静观察的时间，记录事实、感受和推测之间的区别。相信自己的感受，同时允许证据修正判断。",image:"月相、帷幕、石榴与银色水面"},
+{n:"皇后",r:"III",k:"丰饶 · 滋养 · 创造",motif:"flower",up:"皇后象征生命力从被照料的土壤中生长。它可能指向关系中的温柔、创作的灵感、身体与生活的丰盛，也提醒你：真正的滋养不是无限付出，而是让给予与接收都有空间。值得投入的事，需要时间、耐心和适宜的环境。",rev:"逆位时，照顾可能变成过度承担，温柔也可能变成忽略自己的需求。你或许正在等待别人肯定，或把自己的价值系在“我能为别人做多少”上。先回到自己的身体与生活，看看哪里已经疲惫。",advice:"给重要的人和计划稳定的关注，也给自己留出休息、享受与被照顾的位置。",image:"花园、麦穗、藤蔓、丰盛的王座"},
+{n:"皇帝",r:"IV",k:"秩序 · 边界 · 责任",motif:"crown",up:"皇帝代表结构、规则与承担。面对复杂局面，清楚的边界和可执行的安排能让你重新获得掌控感。它不是冷硬地压住情绪，而是让情绪、资源与责任各自有位置。此刻需要的是稳定的框架，而不是更多空泛的保证。",rev:"逆位可能呈现两种失衡：过度控制，或因害怕承担而放任局面。你也许正与权威、规则或强势的人发生拉扯。请辨认哪些规则确实保护你，哪些只是让你不敢提出不同意见。",advice:"明确责任、时间和边界。能协商的就协商，必须坚持的底线则用平静而坚定的方式表达。",image:"山脉、石制王座、权杖与几何纹章"},
+{n:"教皇",r:"V",k:"传统 · 学习 · 信念",motif:"book",up:"教皇把个人经验放进更大的知识与传统之中。它适合学习、请教、建立共同规则，也提醒你不必每件事都独自摸索。寻找可信赖的老师、制度或方法，会帮助你把零散经验整理成稳定的理解。",rev:"逆位可能表示旧规则不再适用，或你为了得到认可而压下了自己的判断。也可能是盲目反叛：只因为某件事来自传统，就认定它一定错误。真正重要的是理解规则背后的目的，再决定是否沿用。",advice:"向可靠的人求证，但不要交出自己的判断权。学习之后，选择适合现实处境的做法。",image:"拱门、古书、双柱与温暖的圣堂光线"},
+{n:"恋人",r:"VI",k:"连接 · 选择 · 价值观",motif:"heart",up:"恋人不只谈浪漫，也谈选择是否与内在价值一致。两个人之间的吸引，需要透过坦诚沟通、尊重差异和共同承担，才可能成为真实的连接。若问题并非感情，也可能是在提醒你：眼前的选择会定义你愿意成为什么样的人。",rev:"逆位可能呈现期待不对等、沟通回避，或为了维持关系而牺牲重要需求。也可能是内心两种愿望互相拉扯。不要急着把分歧解释成不爱，先看彼此是否愿意诚实面对问题。",advice:"把未说出口的期待说清楚，并观察对方是否以行动回应。选择能让你保持尊严与真实的连接。",image:"双生天使、花园、祝福之光与交织的藤蔓"},
+{n:"战车",r:"VII",k:"方向 · 决心 · 推进",motif:"chariot",up:"战车象征把相反的力量带向同一个方向。你可能同时面对责任、欲望与外界期待，但只要核心目标清楚，就能逐步推进。它强调的是有意识的驾驭，而不是一味加速；真正的胜利包括知道何时调整路线。",rev:"逆位可能意味着目标过多、节奏失控，或把坚持变成硬撑。你也许很努力，却没有确认努力是否仍指向想要的结果。停下来校准方向，不等于放弃。",advice:"选出当前最重要的一条路线，减少无关消耗。每推进一段，就检查一次方向是否仍然适合你。",image:"星轨战车、双翼骏马、月桂与远方城门"},
+{n:"力量",r:"VIII",k:"温柔 · 勇气 · 自我调节",motif:"lion",up:"力量描绘的不是征服，而是人与本能之间建立信任。你可能需要面对强烈情绪、压力或难以处理的人际局面。真正有效的勇气，往往是既不否认自己的感受，也不让一时冲动替自己做决定。温柔可以有边界，坚定也可以不伤人。",rev:"逆位可能指向自我怀疑、情绪被压抑，或为了显得坚强而不肯求助。也可能是压力累积后，以急躁的方式释放。先照顾身心状态，再处理需要勇气面对的事情。",advice:"练习暂停、命名情绪、表达需求。允许自己寻求支持，别把独自承受当成唯一的坚强。",image:"狮子、花冠、日轮与抚慰的双手"},
+{n:"隐士",r:"IX",k:"独处 · 研究 · 内在指引",motif:"lantern",up:"隐士举起灯，不是为了照亮整条路，而是照见下一步。它适合反思、研究、独立判断，也可能说明你需要从外界声音中暂时退开。答案不一定来自更多意见，有时来自把问题缩小到真正重要的部分。",rev:"逆位可能是过度孤立、陷入反复思考，或因为害怕被评价而不愿分享。独处若不再带来清明，就需要重新与世界建立联系。你不必在完全想通之后才允许别人靠近。",advice:"安排一段不被打扰的思考时间，再找一位可信任的人交换看法。让独处成为整理，而非躲避。",image:"星夜山径、提灯、雪松与远处小屋"},
+{n:"命运之轮",r:"X",k:"周期 · 转折 · 机会",motif:"wheel",up:"命运之轮提醒你，生活并非静止的直线。外部条件、他人的选择和时机都可能改变局势。它不保证好运自动降临，而是邀请你识别正在变化的部分：哪些机会值得回应，哪些旧模式已经走到尽头。",rev:"逆位可能让人感到事情反复、时机不顺，或总被同一种模式困住。此时与其急着扭转所有变化，不如找出自己能够影响的环节。循环若被看见，就有机会被重新选择。",advice:"区分可控与不可控。对变化保持弹性，同时为自己建立能持续运作的基本盘。",image:"星轮、四方守护者、云层与循环的星轨"},
+{n:"正义",r:"XI",k:"公平 · 诚实 · 因果",motif:"scales",up:"正义要求把感受与事实都放到桌面上。它常与决定、协议、责任和公平有关：你需要看见每个人实际做了什么，也看见自己的选择带来什么影响。清晰并不总是轻松，但比长期停留在模糊里更有力量。",rev:"逆位可能呈现信息不完整、标准不一致，或有人不愿承担应有责任。也可能是你对自己过于苛刻，或只挑选支持既有立场的证据。先把事实补齐，再作判断。",advice:"核对记录、承诺与具体行为。涉及正式权益时，寻求可靠的专业意见，不要只凭情绪或口头保证。",image:"天秤、长剑、白色石阶与对称柱廊"},
+{n:"倒吊人",r:"XII",k:"暂停 · 交托 · 视角转换",motif:"hanged",up:"倒吊人把熟悉的世界翻转，让你看见原本忽略的角度。暂时停顿不一定是失败，也可能是旧方法已经无法解决新问题。它邀请你重新理解“值得付出的代价”，辨认等待是在积蓄力量，还是在拖延必须面对的选择。",rev:"逆位可能表示停滞太久、不断牺牲却没有真正改变，或把无能为力误当成顺其自然。你可以尊重现实限制，同时重新寻找自己仍能做出的选择。",advice:"暂缓惯性反应，换一个角度重新定义问题。若等待没有带来新信息，就设定一个重新评估的时间点。",image:"倒悬天使、光环、树枝与水面倒影"},
+{n:"死神",r:"XIII",k:"结束 · 转化 · 释放",motif:"moth",up:"死神很少是在字面上谈死亡，它更常象征一个阶段、身份或旧模式的结束。某些东西已经无法以原来的方式继续，承认这一点会带来失落，也会腾出空间。它不是催促你立刻放下，而是让你看见改变已经开始发生。",rev:"逆位可能表示明知某个阶段已经改变，却仍紧抓旧安排；也可能是变化太快，让你还没有时间消化。不要因为暂时无法告别就责备自己，但也别用拖延替代真正的哀悼与整理。",advice:"辨认需要结束的具体模式，而不是否定整段经历。保留经验，放下已经不再适合你的部分。",image:"白蝶、落花、晨曦与通往新季节的拱门"},
+{n:"节制",r:"XIV",k:"调和 · 修复 · 节奏",motif:"temperance",up:"节制让两只杯中的水缓缓流动，象征不同需求可以透过调整找到新的比例。它不要求你压抑任何一方，而是邀请你试着协调工作与休息、理性与情绪、付出与接收。真正的平衡是动态的，需要不断感受和修正。",rev:"逆位可能表示节奏失衡、极端摇摆，或试图用单一方法解决复杂问题。你也许已经知道哪里不舒服，却一直没有为调整留出空间。",advice:"先做一个温和而可持续的改变。不要追求一次到位，观察调整后身心与关系的反馈。",image:"双杯、流动的光、水岸鸢尾与虹桥"},
+{n:"恶魔",r:"XV",k:"依附 · 欲望 · 觉察",motif:"chains",up:"恶魔把注意力带到那些让人难以抽身的模式：渴望被认可、害怕失去、即时满足、权力拉扯，或明知不舒服却反复回到熟悉的关系。它不是在审判欲望，而是在问：你是否还有选择？看见束缚的形状，是重新取得主动权的开始。",rev:"逆位可能表示你正在识别并松开某种依赖，也可能是表面离开、内在仍被旧模式牵引。改变通常不是一次性的宣告，而是许多次具体选择与边界练习。",advice:"找出触发循环的情境，建立现实可行的支持与界限。若关系中存在胁迫或伤害，优先考虑安全与外部支持。",image:"松开的锁链、镜面、火焰与阴影中的羽翼"},
+{n:"高塔",r:"XVI",k:"震动 · 揭露 · 重建",motif:"tower",up:"高塔描绘旧结构受到冲击的瞬间。它可能是某个事实终于显露、计划突然改变，或原本依赖的信念开始松动。动荡本身并不浪漫，但它能让你看清哪些基础确实稳固，哪些只是因为一直没有被质疑。",rev:"逆位可能表示你已经感到裂缝，却仍试图维持表面；也可能是冲击过后，正在慢慢收拾残局。不要为了避免短暂不适而忽视长期风险。",advice:"先照顾安全与最紧迫的现实问题，再判断哪些需要修复、哪些需要重新建立。一步一步来，不必今天解决全部。",image:"闪电、裂开的高塔、飞散的石片与金色曙光"},
+{n:"星星",r:"XVII",k:"希望 · 疗愈 · 信任",motif:"star",up:"星星出现在风暴之后，像是疲惫的人终于重新看见远处的光。它不承诺所有问题马上消失，而是提示恢复、灵感与信任正在获得空间。你可以先做那些让自己重新感到真实、安稳和有生命力的事。",rev:"逆位可能是希望感暂时变弱，或你把注意力放在尚未实现的理想上，以至于看不见已经发生的小小修复。不要强迫自己乐观，先承认疲惫，再寻找一点能够支撑今天的东西。",advice:"用可持续的小行动照顾自己。把进步记录下来，不必拿别人的速度衡量自己的恢复。",image:"星河、双水瓶、天使之泉与银白花朵"},
+{n:"月亮",r:"XVIII",k:"梦境 · 不安 · 迷雾",motif:"moon",up:"月亮照亮的是模糊地带：直觉、梦境、恐惧、想象，以及尚未得到解释的细节。它提醒你，感受是真实的，但感受所讲述的故事未必就是全部事实。此时不宜急于给人或事件贴上结论，先让更多信息浮现。",rev:"逆位可能表示迷雾正在散开，也可能是焦虑累积到难以忽视。你开始看见哪些担忧来自现实，哪些来自过去经验。把隐约的不安具体化，才有机会回应它。",advice:"放慢重大决定，核对信息来源。写下“我知道什么、我猜测什么、我还需要确认什么”。",image:"月相、双塔、潮汐、夜行生物与银色小径"},
+{n:"太阳",r:"XIX",k:"明朗 · 活力 · 成长",motif:"sun",up:"太阳带来坦率、温暖和被看见的喜悦。它可能象征一件事终于变得清楚，也可能是你重新找回表达、创造和享受生活的能力。允许自己承认做得好的地方，不必把快乐解释成不够谨慎。",rev:"逆位并不等于坏消息，更像是光被云层遮住：好事可能存在，却暂时难以充分感受；也可能期待过高，让普通进展显得不够。调整节奏，别用完美主义削弱真实的喜悦。",advice:"把值得庆祝的进展说出来，也继续做好现实中的细节。让乐观成为行动的能量，而不是忽视问题的理由。",image:"日轮、白马、向日葵、花环与明亮庭院"},
+{n:"审判",r:"XX",k:"召唤 · 复盘 · 更新",motif:"judgement",up:"审判像一声从远处传来的号角，邀请你回看经历，并决定如何带着经验进入下一阶段。它关乎觉醒，也关乎承担：过去发生的事不能重来，但你可以改变自己如何理解它、回应它。某个被搁置的问题，可能已经到了值得认真面对的时候。",rev:"逆位可能是害怕被评判、迟迟不肯原谅自己，或明明知道需要改变却不断推迟。也要留意过度复盘，把每一次失误都变成对自己的定罪。",advice:"从过去提炼经验，而不是反复惩罚自己。选一个现在能够完成的回应，让新的阶段有真实的开始。",image:"号角、云层、展翼天使与苏醒的花园"},
+{n:"世界",r:"XXI",k:"完成 · 整合 · 圆满",motif:"world",up:"世界象征一段旅程的整合与完成。你可能已经积累了足够的经验，能够看见自己走过的距离；也可能需要把分散的成果收束起来，给阶段性的努力一个正式结束。圆满不是毫无遗憾，而是能够带着完整的经验继续前行。",rev:"逆位可能表示最后一步尚未完成、成果没有被好好承认，或你已经站在门口却迟迟不肯结束。请辨认是现实细节仍待处理，还是对下一阶段的不确定让你停留在原地。",advice:"列出尚未收尾的事项，完成必要的告别与整理。承认自己已经学会的东西，再决定下一段旅程。",image:"星环、四方守护者、花环与中央舞者"}
 ];
-const suits=[
- {name:"权杖",symbol:"🔥",theme:"行动、热情、创造与事业",cards:["火花","萌芽","远望","庆祝","竞争","胜利","防守","迅速","坚持","负担","讯息","探索者","行动者","领袖"]},
- {name:"圣杯",symbol:"💧",theme:"情感、关系、直觉与内心",cards:["新情感","相遇","欢聚","沉思","失落","回忆","幻想","离开","满足","圆满","讯息","浪漫者","知心者","慈爱者"]},
- {name:"宝剑",symbol:"🌬️",theme:"思想、沟通、判断与挑战",cards:["清晰","抉择","心痛","休憩","冲突","过渡","策略","束缚","忧虑","终结","观察者","挑战者","独立者","理性者"]},
- {name:"星币",symbol:"🌿",theme:"现实、学业、财富与长期积累",cards:["新机会","合作","技艺","守护","匮乏","慷慨","耕耘","学习","丰收","传承","学徒","实践者","经营者","守成者"]}
+
+const SUITS = {
+"权杖":{element:"火",color:["#c77c70","#f0bd83","#59314b"],focus:"行动、热情、创意、事业与个人意志",gift:"点燃行动力，把想法带入现实",shadow:"急躁、耗竭、争强或只有热情没有持续",advice:"把灵感变成有节奏的行动，留意精力分配。",symbol:"wand"},
+"圣杯":{element:"水",color:["#769ab6","#c6d9e8","#334567"],focus:"情感、关系、直觉、想象与内在需求",gift:"感受、连结、共情与情绪流动",shadow:"理想化、逃避、情绪淹没或过度依赖",advice:"尊重感受，也用清楚沟通确认彼此的真实意愿。",symbol:"cup"},
+"宝剑":{element:"风",color:["#8294c4","#e2d9ed","#343956"],focus:"思想、沟通、判断、冲突与真相",gift:"辨析、表达、决断与看清事实",shadow:"过度思虑、尖锐表达、误解或精神压力",advice:"把事实与推测分开，用清晰而不伤人的方式沟通。",symbol:"sword"},
+"星币":{element:"土",color:["#8eaa88","#e3d1a0","#3c5147"],focus:"现实、学业、工作、资源、身体与长期积累",gift:"稳定、耐心、技能与可持续成果",shadow:"匮乏感、固守、过度物质化或缺乏弹性",advice:"关注可执行的计划、资源与长期节奏。",symbol:"coin"}
+};
+const RANKS = [
+{r:"Ace",cn:"王牌",key:"种子与开端",up:"一股新的能量正在形成，像一颗刚落进土里的种子。它带来机会、灵感或新的态度，但潜能仍需要被照料，不能只停留在想象。",rev:"新的开始可能被延迟、忽略，或尚未找到合适的出口。先确认自己是否真的想投入，再处理阻碍启动的现实问题。"},
+{r:"Two",cn:"二",key:"选择与平衡",up:"两种力量开始并存，你需要观察它们如何互动。此牌常带来协商、选择、分配或关系中的回应，关键不是立刻选边，而是看清每个选项的代价与可能。",rev:"平衡正在倾斜，或你为了避免冲突而迟迟不作决定。把真正的优先次序说清楚，别让拖延替你做选择。"},
+{r:"Three",cn:"三",key:"成长与协作",up:"事情开始向外展开，个人努力有机会与他人、环境或更大的计划连接。它强调交流、练习与协作，也提醒你让初步成果接受现实反馈。",rev:"合作可能缺少共识，计划推进不一，或你太早期待成果。回到分工、沟通和基础能力，重新确认大家是否朝同一方向努力。"},
+{r:"Four",cn:"四",key:"结构与稳定",up:"一个阶段正在建立秩序，稳定感来自边界、规律和可依靠的基础。此牌鼓励你珍惜已经拥有的，也检查目前的结构是否足以支持下一步。",rev:"安全感可能变成僵化，或看似稳定的安排其实已经不再合身。适度调整规则，让结构继续服务于生活，而不是反过来限制生活。"},
+{r:"Five",cn:"五",key:"摩擦与考验",up:"不同需求发生碰撞，资源、情绪或立场的冲突浮现。它不必然代表失败，而是让你看见问题真正卡在哪里。与其急着证明谁对，不如辨认冲突背后的需要。",rev:"紧张可能正在缓和，也可能被压下而没有解决。真正的修复需要承认影响、调整行为，并建立新的沟通方式。"},
+{r:"Six",cn:"六",key:"回应与流动",up:"付出开始得到回应，或某种经验、支持与资源正在流动。它提醒你留意谁在给予、谁在接收，以及这份交换是否让双方都保有尊严。",rev:"付出与回报可能不对等，或你太依赖外界认可来确认价值。重新衡量交换关系，必要时调整期待与边界。"},
+{r:"Seven",cn:"七",key:"评估与坚持",up:"进展需要经过检验。你可能已经投入不少，现在要判断哪些努力值得继续，哪些策略需要改变。坚持并非不许调整，而是知道自己为何继续。",rev:"耐心正在消耗，或你守着一个已经不再有效的方法。暂停评估投入与回报，允许策略更新，不必为了证明过去没错而继续加码。"},
+{r:"Eight",cn:"八",key:"练习与推进",up:"重复、专注与熟练度成为关键。成果可能来自持续练习，也可能来自消息、行动或流程开始加速。此牌鼓励你把注意力放在过程质量，而非只盯着结果。",rev:"节奏可能混乱，细节反复出错，或你因为急于完成而失去专注。减少同时进行的任务，把一件事做好，再继续下一件。"},
+{r:"Nine",cn:"九",key:"成熟与临界点",up:"你已经走过相当一段路，经验与韧性正在累积。此牌既是成果的提醒，也是临界点的提示：继续前进之前，看看自己是否需要休息、保护或重新设定边界。",rev:"疲惫、戒备或孤立感可能变得明显。你不必凡事靠意志硬撑，适度求助与恢复，反而能让已经建立的成果更稳固。"},
+{r:"Ten",cn:"十",key:"完成与承载",up:"一个循环来到重要节点，成果、责任或情绪重量集中显现。它可能意味着阶段性完成，也可能提醒你承担过多。看清哪些责任属于你，哪些应该被分享或放下。",rev:"旧循环难以结束，或负担已经超过合理范围。把问题拆小，处理最紧迫的一项，并重新分配不必由你独自承担的部分。"},
+{r:"Page",cn:"侍从",key:"学习与讯息",up:"侍从带着好奇心接近世界，象征学习、观察、消息与尚在萌芽的能力。它鼓励你先保持开放，愿意尝试，也愿意承认自己还在学习。",rev:"消息可能不完整，态度也可能不够成熟。先核实信息，不必因一时兴奋或不安就做出过大的承诺。"},
+{r:"Knight",cn:"骑士",key:"行动与追寻",up:"骑士把某种能量带向外部世界，象征主动、追求与行动风格。它问你是否正在朝目标前进，也提醒你留意速度、方法与对他人的影响。",rev:"行动可能太急、太慢，或方向不够明确。检查自己是在认真推进，还是被冲动、焦虑或外界催促牵着走。"},
+{r:"Queen",cn:"王后",key:"内在掌握与滋养",up:"王后已经理解这组元素的语言，能够以成熟方式照料、判断与运用它。她提示你把能力落实在日常，也让自己拥有接收支持与表达需求的空间。",rev:"成熟的特质可能走向过度：照顾变成控制，敏感变成封闭，独立变成拒绝帮助。重新找回弹性，不必永远扮演最可靠的人。"},
+{r:"King",cn:"国王",key:"整合与担当",up:"国王象征对这组元素的成熟掌握，能够看见全局并承担影响。此牌鼓励你以稳定、清晰和负责任的方式做决定，同时记得权威应当服务于成长，而不是压制他人。",rev:"掌控可能变成僵硬，判断也可能受到自尊或恐惧影响。真正的成熟包括承认局限、听取反馈，并在必要时调整自己的立场。"}
 ];
-const deck=[...majors.map((c,i)=>({name:c[0],num:c[1],glyph:c[2],keywords:c[3],up:c[4],rev:c[5],major:true})),...suits.flatMap((s,si)=>s.cards.map((rank,i)=>{let num=i<10?["Ace","二","三","四","五","六","七","八","九","十"][i]:["侍从","骑士","王后","国王"][i-10];let themes=[["开端与潜能","平衡与规划","拓展与协作","稳定与基础","压力与冲突","进展与认可","坚持与考验","迅速行动","毅力与韧性","责任与负担","消息与灵感","探索与尝试","主动与热情","领导与远见"],["情感萌芽","选择与平衡","友谊与喜悦","情绪停滞","失落与接纳","温暖与回忆","想象与选择","离开与寻找","满足与感恩","情感圆满","直觉消息","浪漫与邀请","共情与倾听","成熟与包容"],["清晰与突破","选择与权衡","失望与疗愈","休息与恢复","冲突与立场","过渡与前行","策略与谨慎","限制与自省","焦虑与担忧","结束与释怀","观察与消息","行动与挑战","独立与洞察","理性与判断"],["资源与机会","合作与规划","技能与协作","安全与掌控","现实压力","给予与支持","耐心与成长","学习与精进","独立与丰盛","长期成果","学习与新计划","踏实与实践","务实与滋养","稳定与守护"]];return {name:s.name+"·"+num,num:String(i+1),glyph:s.symbol,keywords:themes[si][i],up:`这张牌强调${themes[si][i]}。${s.theme}是当前值得关注的方向。把目标拆解成可执行的小步骤，留意现实中的资源与反馈。`,rev:`这张牌提醒你重新审视${themes[si][i]}。${s.theme}方面可能存在尚未处理的顾虑或失衡。放慢节奏，确认自己的真实需求，再决定下一步。`,major:false,suit:s.name}}))];
-const spreads={one:{title:"单张指引",desc:"一张牌，照亮当下的方向",pos:["当下的指引"]},three:{title:"时间之流",desc:"从过去、现在到未来，观察事情的发展",pos:["过去 · 根源","现在 · 核心","未来 · 趋势"]},love:{title:"爱情关系",desc:"从自己、对方到关系本身，理解情感的流动",pos:["你的内心","对方的状态","你们之间的连接","关系中的阻碍","未来的发展趋势"]},cross:{title:"凯尔特十字",desc:"从现状、挑战到潜在影响，探索问题全貌",pos:["当前处境","面临的挑战","潜意识 · 深层动机","过去的影响","理想目标 · 显意识","近期发展","你自身的状态","外部环境","希望与恐惧","最终发展趋势"]}};
-let spread="one",picked=[],step=0,question="";
+const SPREADS={
+one:{title:"单张指引",desc:"一张牌，照见此刻最值得留意的主题。",positions:[["当下的核心","这张牌指出此刻最值得看见的主题与内在资源。"]]},
+three:{title:"时间之流",desc:"沿着过去、现在与未来趋势，观察事情如何走到此刻。",positions:[["过去 · 根源","它不只是回忆，也包括仍在影响现在的经验、选择与旧模式。"],["现在 · 核心","这是目前最鲜明的处境、态度或需要面对的课题。"],["未来 · 趋势","它呈现当前路径若持续发展，可能出现的方向；不是不可改变的定局。"]]},
+love:{title:"爱情关系",desc:"把自己、对方与关系放在同一张图景里，理解情感的流动。",positions:[["你的内心","你真正的感受、期待、顾虑，以及你在关系中的需要。"],["对方的状态","对方可能呈现的态度或处境；请结合实际行为验证，不把牌当作读心术。"],["关系的连接","你们之间正在形成的互动模式、吸引力与共同基础。"],["隐含的阻碍","尚未被充分表达的恐惧、误解、边界或现实压力。"],["关系的发展方向","如果双方维持目前的互动方式，关系可能呈现的趋势与需要的选择。"]]},
+cross:{title:"凯尔特十字",desc:"十个位置交织成一幅全景图，探索表层处境与深层动力。",positions:[["当前处境","问题此刻最核心的状态。"],["交叉挑战","正在阻碍、推动或考验你的力量。"],["潜意识 · 根基","深层需求、习惯或尚未意识到的动机。"],["过去影响","已经发生、但仍在塑造当下的经验。"],["显意识 · 目标","你希望抵达的方向，以及你正在关注的目标。"],["近期趋势","现有条件下较可能展开的下一阶段。"],["你的内在位置","你如何看待自己，以及你带入问题的态度。"],["外部环境","他人、环境与现实条件对局面的影响。"],["希望与恐惧","你渴望发生的事，以及你担心面对的部分。"],["整合趋势","把前面所有因素放在一起后，呈现的整体发展方向。"]]}
+};
+let spread="one",shuffled=[],drawn=[],step=0,question="";
 const $=id=>document.getElementById(id);
-document.querySelectorAll(".spread").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".spread").forEach(x=>x.classList.remove("active"));b.classList.add("active");spread=b.dataset.id}));
-function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function cardHTML(p,pos){return `<div class="tarot-card"><div class="face ${p.rev?"reversed":""}"><span class="glyph">${p.c.glyph}</span><span class="name">${p.c.name}</span></div><div class="cname">${p.c.name} · ${p.rev?"逆位":"正位"}</div><div class="position">${pos||""}</div></div>`}
-$("start").onclick=()=>{question=$("question").value.trim();picked=shuffle(deck).slice(0,spreads[spread].pos.length).map(c=>({c,rev:Math.random()<.28}));step=0;$("setup").classList.add("hidden");$("result").classList.add("hidden");$("draw").classList.remove("hidden");$("drawTitle").textContent=spreads[spread].title;$("drawDesc").textContent=spreads[spread].desc;$("drawn").innerHTML="";$("bar").style.width="0%";$("next").textContent="翻开第一张牌　✧";$("instruction").textContent="集中精神，翻开第一张牌";$("next").onclick=reveal};
-function reveal(){if(step>=picked.length)return;let p=picked[step];$("drawn").insertAdjacentHTML("beforeend",cardHTML(p,spreads[spread].pos[step]));step++;$("bar").style.width=step/picked.length*100+"%";$("instruction").textContent=step<picked.length?"请继续揭开下一张牌":"所有牌已经揭晓，准备查看解读";$("next").textContent=step<picked.length?"翻开下一张牌　✧":"查看完整解读　☾";if(step===picked.length)$("next").onclick=showResults}
-function showResults(){$("draw").classList.add("hidden");$("result").classList.remove("hidden");$("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 聆听内心的声音";$("allcards").innerHTML=picked.map((p,i)=>cardHTML(p,spreads[spread].pos[i])).join("");$("meanings").innerHTML=picked.map((p,i)=>{let c=p.c;return `<div class="reading"><div class="badge">CARD ${String(i+1).padStart(2,"0")} · ${spreads[spread].pos[i]}</div><h3>${c.name}　${p.rev?"逆位":"正位"}</h3><p><b>核心主题：</b>${c.keywords}${c.suit?" · "+c.suit:" · 大阿尔卡那"}</p><p>${p.rev?c.rev:c.up}</p><p>${p.rev?"逆位提示：先照顾内在感受，辨认阻碍，再决定是否调整方向。":"正位提示：可以顺着这份能量采取适度行动，同时保持对现实情况的观察。"}</p></div>`}).join("");let names=picked.map(p=>p.c.keywords.split("、")[0]);$("summary").textContent=`这组牌呈现的主题包括：${names.join("、")}。它们邀请你同时看见期待与现实：不必急着得到唯一答案，可以先厘清最重要的需求，选择一个温和而具体的行动。愿你带着清醒与善意，走向自己的下一步。`}
-$("next").onclick=reveal;$("again").onclick=()=>{$("result").classList.add("hidden");$("draw").classList.add("hidden");$("setup").classList.remove("hidden");$("next").onclick=reveal};
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1800)}
+function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function slug(s){return s.replace(/[^\w\u4e00-\u9fa5]/g,"")}
+function makeDeck(){
+ const minors=[];
+ for(const [suit,meta] of Object.entries(SUITS)){
+  RANKS.forEach((rank,i)=>{
+   const label=rank.r==="Ace"?"王牌":rank.cn;
+   const name=suit+" · "+label;
+   const up=rank.up+" 在"+suit+"的语境里，这份力量落在"+meta.focus+"之中。"+meta.gift+"，但它需要结合现实条件，而不是只凭愿望推动。";
+   const rev=rank.rev+" 放在"+suit+"的领域里，尤其要留意"+meta.shadow+"。"+meta.advice;
+   minors.push({id:suit+i,name,roman:rank.r==="Ace"?"A":rank.r==="Page"?"侍":rank.r==="Knight"?"骑":rank.r==="Queen"?"后":rank.r==="King"?"王":String(i+1),suit,element:meta.element,rank:rank.cn,keywords:rank.key+" · "+meta.focus.split("、").slice(0,2).join("、"),up,rev,advice:meta.advice,image:meta.focus,motif:meta.symbol,rankIndex:i+1,major:false});
+  });
+ }
+ const majors=MAJORS.map((m,i)=>({id:"major"+i,name:m.n,roman:m.r,keywords:m.k,up:m.up,rev:m.rev,advice:m.advice,image:m.image,motif:m.motif,major:true}));
+ return [...majors,...minors];
+}
+const FULL_DECK=makeDeck();
+function svgBack(){
+ return `<svg viewBox="0 0 120 180" aria-hidden="true"><defs><linearGradient id="backg" x2="1" y2="1"><stop stop-color="#68517d"/><stop offset="1" stop-color="#20172f"/></linearGradient></defs><rect x="2" y="2" width="116" height="176" rx="8" fill="url(#backg)" stroke="#e8ce9b" stroke-width="1.5"/><rect x="8" y="8" width="104" height="164" rx="5" fill="none" stroke="#e8ce9b" opacity=".7"/><rect x="14" y="14" width="92" height="152" rx="3" fill="none" stroke="#d9baf1" stroke-dasharray="2 4" opacity=".7"/><circle cx="60" cy="88" r="34" fill="none" stroke="#e8ce9b" opacity=".8"/><circle cx="60" cy="88" r="26" fill="none" stroke="#d9baf1" stroke-dasharray="2 4"/><path d="M58 87C37 42 17 53 31 81c8 15 17 18 29 14M62 87c21-45 41-34 27-6-8 15-17 18-29 14" fill="none" stroke="#f0dba9" stroke-width="2"/><path d="M60 61c-10 15-10 35 0 52 10-17 10-37 0-52Z" fill="#d6b4ed" stroke="#f0dba9"/><path d="M60 18v10M60 148v14M19 88h10M91 88h10M31 36l7 7M82 133l7 7M89 36l-7 7M38 133l-7 7" stroke="#e8ce9b" stroke-linecap="round"/><circle cx="60" cy="88" r="4" fill="#fff1ca"/></svg>`;
+}
+function motifSvg(motif,color){
+ const stroke=`stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
+ const motifs={
+  wand:`<path d="M150 116L150 258" ${stroke}/><path d="M150 139c-28-25-34-4-15 8M150 174c28-25 34-4 15 8M150 209c-28-25-34-4-15 8" ${stroke}/><path d="M150 103l-8 12h16Z" fill="${color}"/>`,
+  cup:`<path d="M122 135h56l-7 53c-3 19-39 19-42 0Z" ${stroke}/><path d="M150 207v30m-25 0h50M178 146h17c0 25-9 34-22 34M122 146h-17c0 25 9 34 22 34" ${stroke}/><path d="M150 117c-16-18 10-22 0-38" ${stroke}/>`,
+  sword:`<path d="M150 80l-15 125 15 20 15-20Z" fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="3"/><path d="M115 209h70M150 225v31m-13 0h26" ${stroke}/><path d="M150 80v-18" ${stroke}/>`,
+  coin:`<circle cx="150" cy="160" r="53" ${stroke}/><circle cx="150" cy="160" r="42" ${stroke}/><path d="M150 125l9 22 23 1-18 14 6 23-20-13-20 13 6-23-18-14 23-1Z" fill="${color}" fill-opacity=".25" stroke="${color}" stroke-width="2"/>`,
+  butterfly:`<path d="M150 155c-58-86-98-43-54 8 18 21 37 18 54 2 17 16 36 19 54-2 44-51 4-94-54-8Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><path d="M150 143v73m0-65c-14-24-22-22-27-33m27 33c14-24 22-22 27-33" ${stroke}/><circle cx="150" cy="141" r="7" fill="${color}"/>`,
+  moon:`<path d="M170 102c-49-13-78 41-49 78 20 26 56 21 72-3-41 7-59-45-23-75Z" fill="${color}" fill-opacity=".24" stroke="${color}" stroke-width="3"/><path d="M95 202l5 10 11 2-8 7 2 11-10-6-10 6 2-11-8-7 11-2Z" fill="${color}"/>`,
+  flower:`<g fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="2"><ellipse cx="150" cy="119" rx="17" ry="38"/><ellipse cx="150" cy="201" rx="17" ry="38"/><ellipse cx="109" cy="160" rx="38" ry="17"/><ellipse cx="191" cy="160" rx="38" ry="17"/><ellipse cx="121" cy="131" rx="17" ry="34" transform="rotate(-45 121 131)"/><ellipse cx="179" cy="189" rx="17" ry="34" transform="rotate(-45 179 189)"/><ellipse cx="179" cy="131" rx="17" ry="34" transform="rotate(45 179 131)"/><ellipse cx="121" cy="189" rx="17" ry="34" transform="rotate(45 121 189)"/></g><circle cx="150" cy="160" r="13" fill="${color}"/>`,
+  crown:`<path d="M105 202l12-72 32 34 32-34 14 72Z" ${stroke}/><path d="M113 214h74M119 185h62" ${stroke}/><circle cx="150" cy="151" r="8" fill="${color}"/>`,
+  book:`<path d="M150 125c-28-19-52-17-72-8v91c25-10 49-9 72 10 23-19 47-20 72-10v-91c-20-9-44-11-72 8Z" ${stroke}/><path d="M150 126v92M92 142c18-5 35-2 48 7m-48 14c18-5 35-2 48 7m68-28c-18-5-35-2-48 7m48 14c-18-5-35-2-48 7" ${stroke}/>`,
+  heart:`<path d="M150 215s-67-40-67-83c0-37 47-49 67-14 20-35 67-23 67 14 0 43-67 83-67 83Z" fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="3"/><path d="M150 105v112" stroke="${color}" opacity=".45"/>`,
+  chariot:`<path d="M103 190h94l-10 45h-74Z" ${stroke}/><circle cx="125" cy="241" r="12" ${stroke}/><circle cx="175" cy="241" r="12" ${stroke}/><path d="M150 95v93m-28-75h56l-28-25Z" ${stroke}/><path d="M111 110l-17-20m95 20 17-20" ${stroke}/>`,
+  lion:`<circle cx="150" cy="160" r="51" ${stroke}/><path d="M119 137l-13-25 29 8 15-18 15 18 29-8-13 25M132 161h1m34 0h1m-35 19c11 12 25 12 36 0" ${stroke}/><path d="M150 145v18m-11 6h22" ${stroke}/>`,
+  lantern:`<path d="M126 115h48l-6 88h-36Z" ${stroke}/><path d="M137 115V99c0-18 26-18 26 0v16m-26 88h26m-13-78c-19 25 17 30 0 53" ${stroke}/><path d="M105 160l-18 0m118 0h18M150 72V54" ${stroke}/>`,
+  wheel:`<circle cx="150" cy="160" r="62" ${stroke}/><circle cx="150" cy="160" r="14" ${stroke}/><path d="M150 98v48m0 28v48m-62-62h48m28 0h48m-106-44 34 34m36 36 34 34m0-104-34 34m-36 36-34 34" ${stroke}/>`,
+  scales:`<path d="M150 102v137m-42 0h84M112 125h76M150 102l-12-14h24Z" ${stroke}/><path d="M112 125l-24 45h48Zm64 0-24 45h48Z" ${stroke}/><path d="M88 170c6 16 42 16 48 0m16 0c6 16 42 16 48 0" ${stroke}/>`,
+  hanged:`<path d="M104 92h92m-46 0v34m-35-34v143m70-143v143" ${stroke}/><circle cx="150" cy="145" r="15" ${stroke}/><path d="M150 160v50m-23-32 23-18 23 18m-23 32-18 26m18-26 18 26" ${stroke}/>`,
+  moth:`<path d="M150 155c-48-65-78-30-49 17 16 25 34 20 49 3 15 17 33 22 49-3 29-47-1-82-49-17Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><path d="M150 151v72m-4-63-25-28m29 28 25-28" ${stroke}/><circle cx="150" cy="143" r="6" fill="${color}"/>`,
+  temperance:`<path d="M112 127h76l-9 52h-58Z" ${stroke}/><path d="M150 179v51m-28 0h56M128 137c-20 18 20 25 0 43m44-43c-20 18 20 25 0 43" ${stroke}/>`,
+  chains:`<circle cx="150" cy="160" r="38" ${stroke}/><path d="M112 160H86m128 0h-26M150 122V96m0 128v-26M125 135l-18-18m86 86-18-18m0-50 18-18m-86 86 18-18" ${stroke}/><path d="M139 149l22 22m0-22-22 22" ${stroke}/>`,
+  tower:`<path d="M112 226V122h76v104M104 122l46-35 46 35M126 122v-24m48 24v-24" ${stroke}/><path d="M140 154l-12 18 18 10-13 23m27-84 12-18-15-9" ${stroke}/><path d="M150 70l-12-22 23 12" ${stroke}/>`,
+  star:`<path d="M150 85l18 53 56 2-44 34 16 54-46-32-46 32 16-54-44-34 56-2Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><circle cx="150" cy="160" r="11" fill="${color}"/>`,
+  sun:`<circle cx="150" cy="160" r="39" ${stroke}/><circle cx="150" cy="160" r="25" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-width="2"/><path d="M150 93v-19m0 172v-19m67-67h19m-172 0h19m114-48 14-14m-122 122 14-14m94 0 14 14M99 99l14 14" ${stroke}/>`,
+  judgement:`<path d="M150 104v94m-32-70h64m-32-24-14-18h28Z" ${stroke}/><path d="M115 139l-23 35h46Zm70 0-23 35h46Z" ${stroke}/><path d="M150 198c-20 15-20 31 0 42 20-11 20-27 0-42Z" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-width="2"/>`,
+  world:`<ellipse cx="150" cy="160" rx="60" ry="78" ${stroke}/><circle cx="150" cy="160" r="30" ${stroke}/><path d="M150 130v60m-30-30h60m-45-21 30 42m0-42-30 42" ${stroke}/>`
+ };
+ return motifs[motif]||motifs.star;
+}
+function cardSVG(card){
+ const suit=card.suit?SUITS[card.suit]:null;
+ const colors=suit?suit.color:({butterfly:["#b38bce","#f1d9a7","#3b2b58"],moon:["#8d8dc4","#e9d6ae","#252544"],heart:["#d28ca9","#f0d7ad","#482b4b"],sun:["#d5a45f","#fff0b7","#51364b"],tower:["#a58bb9","#f0d19c","#302642"],star:["#88a9bd","#e8d6b2","#28394e"]}[card.motif]||["#aa91c8","#f0d8a4","#332747"]);
+ const [a,b,bg]=colors,uid="g"+slug(card.id);
+ const pipCount=card.major?0:Math.min(card.rankIndex||1,10);
+ const pips=card.major?"":(pipCount<=10?Array.from({length:pipCount},(_,i)=>{const side=i%2===0?37:263;const row=Math.floor(i/2);const yy=135+row*29;return `<g><circle cx="${side}" cy="${yy}" r="5" fill="${b}" fill-opacity=".2" stroke="${b}" stroke-width="1.2"/><path d="M${side} ${yy-3}l1.5 3 3 1-3 1.5-1.5 3-1.5-3-3-1.5 3-1Z" fill="${b}"/></g>`}).join(""):"");
+ const courtMark=!card.major&&card.rankIndex>10?`<path d="M39 292l7-13 7 13 7-13 7 13M233 292l7-13 7 13 7-13 7 13" fill="none" stroke="${b}" stroke-width="2"/>`:"";
+ const angel= `<g opacity=".95">
+ <path d="M137 245C93 191 64 188 58 211c-7 29 30 54 75 55M163 245c44-54 73-57 79-34 7 29-30 54-75 55" fill="${a}" fill-opacity=".24" stroke="${b}" stroke-width="2.4"/>
+ <path d="M132 210c-21-29-37-42-51-40 11 20 19 37 39 55m48-15c21-29 37-42 51-40-11 20-19 37-39 55" fill="none" stroke="${b}" stroke-width="1.3" opacity=".8"/>
+ <path d="M150 118c-17 0-26 13-25 30 1 16 11 27 25 27s24-11 25-27c1-17-8-30-25-30Z" fill="#e9c6b3" stroke="${b}" stroke-width="1.5"/>
+ <path d="M126 139c-3-25 11-39 26-39 17 0 28 16 22 40-7-9-12-20-14-26-7 12-19 21-34 25Z" fill="#4b355c" stroke="${b}" stroke-width="1.5"/>
+ <path d="M137 177c-7 14-17 30-20 59l33 19 33-19c-3-29-13-45-20-59-9 8-17 8-26 0Z" fill="${a}" stroke="${b}" stroke-width="2"/>
+ <path d="M117 231c-20 27-22 54-11 73 17 10 61 10 88 0 11-19 9-46-11-73l-33 24Z" fill="${bg}" stroke="${b}" stroke-width="2"/>
+ <path d="M150 256v47m-18-38 18 17 18-17" fill="none" stroke="${b}" stroke-width="1.4" opacity=".9"/>
+ <path d="M130 122c5-27 35-31 47-7" fill="none" stroke="${b}" stroke-width="2"/>
+ <ellipse cx="150" cy="112" rx="34" ry="10" fill="none" stroke="${b}" stroke-width="2"/>
+ </g>`;
+ const ornament=Array.from({length:12},(_,i)=>{let angle=i*Math.PI/6,x=150+Math.cos(angle)*116,y=205+Math.sin(angle)*150;return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.2" fill="${b}" opacity=".8"/>`}).join("");
+ const stars=`<g fill="${b}" opacity=".8"><path d="M49 82l3 8 8 3-8 3-3 8-3-8-8-3 8-3Zm203 24 2 6 6 2-6 2-2 6-2-6-6-2 6-2ZM58 306l3 7 7 3-7 3-3 7-3-7-7-3 7-3Zm184-12 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/></g>`;
+ return `<svg viewBox="0 0 300 440" role="img" aria-label="${safe(card.name)} 塔罗牌插画">
+ <defs><linearGradient id="${uid}bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${bg}"/><stop offset=".55" stop-color="${a}" stop-opacity=".48"/><stop offset="1" stop-color="#171126"/></linearGradient><radialGradient id="${uid}halo"><stop stop-color="${b}" stop-opacity=".5"/><stop offset="1" stop-color="${b}" stop-opacity="0"/></radialGradient></defs>
+ <rect width="300" height="440" fill="url(#${uid}bg)"/><circle cx="150" cy="180" r="116" fill="url(#${uid}halo)"/>
+ <rect x="8" y="8" width="284" height="424" rx="8" fill="none" stroke="${b}" stroke-width="2"/><rect x="15" y="15" width="270" height="410" rx="5" fill="none" stroke="${b}" stroke-width=".8" opacity=".7"/>
+ <path d="M27 58Q150 22 273 58M27 378Q150 414 273 378" stroke="${b}" fill="none" opacity=".55"/>
+ ${stars}${ornament}
+ <circle cx="150" cy="185" r="91" fill="none" stroke="${b}" stroke-width="1.4" opacity=".55"/><circle cx="150" cy="185" r="82" fill="none" stroke="${b}" stroke-dasharray="2 6" opacity=".6"/>
+ ${angel}
+ ${pips}${courtMark}
+ <g transform="translate(0 4)">${motifSvg(card.motif,b)}</g>
+ <path d="M32 342h236" stroke="${b}" opacity=".6"/><text x="150" y="33" fill="${b}" text-anchor="middle" font-size="11" letter-spacing="4" font-family="Georgia,serif">${safe(card.roman||"✧")}</text>
+ <text x="150" y="369" fill="#fff2d8" text-anchor="middle" font-size="${card.name.length>8?13:16}" letter-spacing="2" font-family="Georgia,'Noto Serif SC',serif">${safe(card.name)}</text>
+ <text x="150" y="393" fill="${b}" text-anchor="middle" font-size="8" letter-spacing="2" font-family="Arial,sans-serif">${card.major?"MAJOR ARCANA":safe(card.suit.toUpperCase())+" · "+safe(card.element)}</text>
+ <path d="M135 408l15-8 15 8-15 8Z" fill="none" stroke="${b}" opacity=".7"/>
+ </svg>`;
+}
+function shuffleArray(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function cardBackMini(){return svgBack()}
+function cardNode(item,pos,delay=0){
+ const c=item.card,orientation=item.reversed?"reversed":"";
+ return `<div class="tarot-card" style="animation-delay:${delay}ms"><div class="card-face ${orientation}">${cardSVG(c)}</div><div class="card-caption">${safe(c.name)} · ${item.reversed?"逆位":"正位"}</div><div class="card-position">${safe(pos)}</div></div>`;
+}
+function showSection(id){["setup","ritual","draw","result"].forEach(x=>$(x).classList.toggle("hidden",x!==id));window.scrollTo({top:0,behavior:"smooth"})}
+function renderAmbient(){const a=$("ambient");for(let i=0;i<35;i++){const s=document.createElement("i");s.className="spark";s.style.left=Math.random()*100+"%";s.style.top=(25+Math.random()*75)+"%";s.style.setProperty("--dur",(5+Math.random()*9)+"s");s.style.setProperty("--dx",(Math.random()*60-30)+"px");s.style.animationDelay=(-Math.random()*10)+"s";a.appendChild(s)}}
+function buildSlots(){
+ const positions=SPREADS[spread].positions;
+ $("slots").innerHTML=positions.map((p,i)=>`<div class="slot" id="slot${i}"><div class="slot-frame"><span class="slot-num">${String(i+1).padStart(2,"0")}</span><span class="slot-label">${safe(p[0])}</span></div><div class="slot-name">${safe(p[0])}</div></div>`).join("");
+}
+function buildPickDeck(){
+ const count=window.innerWidth<480?12:18;
+ $("pickDeck").innerHTML=Array.from({length:count},(_,i)=>`<button class="pick-card" type="button" aria-label="选择第 ${i+1} 张牌">${svgBack()}</button>`).join("");
+ $("pickDeck").querySelectorAll(".pick-card").forEach((btn,i)=>btn.addEventListener("click",()=>pickCard(btn,i)));
+}
+function pickCard(btn,index){
+ if(step>=SPREADS[spread].positions.length||btn.disabled)return;
+ btn.disabled=true;
+ const c=shuffled[step],item={card:c,reversed:Math.random()<.27};
+ drawn.push(item);
+ const pos=SPREADS[spread].positions[step][0];
+ const slot=$("slot"+step);slot.classList.add("filled");
+ slot.querySelector(".slot-frame").innerHTML=cardNode(item,pos);
+ $("drawBar").style.width=(drawn.length/SPREADS[spread].positions.length*100)+"%";
+ step++;
+ if(step<SPREADS[spread].positions.length){
+  $("pickInstruction").textContent=`第 ${step+1} 张：${SPREADS[spread].positions[step][0]}。继续凭直觉选择一张牌。`;
+  $("pickNote").textContent="每一次选择都只揭开下一张牌。慢慢来，不必急。";
+ }else{
+  $("pickInstruction").textContent="所有牌都已揭开。你可以准备阅读这组牌的完整讯息。";
+  $("pickNote").textContent="牌阵已经完成。请留意每张牌之间的呼应，而不只是单张牌义。";
+  $("pickDeck").querySelectorAll("button").forEach(b=>b.disabled=true);
+  $("readNow").classList.remove("hidden");
+ }
+}
+function beginReading(){
+ question=$("question").value.trim();spread=document.querySelector(".spread.active").dataset.id;
+ shuffled=shuffleArray(FULL_DECK);drawn=[];step=0;
+ showSection("ritual");$("orb").classList.add("shuffling");$("ritualTitle").textContent="正在洗牌";$("ritualText").textContent="让问题停留在心里，牌正在重新排列。";$("ritualBar").style.width="0%";$("cutDeck").classList.add("hidden");
+ let n=0;const timer=setInterval(()=>{n++;$("ritualBar").style.width=Math.min(100,n*14)+"%";if(n>=7){clearInterval(timer);$("orb").classList.remove("shuffling");$("ritualTitle").textContent="牌已经洗匀";$("ritualText").textContent="想象自己轻轻切开牌堆。准备好后，开始选择你的牌。";$("cutDeck").classList.remove("hidden")}},220);
+}
+function startDraw(){
+ showSection("draw");$("drawTitle").textContent=SPREADS[spread].title;$("drawDesc").textContent=SPREADS[spread].desc;$("drawBar").style.width="0%";$("pickInstruction").textContent=`第 1 张：${SPREADS[spread].positions[0][0]}。请点击一张牌背。`;$("readNow").classList.add("hidden");buildSlots();buildPickDeck();
+}
+function suitCounts(){
+ const counts={"权杖":0,"圣杯":0,"宝剑":0,"星币":0};drawn.forEach(x=>{if(x.card.suit)counts[x.card.suit]++});return counts;
+}
+function questionLens(){
+ const q=question.trim();
+ if(!q)return "没有写下具体问题也没有关系。你可以把这组牌当作对当下状态的一次开放式观察，留意最有共鸣的那张牌。";
+ if(/感情|恋爱|关系|喜欢|暧昧|分手|婚姻|伴侣|爱情/.test(q))return "围绕这段关系，牌面更适合帮助你观察双方的表达、需求、边界与实际互动。它无法替你确认另一个人的内心，请把任何推测与对方真实而持续的行为核对。";
+ if(/工作|事业|职业|实习|求职|职场|老板|同事/.test(q))return "放在工作与事业的语境里，这组牌可以帮助你梳理目标、资源、协作关系与长期节奏。除了机会，也请留意现实条件、职责边界和可持续性。";
+ if(/学业|考试|论文|学习|学校|研究|毕业|课程/.test(q))return "放在学习与学业的语境里，重点可能是方法、专注、压力管理与阶段性目标。与其只问结果，不如看清下一步最值得投入的能力和时间。";
+ if(/钱|财务|收入|投资|金钱|消费|预算|存款/.test(q))return "涉及金钱与资源时，请把牌面当作整理风险意识与价值取舍的提示，而不是投资或财务预测。实际决定应以可靠数据、预算和专业意见为基础。";
+ if(/选择|决定|要不要|是否|怎么办|该不该/.test(q))return "如果你正站在选择面前，这组牌可以帮助你辨认每条路背后的需要、代价与价值观。它不替你做决定，而是让决定变得更清楚。";
+ return "结合你提出的问题，建议先区分已经确认的事实、你此刻的感受，以及仍需要进一步了解的部分。牌面提供的是观察角度，真正有用的答案还要回到现实行动与反馈中。";
+}
+function overallText(){
+ const major=drawn.filter(x=>x.card.major).length,rev=drawn.filter(x=>x.reversed).length,counts=suitCounts();
+ const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0],low=Object.entries(counts).sort((a,b)=>a[1]-b[1])[0];
+ let p1=major>=4?"这组牌中大阿尔卡那占比很高，说明你问到的可能不只是某个短期事件，而是一段更深的成长课题、价值选择或人生阶段。它值得被认真对待，但不代表结果已经被命定。":major>=2?"大阿尔卡那与小阿尔卡那同时出现，像是提醒你：眼前的具体事件背后，也有更深层的态度与选择正在形成。既要处理现实细节，也要留意这件事正在教会你的东西。":"这组牌以小阿尔卡那为主，焦点更靠近日常互动、行动方式与现实选择。改变未必需要戏剧性的转折，持续而具体的小调整同样重要。";
+ let p2=rev>=Math.ceil(drawn.length*.55)?"逆位较多，提示目前有些能量尚未顺畅表达。它们可能指向内在顾虑、延迟、尚未说清的需求，或需要重新调整的旧习惯；不必把逆位理解成坏结果。":rev>0?"正逆位交错，呈现出机会与顾虑并存的状态。你并非完全没有选择，只是需要分辨哪些部分可以主动推进，哪些部分仍需要时间与澄清。":"牌面全部以正位出现，整体表达较为直接。它更像是在强调可被看见、可付诸行动的资源，但仍需要现实中的投入与判断。";
+ let focus=top[1]>=2?`四个花色中，${top[0]}的能量最突出。它对应${SUITS[top[0]].focus}，说明这次问题很可能需要优先从这个领域理解。`:"四个花色分布较平均，说明这件事牵涉多个层面，不能只用单一角度解释。";
+ let missing=low[1]===0?`这组牌没有出现${low[0]}，它所代表的${SUITS[low[0]].focus}或许尚未被充分纳入考虑。可以问问自己：我是否忽略了这一面？`:"";
+ return `<div class="reading"><div class="badge">THE OVERALL WEATHER · 整体气候</div><h3>这组牌共同呈现的底色</h3><p>${p1}</p><p>${p2}</p><p>${focus}${missing}</p><p><b style="color:#e9d3a5">回到你的问题：</b>${safe(questionLens())}</p><div class="suit-meter">${Object.entries(counts).map(([s,n])=>`<span class="suit-chip">${s} ${n} 张 · ${SUITS[s].element}</span>`).join("")}<span class="suit-chip">大阿尔卡那 ${major} 张</span><span class="suit-chip">逆位 ${rev} 张</span></div></div>`;
+}
+function positionNarrative(pos,idx){
+ const name=pos[0];
+ const map={
+ "过去 · 根源":"把它看作一段仍在回响的经验，而不是已经写死的命运。它说明你为什么会走到今天，也提示哪些旧反应可能需要更新。",
+ "现在 · 核心":"这是当下最需要诚实面对的部分。与其急着问结果，不如先看清自己正在怎样参与这件事。",
+ "未来 · 趋势":"这张牌描述的是当前路径的延伸。如果你希望趋势改变，最有影响力的往往是现在能够调整的沟通、选择与行动。",
+ "你的内心":"它帮助你辨认自己的真实需求。请把“我希望对方怎样”与“我在这段关系里需要什么”分开看。",
+ "对方的状态":"这不是对对方内心的确定判断，而是一个观察角度。请把牌面提示与对方实际表达、持续行为放在一起验证。",
+ "你们之间的连接":"关系不是单方面的感觉，而是两个人反复形成的互动。观察彼此是否能够回应、修复与共同承担。",
+ "关系中的阻碍":"阻碍未必意味着没有感情，也可能是时机、表达方式、边界或现实条件尚未协调。",
+ "未来的发展趋势":"这张牌不是保证某种结局，而是展示目前互动模式可能延伸出的方向。双方的选择仍会改变它。",
+ "当前处境":"先承认事情现在是什么样子，不急着美化或否定。清楚描述现状，是所有有效调整的起点。",
+ "面临的挑战":"挑战的位置不只是坏消息，也可能是推动你改变策略的力量。看看它要求你学会什么，而不只是想办法绕开。",
+ "潜意识 · 深层动机":"这张牌可能触及你尚未充分表达的渴望、担忧或熟悉的应对模式。给它一点空间，但不要急着给自己贴标签。",
+ "过去的影响":"过去提供了背景，却不必决定未来。辨认哪些经验仍有价值，哪些反应已经不再适合现在。",
+ "理想目标 · 显意识":"这是你清楚意识到、希望抵达的方向。也可以检查：这个目标真的是你想要的，还是来自外界期待？",
+ "近期发展":"它呈现当前条件下较容易展开的下一步。把它当作观察和准备的线索，而不是不可更改的预言。",
+ "你自身的状态":"这张牌邀请你观察自己带入问题的态度、优势与盲点。你可以调整自己的参与方式，而不必控制所有人。",
+ "外部环境":"外界确实会影响局面，但它不等于你完全无能为力。分清环境限制与可争取的空间。",
+ "希望与恐惧":"愿望和担心有时来自同一个地方：你很在乎这件事。先承认情绪，再决定怎样照顾它。",
+ "最终发展趋势":"把它理解为整组牌的综合走向，而非绝对结局。前面的位置已经告诉你，哪些选择会影响这条路径。"
+ };
+ return map[name]||"这张牌在此处补充了整组牌的另一个层面。结合它前后的牌来看，重点不是孤立地判断好坏，而是理解它如何参与整体变化。";
+}
+function interpretItem(item,pos,idx){
+ const c=item.card,reverse=item.reversed,meaning=reverse?c.rev:c.up;
+ const orientation=reverse?"逆位":"正位";
+ const intro=`在「${pos[0]}」的位置上，${c.name} ${orientation}并不是孤立的一句牌义。${positionNarrative(pos,idx)}`;
+ const image=c.image?`牌面意象：${c.image}。这些象征提醒你把注意力放回到${c.keywords||c.suit+"的能量"}。`:"";
+ const prompt=reverse?"可以问问自己：我正在回避哪一个需要被看见的部分？如果不急着做决定，我还需要确认什么？":"可以问问自己：这张牌指出的资源，我现在可以怎样在现实里使用？哪一个小行动最能回应它？";
+ const advice=c.advice||SUITS[c.suit].advice;
+ return `<div class="reading"><div class="badge">CARD ${String(idx+1).padStart(2,"0")} · ${safe(pos[0])}</div><h3>${safe(c.name)}　<span style="font-size:12px;color:#c9b8d8">${orientation}</span></h3><p><b style="color:#e9d3a5">核心主题：</b>${safe(c.keywords)}</p><p>${safe(intro)}</p><p>${safe(meaning)}</p><p>${safe(image)}</p><p><b style="color:#e9d3a5">给你的行动建议：</b>${safe(advice)}</p><p class="prompt">${safe(prompt)}</p></div>`;
+}
+function connectionsText(){
+ const names=drawn.map(x=>x.card.name),positions=SPREADS[spread].positions;
+ let pairs=[];
+ for(let i=0;i<drawn.length-1;i++){
+  const a=drawn[i].card,b=drawn[i+1].card;
+  const shared=a.suit&&a.suit===b.suit?`两张${a.suit}连续出现，强化了${SUITS[a.suit].focus}这一主题。`:"";
+  const contrast=a.suit&&b.suit&&a.suit!==b.suit?`从${a.suit}的${SUITS[a.suit].element}元素转向${b.suit}的${SUITS[b.suit].element}元素，像是从${SUITS[a.suit].focus.split("、").slice(0,2).join("与")}转向${SUITS[b.suit].focus.split("、").slice(0,2).join("与")}，提醒你转换观察角度。`:"";
+  if(shared||contrast)pairs.push(shared+contrast);
+ }
+ let base=spread==="three"?`时间之流的重点在于变化：过去的「${names[0]}」提供背景，现在的「${names[1]}」指出核心，未来位置的「${names[2]}」则显示当前路径可能延伸的方向。三张牌不是三个互不相干的结论，而是一段连续的过程。`:
+ spread==="love"?`关系牌阵里，你的位置是「${names[0]}」，对方状态的位置是「${names[1]}」，两者之间的连接由「${names[2]}」呈现；阻碍与趋势分别落在「${names[3]}」和「${names[4]}」。这提醒你既要照顾自己的感受，也要观察双方是否有真实、持续的互动。`:
+ spread==="cross"?`凯尔特十字中，现状「${names[0]}」与挑战「${names[1]}」构成眼前的主轴；深层根基「${names[2]}」和过去影响「${names[3]}」解释了它如何形成。目标「${names[4]}」与近期趋势「${names[5]}」呈现你想去的方向和可能的下一步，后四张则把个人状态、外部环境、希望恐惧与整体趋势补充完整。`:
+ `单张牌「${names[0]}」是这次抽牌的中心象征。它值得慢慢体会，不必急着把它翻译成一个简单的“好”或“不好”。`;
+ const relation=pairs.length?pairs.slice(0,3).join(""):"这组牌的花色与象征没有形成特别强烈的重复，反而提醒你不要只抓住一个关键词。各张牌分别照见不同层面，理解它们的先后与位置，比单独寻找吉凶更有帮助。";
+ return `<div class="reading"><div class="badge">THE CONVERSATION · 牌与牌之间</div><h3>把它们放在一起看</h3><p>${safe(base)}</p><p>${safe(relation)}</p><p>这组牌更适合被看成一张“当下状态地图”：它指出值得留意的主题，却没有替你取消选择。你可以回到问题本身，看看哪一张牌最让你停顿，那里往往有值得进一步探索的线索。</p></div>`;
+}
+function actionText(){
+ const lead=drawn[drawn.length-1].card;
+ const suitAdvice=lead.suit?SUITS[lead.suit].advice:lead.advice;
+ const steps=[
+ "先写下目前已经确认的事实，以及仍然不确定的部分。不要让猜测冒充证据。",
+ "选择一个在 24 至 72 小时内可以完成的小行动，让思考开始落地。",
+ "为自己设一个复盘时间，观察行动后的真实反馈，再决定是否调整方向。"
+ ];
+ return `<div class="analysis-grid"><div class="insight"><h4>现在可以做的第一件事</h4><p>${safe(lead.advice||suitAdvice)} 不需要一次解决全部问题，先完成最小而真实的一步。</p></div><div class="insight"><h4>值得留意的盲点</h4><p>${safe(drawn.some(x=>x.reversed)?"牌中出现逆位，提醒你留意尚未说清、尚未准备好或需要重新调整的部分。不要因此否定自己。":"即使牌面整体较顺，也要避免把希望当成保证。持续观察现实反馈，给计划留出修正空间。")}</p></div><div class="insight"><h4>给自己的三个小步骤</h4><p>① ${safe(steps[0])}<br>② ${safe(steps[1])}<br>③ ${safe(steps[2])}</p></div><div class="insight"><h4>这次占卜可以带走的问题</h4><p>如果不急着知道最终结果，我现在最需要理解的是什么？我可以怎样在尊重自己与现实的前提下，做出下一步选择？</p></div></div>`;
+}
+function showResults(){
+ showSection("result");
+ $("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 留给内心的一次探索";
+ $("allcards").innerHTML=drawn.map((x,i)=>cardNode(x,SPREADS[spread].positions[i][0],i*70)).join("");
+ $("overall").innerHTML=overallText();
+ $("meanings").innerHTML=drawn.map((x,i)=>interpretItem(x,SPREADS[spread].positions[i],i)).join("");
+ $("connections").innerHTML=connectionsText();
+ $("actions").innerHTML=actionText();
+ const major=drawn.filter(x=>x.card.major).length;
+ const rev=drawn.filter(x=>x.reversed).length;
+ $("summary").textContent=`愿你把这次抽牌当作一面温柔而诚实的镜子。它呈现了${major?` ${major} 张大阿尔卡那所指向的深层课题，以及`:""}${rev?`${rev} 张逆位所提示的调整空间`:"牌面中可以运用的行动资源"}。不必急着把每一张牌都变成答案；有些理解会在你真正生活、沟通和行动之后慢慢清晰。你始终拥有重新选择的能力。`;
+}
+document.querySelectorAll(".spread").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".spread").forEach(x=>x.classList.remove("active"));b.classList.add("active")}));
+$("begin").addEventListener("click",beginReading);
+$("cutDeck").addEventListener("click",startDraw);
+$("readNow").addEventListener("click",showResults);
+$("again").addEventListener("click",()=>{drawn=[];question="";$("question").value="";showSection("setup")});
+renderAmbient();
 </script>
 </body></html>
