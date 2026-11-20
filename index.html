@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#171126">
-<title>Celestia 3.0 · 天使秘境</title>
+<title>Celestia 3.1.1 · 天使秘境</title>
 <style>
 :root{--night:#171126;--violet:#302044;--plum:#49345f;--lav:#d9c0f4;--gold:#e8ce9b;--cream:#fff5df;--muted:#c8b8d9;--line:#dfc58b66}
 *{box-sizing:border-box}
@@ -274,6 +274,69 @@ footer a:hover{color:#f1d6a4}
 }
 @media(prefers-reduced-motion:reduce){.hero-emblem,.hero-orbit,.hero-stars,.scroll-cue span{animation:none!important}}
 </style>
+
+<style>
+/* Celestia 3.1 — one opening cover, lateral scene transitions, sacred reveal */
+body.reading-mode header.grand-hero{display:none}
+body.reading-mode main{padding-top:22px}
+.scene-push-next{animation:scenePushNext .78s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%}
+.scene-push-prev{animation:scenePushPrev .78s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%}
+@keyframes scenePushNext{0%{opacity:0;transform:translateX(110px) scale(.96);filter:blur(12px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes scenePushPrev{0%{opacity:0;transform:translateX(-110px) scale(.96);filter:blur(12px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateX(0) scale(1)}}
+.scene-push-next:before,.scene-push-prev:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;background:linear-gradient(90deg,transparent,#e5c7ff22,transparent);animation:lightSweep .85s ease-out both}
+@keyframes lightSweep{0%{transform:translateX(-120%);opacity:0}25%{opacity:1}100%{transform:translateX(120%);opacity:0}}
+.selected-back{height:100%;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;animation:backSettle .5s cubic-bezier(.2,.8,.2,1) both}
+.selected-back svg{height:calc(100% - 24px);width:auto;max-width:88%;filter:drop-shadow(0 8px 14px #080511aa)}
+.selected-back span{font:9px Arial,sans-serif;letter-spacing:2px;color:#f0d8a7}
+.slot.still-hidden .slot-frame{background:radial-gradient(ellipse,#9e79c522,transparent 72%),#ffffff06;border:1px solid #e8ce9b88;box-shadow:0 0 22px #cda4f322,inset 0 0 30px #e1c0ff0e}
+@keyframes backSettle{from{opacity:0;transform:translateY(16px) rotateY(35deg) scale(.9)}to{opacity:1;transform:none}}
+#readNow{margin-top:20px;animation:revealButtonPulse 2.4s ease-in-out infinite}
+@keyframes revealButtonPulse{0%,100%{box-shadow:0 8px 28px #0a0614,0 0 20px #cba4ed35}50%{box-shadow:0 8px 28px #0a0614,0 0 42px #f0d6a277}}
+.reveal-bloom .slot.filled .card-face{animation:cardFlipReveal 1.05s cubic-bezier(.16,1,.3,1) both}
+@keyframes cardFlipReveal{0%{opacity:0;transform:rotateY(90deg) scale(.8);filter:brightness(2) blur(5px)}55%{opacity:1;filter:brightness(1.4) blur(0)}100%{opacity:1;transform:rotateY(0) scale(1);filter:brightness(1)}}
+.pro-reading{padding:clamp(20px,3vw,30px)}
+.pro-card-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid #e8ce9b33;padding-bottom:13px;margin-bottom:14px}
+.pro-card-heading h3{margin:0;font-size:21px;letter-spacing:3px}
+.orientation-tag{font:10px Arial,sans-serif;color:#cbb5df;letter-spacing:2px;margin-top:8px}
+.mini-glyph{width:42px;height:42px;border:1px solid #e8ce9b88;border-radius:50%;display:grid;place-items:center;color:#f2d59c;font-size:22px;box-shadow:0 0 20px #d7b4f333}
+.meaning-layer{padding:13px 0;border-bottom:1px solid #e8ce9b22}
+.meaning-layer:last-child{border-bottom:0}
+.layer-label{font:10px Arial,sans-serif;letter-spacing:2px;color:#d8b8ed;margin-bottom:9px}
+.keyword-line{color:#f3d9a5!important;letter-spacing:1px}
+.symbolic-layer{background:linear-gradient(90deg,#b68fdf0c,transparent);padding:17px 15px;margin:6px -15px;border-left:2px solid #c9a3e7}
+.advice-layer{padding-bottom:0}
+.chibi-oracle{width:112px;margin:12px auto 3px;text-align:center;filter:drop-shadow(0 8px 14px #08051177);animation:chibiFloat 3.6s ease-in-out infinite}
+.chibi-oracle svg{width:100%;display:block;overflow:visible}
+.chibi-oracle span{font:9px Arial,sans-serif;letter-spacing:2px;color:#e7d3f1}
+@keyframes chibiFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+.verdict-card{isolation:isolate}
+@media(max-width:600px){.pro-card-heading h3{font-size:18px}.chibi-oracle{width:94px}.selected-back span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.scene-push-next,.scene-push-prev,.scene-push-next:before,.scene-push-prev:before,.chibi-oracle,#readNow{animation:none!important}}
+</style>
+
+<style>
+.traditional-note{
+ margin:14px 0 18px;
+ padding:14px 17px;
+ border:1px solid #d8b7eb55;
+ border-left:3px solid #e8ce9b;
+ border-radius:12px;
+ background:linear-gradient(110deg,#c7a4e817,#ffffff05);
+}
+.traditional-label{
+ margin-bottom:9px;
+ color:#e8ce9b;
+ font-size:10px;
+ letter-spacing:2px;
+}
+.traditional-note p{
+ margin:5px 0;
+ color:#d9cce5;
+ font-size:12px;
+ line-height:1.85;
+}
+.traditional-note b{color:#f1d9ad;font-weight:600}
+</style>
 </head>
 <body>
 <div id="ambient" aria-hidden="true"></div>
@@ -358,7 +421,7 @@ footer a:hover{color:#f1d6a4}
  </div>
 </section>
 </main>
-<footer>CELESTIA · FOLLOW THE LIGHT WITHIN YOU<br><span id="artStatus">正在唤醒经典牌面…</span><br><a href="https://tarostarot.com/tarot-card-data" target="_blank" rel="noopener">Tarot card data by Taro's Tarot · CC BY 4.0</a> · 1909 Rider–Waite–Smith artwork</footer>
+<footer>CELESTIA 3.1 · FOLLOW THE LIGHT WITHIN YOU<br><span id="artStatus">正在唤醒经典牌面…</span><br><a href="https://tarostarot.com/tarot-card-data" target="_blank" rel="noopener">Tarot card data by Taro's Tarot · CC BY 4.0</a> · 1909 Rider–Waite–Smith artwork</footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -512,41 +575,72 @@ function cardBackMini(){return svgBack()}
 function cardNode(item,pos,delay=0){
  const c=item.card,orientation=item.reversed?"reversed":"";
  const face=c.artImage
-   ? `<img src="${safe(c.artImage)}" alt="${safe(c.name)}" loading="lazy" referrerpolicy="no-referrer">`
+   ? `<img data-card-id="${safe(c.id)}" src="${safe(c.artImage)}" alt="${safe(c.name)}" loading="eager" decoding="async">`
    : cardSVG(c);
  return `<div class="tarot-card" style="animation-delay:${delay}ms"><div class="card-face ${orientation}"><div class="card-art">${face}<div class="art-frame"></div><div class="art-caption">${safe(c.name)}</div></div></div><div class="card-caption">${safe(c.name)} · ${item.reversed?"逆位":"正位"}</div><div class="card-position">${safe(pos)}</div></div>`;
 }
 
 const TAROT_DATA_URL="https://tarostarot.com/tarot-card-data/tarot-cards.json";
 const SUIT_EN={"权杖":"wands","圣杯":"cups","宝剑":"swords","星币":"pentacles"};
+let artworkPromise=null;
 async function loadClassicArtwork(){
  try{
-  const response=await fetch(TAROT_DATA_URL,{cache:"force-cache"});
-  if(!response.ok)throw new Error("card data unavailable");
+  const response=await fetch(TAROT_DATA_URL,{cache:"force-cache",mode:"cors"});
+  if(!response.ok)throw new Error("HTTP "+response.status);
   const payload=await response.json();
-  const records=payload.cards||[];
+  const records=Array.isArray(payload)?payload:(payload.cards||payload.data||[]);
+  if(!records.length)throw new Error("empty card data");
+  let matched=0;
   for(const c of FULL_DECK){
-   let match;
-   if(c.major)match=records.find(x=>x.arcana==="major"&&x.number===Number(c.id.replace("major","")));
-   else match=records.find(x=>x.arcana==="minor"&&x.suit===SUIT_EN[c.suit]&&x.number===c.rankIndex);
-   if(match){c.artImage=match.image;c.yesNo=match.yes_no;c.sourceName=match.name;}
+   const record=records.find(x=>{
+    if(c.major)return x.arcana==="major"&&Number(x.number)===Number(c.id.replace("major",""));
+    return x.arcana==="minor"&&(x.suit||"").toLowerCase()===SUIT_EN[c.suit]&&Number(x.number)===Number(c.rankIndex);
+   });
+   if(record){
+    if(typeof record.image==="string"&&record.image.startsWith("https://"))c.artImage=record.image;
+    if(record.yes_no)c.yesNo=record.yes_no;
+    if(Array.isArray(record.keywords))c.standardKeywords=record.keywords;
+    if(record.upright)c.standardUp=record.upright;
+    if(record.reversed)c.standardRev=record.reversed;
+    c.sourceName=record.name;
+    matched++;
+   }
   }
-  document.body.classList.add("classic-art-ready");
-  $("artStatus").textContent="78 張經典牌面已就位";
+  if(matched<70)throw new Error("matched only "+matched+" cards");
+  $("artStatus").textContent="经典牌图已连接 · "+matched+"/78";
  }catch(e){
-  $("artStatus").textContent="經典牌面暫時無法載入，將使用內建牌面";
+  $("artStatus").textContent="外部牌图暂不可用 · 已启用内置原创牌面";
  }
 }
-
+function ensureArtwork(){
+ if(!artworkPromise)artworkPromise=loadClassicArtwork();
+ return artworkPromise;
+}
+function attachImageFallback(root){
+ root.querySelectorAll("img[data-card-id]").forEach(img=>{
+  img.addEventListener("error",()=>{
+   const card=FULL_DECK.find(c=>c.id===img.dataset.cardId);
+   if(!card)return;
+   const holder=document.createElement("div");
+   holder.innerHTML=cardSVG(card);
+   img.replaceWith(holder.firstElementChild);
+   $("artStatus").textContent="部分外部牌图无法加载 · 已自动切换内置牌面";
+  },{once:true});
+ });
+}
 function showSection(id){
  const order=["setup","ritual","draw","result"];
- const current=order.find(x=>!$(x).classList.contains("hidden"));
+ const current=order.find(x=>!$(x).classList.contains("hidden"))||"setup";
+ const from=order.indexOf(current),to=order.indexOf(id);
  const target=$(id);
- target.classList.remove("hidden","scene-enter");
+ if(id==="setup") document.body.classList.remove("reading-mode");
+ else document.body.classList.add("reading-mode");
+ target.classList.remove("hidden","scene-push-next","scene-push-prev");
  void target.offsetWidth;
- target.classList.add("scene-enter");
+ target.classList.add(to>=from?"scene-push-next":"scene-push-prev");
  order.filter(x=>x!==id).forEach(x=>$(x).classList.add("hidden"));
- window.scrollTo({top:0,behavior:"smooth"});
+ const y=id==="setup"?0:Math.max(0,$("setup").getBoundingClientRect().top+window.scrollY-12);
+ window.scrollTo({top:y,behavior:"smooth"});
 }
 function renderAmbient(){const a=$("ambient");for(let i=0;i<35;i++){const s=document.createElement("i");s.className="spark";s.style.left=Math.random()*100+"%";s.style.top=(25+Math.random()*75)+"%";s.style.setProperty("--dur",(5+Math.random()*9)+"s");s.style.setProperty("--dx",(Math.random()*60-30)+"px");s.style.animationDelay=(-Math.random()*10)+"s";a.appendChild(s)}}
 function buildSlots(){
@@ -571,21 +665,45 @@ function pickCard(btn,index){
  const item={card:c,reversed:Math.random()<.27};
  drawn.push(item);
  const pos=SPREADS[spread].positions[step][0];
- const slot=$("slot"+step);slot.classList.add("filled");
- slot.querySelector(".slot-frame").innerHTML=cardNode(item,pos);
+ const slot=$("slot"+step);slot.classList.add("filled","still-hidden");
+ slot.querySelector(".slot-frame").innerHTML=`<div class="selected-back">${svgBack()}<span>已选中 · ${String(step+1).padStart(2,"0")}</span></div>`;
  $("drawBar").style.width=(drawn.length/SPREADS[spread].positions.length*100)+"%";
  step++;
  if(step<SPREADS[spread].positions.length){
   $("pickInstruction").textContent=`第 ${step+1} 张：${SPREADS[spread].positions[step][0]}。从 78 张牌中继续选择。`;
-  $("pickNote").textContent="每一次选择都会从完整牌阵中取走一张。你可以慢慢挑选。";
+  $("pickNote").textContent="已选中的牌仍然保持背面朝上，不会影响你下一次的直觉选择。";
  }else{
-  $("pickInstruction").textContent="所有牌都已揭开。你可以准备阅读这组牌的完整讯息。";
-  $("pickNote").textContent="牌阵已经完成。请留意每张牌之间的呼应，而不只是单张牌义。";
+  $("pickInstruction").textContent="全部选择完成。你的牌阵已经准备好。";
+  $("pickNote").textContent="所有牌仍然背面朝上。你可以决定何时揭晓，不必在抽取过程中提前知道答案。";
   $("pickDeck").querySelectorAll("button").forEach(b=>b.disabled=true);
+  $("readNow").textContent="✧　揭晓全部牌面　✧";
   $("readNow").classList.remove("hidden");
  }
 }
-function beginReading(){
+function revealAndRead(){
+ const positions=SPREADS[spread].positions;
+ drawn.forEach((item,i)=>{
+  const slot=$("slot"+i);
+  slot.classList.remove("still-hidden");
+  slot.querySelector(".slot-frame").innerHTML=cardNode(item,positions[i][0],i*130);
+ });
+ attachImageFallback($("slots"));
+ $("readNow").disabled=true;
+ $("readNow").textContent="牌面正在揭晓…";
+ $("draw").classList.add("reveal-bloom");
+ setTimeout(()=>{
+  $("readNow").disabled=false;
+  $("draw").classList.remove("reveal-bloom");
+  showResults();
+ },1300);
+}
+
+async function beginReading(){
+ $("begin").disabled=true;
+ $("begin").textContent="正在唤醒牌库…";
+ await ensureArtwork();
+ $("begin").disabled=false;
+ $("begin").textContent="✧　进入抽牌仪式　✧";
  question=$("question").value.trim();spread=document.querySelector(".spread.active").dataset.id;
  shuffled=shuffleArray(FULL_DECK);drawn=[];step=0;
  showSection("ritual");$("orb").classList.add("shuffling");$("ritualTitle").textContent="正在洗牌";$("ritualText").textContent="让问题停留在心里，牌正在重新排列。";$("ritualBar").style.width="0%";$("cutDeck").classList.add("hidden");
@@ -640,14 +758,66 @@ function positionNarrative(pos,idx){
  };
  return map[name]||"这张牌在此处补充了整组牌的另一个层面。结合它前后的牌来看，重点不是孤立地判断好坏，而是理解它如何参与整体变化。";
 }
+
+const TRADITIONAL_MAJOR = {
+ "愚者":{up:"新开始、自由、自发、信任、冒险",rev:"鲁莽、轻率、准备不足、逃避责任"},
+ "魔术师":{up:"意志、技能、资源整合、创造、行动力",rev:"操纵、欺瞒、才能未发挥、目标涣散"},
+ "女祭司":{up:"直觉、潜意识、静默、内在知识",rev:"隐瞒、直觉受阻、信息不明、表里不一"},
+ "皇后":{up:"丰饶、创造、滋养、感官与生命力",rev:"过度付出、依赖、创造力受阻、自我忽略"},
+ "皇帝":{up:"秩序、权威、结构、稳定、责任",rev:"控制欲、僵化、专断、缺乏秩序"},
+ "教皇":{up:"传统、学习、信念、制度、导师",rev:"教条、盲从、反叛传统、另辟蹊径"},
+ "恋人":{up:"爱、结合、和谐、价值选择",rev:"失衡、价值冲突、关系不协调、犹豫"},
+ "战车":{up:"胜利、意志、方向、自律、推进",rev:"失控、阻碍、缺乏方向、急于求成"},
+ "力量":{up:"勇气、耐心、温柔、内在力量、自我驾驭",rev:"自我怀疑、情绪失控、脆弱、过度压抑"},
+ "隐士":{up:"内省、独处、寻求真理、内在指引",rev:"孤立、封闭、过度退缩、拒绝帮助"},
+ "命运之轮":{up:"转折、周期、机遇、命运变化",rev:"延误、反复、抗拒变化、失去节奏"},
+ "正义":{up:"公平、真相、责任、因果、理性判断",rev:"不公、偏见、逃避责任、判断失衡"},
+ "倒吊人":{up:"暂停、牺牲、换位思考、放下控制",rev:"拖延、无谓牺牲、停滞、抗拒改变"},
+ "死神":{up:"结束、转化、放下、更新、阶段更替",rev:"抗拒改变、停滞、无法释怀、拖延结束"},
+ "节制":{up:"平衡、调和、耐心、整合、适度",rev:"失衡、过度、缺乏协调、节奏紊乱"},
+ "恶魔":{up:"束缚、欲望、依附、物质执着、诱惑",rev:"挣脱束缚、觉察、恢复自主、松开依赖"},
+ "塔":{up:"突变、崩塌、真相揭露、旧结构瓦解",rev:"抗拒改变、延迟崩解、恐惧动荡"},
+ "星星":{up:"希望、疗愈、灵感、信念、重新相信",rev:"失望、信心不足、迷失方向、暂时枯竭"},
+ "月亮":{up:"潜意识、幻象、未知、直觉与不安",rev:"迷雾消散、真相浮现、释放恐惧"},
+ "太阳":{up:"喜悦、成功、活力、清晰、生命力",rev:"短暂低落、过度乐观、延迟成功"},
+ "审判":{up:"觉醒、召唤、复盘、重生、回应使命",rev:"自我怀疑、拒绝觉醒、苛责、错失召唤"},
+ "世界":{up:"完成、整合、圆满、抵达、新阶段",rev:"未完成、延迟、缺少收尾、整合不足"}
+};
+function traditionalMeaning(card, reversed){
+ if(card.major){
+  const item=TRADITIONAL_MAJOR[card.name];
+  return item ? (reversed?item.rev:item.up) : card.keywords;
+ }
+ const rank=RANKS[(card.rankIndex||1)-1]||RANKS[0];
+ const suit=SUITS[card.suit]||{focus:"现实生活",gift:"逐步发展",shadow:"失衡或受阻"};
+ return reversed
+  ? `${rank.key}的失衡面；留意${suit.shadow}`
+  : `${rank.key}；在${card.suit}领域中体现为${suit.focus}，并可发展出${suit.gift}`;
+}
+
 function interpretItem(item,pos,idx){
  const c=item.card,reverse=item.reversed,meaning=reverse?c.rev:c.up;
  const orientation=reverse?"逆位":"正位";
  const intro=`在「${pos[0]}」的位置上，${c.name} ${orientation}并不是孤立的一句牌义。${positionNarrative(pos,idx)}`;
  const image=c.image?`牌面意象：${c.image}。这些象征提醒你把注意力放回到${c.keywords||c.suit+"的能量"}。`:"";
  const prompt=reverse?"可以问问自己：我正在回避哪一个需要被看见的部分？如果不急着做决定，我还需要确认什么？":"可以问问自己：这张牌指出的资源，我现在可以怎样在现实里使用？哪一个小行动最能回应它？";
- const advice=c.advice||SUITS[c.suit].advice;
- return `<div class="reading"><div class="badge">CARD ${String(idx+1).padStart(2,"0")} · ${safe(pos[0])}</div><h3>${safe(c.name)}　<span style="font-size:12px;color:#c9b8d8">${orientation}</span></h3><p><b style="color:#e9d3a5">核心主题：</b>${safe(c.keywords)}</p><p>${safe(intro)}</p><p>${safe(meaning)}</p><p>${safe(image)}</p><p><b style="color:#e9d3a5">给你的行动建议：</b>${safe(advice)}</p><p class="prompt">${safe(prompt)}</p></div>`;
+ const advice=c.advice||(c.suit?SUITS[c.suit].advice:"先观察事实与感受，再决定下一步。");
+ const traditional=traditionalMeaning(c,reverse);
+ return `<div class="reading">
+  <div class="badge">CARD ${String(idx+1).padStart(2,"0")} · ${safe(pos[0])}</div>
+  <h3>${safe(c.name)}　<span style="font-size:12px;color:#c9b8d8">${orientation}</span></h3>
+  <div class="traditional-note">
+   <div class="traditional-label">✧ 传统牌意 · 初学者参考</div>
+   <p><b>核心关键词：</b>${safe(c.keywords)}</p>
+   <p><b>${orientation}常见牌意：</b>${safe(traditional)}</p>
+  </div>
+  <p><b style="color:#e9d3a5">核心主题：</b>${safe(c.keywords)}</p>
+  <p>${safe(intro)}</p>
+  <p>${safe(meaning)}</p>
+  <p>${safe(image)}</p>
+  <p><b style="color:#e9d3a5">给你的行动建议：</b>${safe(advice)}</p>
+  <p class="prompt">${safe(prompt)}</p>
+ </div>`;
 }
 function connectionsText(){
  const names=drawn.map(x=>x.card.name),positions=SPREADS[spread].positions;
@@ -684,6 +854,26 @@ function questionKind(){
  if(/能否|能不能|会不会|是否|可不可以|有没有|会吗|能吗|成功吗|行不行|该不该|要不要|会.*吗|能.*吗|脱单/.test(q))return "yesno";
  return "open";
 }
+
+function oracleChibi(mood="hope"){
+ const mouth=mood==="caution"?'<path d="M92 104q8-7 16 0" stroke="#704c68" stroke-width="3" fill="none" stroke-linecap="round"/>':'<path d="M91 100q9 11 18 0" stroke="#704c68" stroke-width="3" fill="none" stroke-linecap="round"/>';
+ const cheek=mood==="caution"?"#e9a2a2":"#f2a6b7";
+ return `<div class="chibi-oracle" aria-label="Q版天使占卜师"><svg viewBox="0 0 200 190" role="img" aria-label="Q版天使占卜师">
+ <ellipse cx="100" cy="176" rx="56" ry="8" fill="#080512" opacity=".3"/>
+ <path d="M72 92C25 39 12 85 46 119c13 13 26 12 42 2M128 92c47-53 60-7 26 27-13 13-26 12-42 2" fill="#e7d5ff" stroke="#f4d9a5" stroke-width="3"/>
+ <path d="M100 12c-20 0-31 13-31 34 0 27 13 43 31 43s31-16 31-43c0-21-11-34-31-34Z" fill="#f4d9bd" stroke="#f6dfb3" stroke-width="3"/>
+ <path d="M68 44c-2-31 16-42 34-42 22 0 35 17 30 47-8-8-14-19-16-29-12 15-28 23-48 24Z" fill="#4c3267" stroke="#e8cba1" stroke-width="3"/>
+ <ellipse cx="100" cy="8" rx="26" ry="7" fill="none" stroke="#f4d9a5" stroke-width="3"/>
+ <path d="M84 68q5 7 10 0m12 0q5 7 10 0" stroke="#533b5a" stroke-width="3" fill="none" stroke-linecap="round"/>
+ ${mouth}<ellipse cx="76" cy="83" rx="9" ry="5" fill="${cheek}" opacity=".65"/><ellipse cx="124" cy="83" rx="9" ry="5" fill="${cheek}" opacity=".65"/>
+ <path d="M78 92c-12 12-19 35-18 62 22 16 58 16 80 0-1-27-8-50-20-62-12 10-30 10-42 0Z" fill="#b99add" stroke="#f2d7a5" stroke-width="3"/>
+ <path d="M100 100v52m-17-39 17 14 17-14" stroke="#f8e8c8" stroke-width="2" fill="none"/>
+ <path d="M87 126l13-9 13 9-13 10Z" fill="#f2d7a5"/>
+ <path d="M50 151q-12 8-8 19 12 7 25-2m83-17q12 8 8 19-12 7-25-2" fill="#f4d9bd" stroke="#f6dfb3" stroke-width="2"/>
+ <path d="M100 1v-7m-4 0h8" stroke="#f4d9a5" stroke-width="2" stroke-linecap="round"/>
+ </svg><span>小天使 · Celestia</span></div>`;
+}
+
 function questionVerdict(){
  if(!question)return "";
  const kind=questionKind();
@@ -710,15 +900,16 @@ function questionVerdict(){
   if(kind==="love"&&yes>no){label="有机会打开新的关系可能";sub="牌面偏向开放与相遇，但脱单不是被动等待的结果；扩大真实互动、表达兴趣和辨认合适对象会更重要。";}
   if(kind==="love"&&no>yes){label="短期更适合整理与调整";sub="目前的牌面更强调边界、准备或旧模式的整理，不等于你不值得被爱，也不代表未来没有机会。";}
   const bar=Math.round((yes+maybe*.5)/total*100);
-  return `<div class="verdict-card"><div class="verdict-eyebrow">✧ A WHISPER TO YOUR QUESTION ✧</div><div class="verdict-label">牌面给出的倾向</div><div class="verdict-answer">${label}</div><div class="verdict-bar"><span style="width:${bar}%"></span></div><div class="verdict-stats"><span>支持 ${yes}</span><span>观望 ${maybe}</span><span>阻碍 ${no}</span></div><p>${sub}</p><p class="verdict-disclaimer">${intro}「倾向条」只是本次牌面符号的汇总，不代表现实世界中发生的概率。</p></div>`;
+  return `<div class="verdict-card"><div class="verdict-eyebrow">✧ A WHISPER TO YOUR QUESTION ✧</div><div class="verdict-label">牌面给出的倾向</div>${oracleChibi(yes>no?"hope":no>yes?"caution":"hope")}<div class="verdict-answer">${label}</div><div class="verdict-bar"><span style="width:${bar}%"></span></div><div class="verdict-stats"><span>支持 ${yes}</span><span>观望 ${maybe}</span><span>阻碍 ${no}</span></div><p>${sub}</p><p class="verdict-disclaimer">${intro}「倾向条」只是本次牌面符号的汇总，不代表现实世界中发生的概率。</p></div>`;
  }
- return `<div class="verdict-card open-verdict"><div class="verdict-eyebrow">✧ A WHISPER TO YOUR QUESTION ✧</div><div class="verdict-label">这次牌面想先告诉你</div><p>${intro}</p><p>先不要急着把问题压缩成一个结果。你可以从牌阵中最有共鸣的那张牌开始，看看它正在提醒你关注什么。</p></div>`;
+ return `<div class="verdict-card open-verdict"><div class="verdict-eyebrow">✧ A WHISPER TO YOUR QUESTION ✧</div><div class="verdict-label">这次牌面想先告诉你</div>${oracleChibi("hope")}<p>${intro}</p><p>先不要急着把问题压缩成一个结果。你可以从牌阵中最有共鸣的那张牌开始，看看它正在提醒你关注什么。</p></div>`;
 }
 
 function showResults(){
  showSection("result");
  $("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 留给内心的一次探索";
  $("allcards").innerHTML=drawn.map((x,i)=>cardNode(x,SPREADS[spread].positions[i][0],i*70)).join("");
+ attachImageFallback($("allcards"));
  $("questionVerdict").innerHTML=questionVerdict();
  $("overall").innerHTML=overallText();
  $("meanings").innerHTML=drawn.map((x,i)=>interpretItem(x,SPREADS[spread].positions[i],i)).join("");
@@ -731,9 +922,9 @@ function showResults(){
 document.querySelectorAll(".spread").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".spread").forEach(x=>x.classList.remove("active"));b.classList.add("active")}));
 $("begin").addEventListener("click",beginReading);
 $("cutDeck").addEventListener("click",startDraw);
-$("readNow").addEventListener("click",showResults);
-$("again").addEventListener("click",()=>{drawn=[];question="";$("question").value="";showSection("setup")});
+$("readNow").addEventListener("click",revealAndRead);
+$("again").addEventListener("click",()=>{drawn=[];question="";step=0;$("question").value="";$("readNow").classList.add("hidden");showSection("setup")});
 renderAmbient();
-loadClassicArtwork();
+ensureArtwork();
 </script>
 </body></html>
