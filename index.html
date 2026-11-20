@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#171126">
-<title>Celestia 3.1.1 · 天使秘境</title>
+<title>Celestia 3.2.1 · 天使秘境</title>
 <style>
 :root{--night:#171126;--violet:#302044;--plum:#49345f;--lav:#d9c0f4;--gold:#e8ce9b;--cream:#fff5df;--muted:#c8b8d9;--line:#dfc58b66}
 *{box-sizing:border-box}
@@ -337,9 +337,147 @@ body.reading-mode main{padding-top:22px}
 }
 .traditional-note b{color:#f1d9ad;font-weight:600}
 </style>
+
+<style>
+/* CELESTIA 3.2 · engraved fresco, gilded relief, and angel-wing passage */
+.panel{
+ border:1px solid #e8d0a577;
+ border-radius:17px;
+ background:
+  radial-gradient(ellipse at 50% 0%,#c8a7e514,transparent 58%),
+  repeating-linear-gradient(135deg,#ffffff03 0 2px,transparent 2px 8px),
+  linear-gradient(145deg,#38234dcc,#160f27f2 66%,#211431ee);
+ box-shadow:0 26px 75px #05030d99, inset 0 1px #fff5dc22, inset 0 0 45px #d2b0ef0b;
+}
+.panel:before{
+ inset:9px;border:1px solid #e8ce9b38;border-radius:11px;
+ background:
+  linear-gradient(#f0d7a6,#f0d7a6) left top/26px 1px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) left top/1px 26px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) right top/26px 1px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) right top/1px 26px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) left bottom/26px 1px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) left bottom/1px 26px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) right bottom/26px 1px no-repeat,
+  linear-gradient(#f0d7a6,#f0d7a6) right bottom/1px 26px no-repeat;
+ pointer-events:none;
+}
+.panel:after{content:"❧";top:12px;right:20px;color:#f0d7a677;font-family:Georgia,serif;font-size:22px;transform:rotate(12deg)}
+.kicker{position:relative;text-shadow:0 0 18px #dcb8f466}
+.kicker:before,.kicker:after{content:"✧";display:inline-block;margin:0 12px;color:#e8ce9b99;font-size:11px}
+.reading,.insight,.verdict-card{
+ border-radius:13px;
+ border:1px solid #e6cb9866;
+ background:radial-gradient(ellipse at 50% 0%,#b78dd71a,transparent 62%),linear-gradient(145deg,#ffffff0e,#ffffff04);
+ box-shadow:inset 0 1px #fff4dc12,0 14px 38px #05030d55;
+ position:relative;
+}
+.reading:before,.insight:before,.verdict-card:before{
+ content:"";position:absolute;inset:5px;border:1px solid #d7b9ed22;border-radius:9px;pointer-events:none;
+}
+.reading h3{letter-spacing:3px;text-shadow:0 0 18px #e5c18d33}
+.traditional-note{background:linear-gradient(110deg,#d4b5ee12,#e8ce9b08);border-color:#e7d1a044;border-left-color:#e8ce9b}
+/* Single-card draw: keep the revealed card in a narrow, centered slot and in normal document flow. */
+#slots.single-card{display:flex;justify-content:center;align-items:flex-start;width:100%;max-width:360px;margin:28px auto;}
+#slots.single-card .slot{width:min(230px,68vw);flex:0 1 230px;position:relative;z-index:0;}
+#slots.single-card .slot-frame{height:300px;overflow:visible;display:flex;align-items:center;justify-content:center;}
+#slots.single-card .slot.filled .slot-frame{overflow:visible;}
+#slots.single-card .slot.filled .slot-frame .tarot-card{width:100%;max-width:220px;margin:0 auto;position:relative;z-index:0;}
+#slots.single-card .slot.filled .slot-frame .card-face{height:282px;}
+#slots.single-card .slot.filled .slot-frame .card-art{height:100%;}
+#slots.single-card .slot-name{margin-top:9px;}
+#draw .panel{overflow:visible;}
+#readNow{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;}
+#draw .pick-deck-wrap{position:relative;z-index:1;}
+.selected-back{pointer-events:none;}
+/* Winged passage overlay: decorative only, never intercepts clicks. */
+#wingTransition{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(ellipse at 50% 48%,#674781ee 0%,#241633f5 48%,#090612 100%);perspective:1500px;}
+#wingTransition.active{visibility:visible;animation:veilBloom 1.72s cubic-bezier(.22,.72,.2,1) both;}
+#wingTransition:before{content:"";position:absolute;inset:-25%;background:repeating-conic-gradient(from 0deg at 50% 50%,#f2dba90b 0deg 2deg,transparent 2deg 14deg);opacity:0;}
+#wingTransition.active:before{animation:raysReveal 1.7s ease-out both;}
+.transition-aureole{position:absolute;width:min(72vw,850px);aspect-ratio:1;border:1px solid #f0d9a655;border-radius:50%;box-shadow:0 0 0 12px #e6c99c0a,0 0 0 26px #d6b6ec0a,0 0 70px #d8b7f455;transform:scale(.15) rotate(-35deg);opacity:0;}
+#wingTransition.active .transition-aureole{animation:aureoleOpen 1.65s cubic-bezier(.16,1,.3,1) both;}
+.transition-wing{position:absolute;top:50%;width:min(54vw,760px);height:min(57vh,520px);transform-style:preserve-3d;filter:drop-shadow(0 0 24px #e9c9f755);opacity:0;}
+.transition-wing svg{width:100%;height:100%;overflow:visible;}
+.wing-left{right:50%;transform-origin:100% 72%;transform:translateY(-50%) translateX(6%) rotateY(-88deg) scale(.48);}
+.wing-right{left:50%;transform-origin:0% 72%;transform:translateY(-50%) translateX(-6%) rotateY(88deg) scaleX(-1) scale(.48);}
+#wingTransition.active .wing-left{animation:wingUnfurlLeft 1.35s cubic-bezier(.16,1,.3,1) .08s both;}
+#wingTransition.active .wing-right{animation:wingUnfurlRight 1.35s cubic-bezier(.16,1,.3,1) .08s both;}
+.transition-center{position:absolute;width:clamp(110px,17vw,210px);filter:drop-shadow(0 0 28px #f4dfb6aa);opacity:0;transform:translateZ(150px) scale(.2) rotate(-35deg);}
+.transition-center svg{width:100%;height:auto;}
+#wingTransition.active .transition-center{animation:crestIgnite 1.5s cubic-bezier(.16,1,.3,1) .15s both;}
+.transition-caption{position:absolute;bottom:9vh;color:#f0d9ad;font:9px Arial,sans-serif;letter-spacing:7px;text-shadow:0 0 15px #e8c99a;opacity:0;}
+#wingTransition.active .transition-caption{animation:captionGlint 1.4s ease .35s both;}
+.transition-flare{position:absolute;width:2px;height:120vh;top:-10vh;left:50%;background:linear-gradient(transparent,#fff7df,#e5c18b,transparent);box-shadow:0 0 35px 12px #e5c18b88;transform:scaleY(0);opacity:0;}
+#wingTransition.active .transition-flare{animation:flareStrike .8s ease-out .32s both;}
+@keyframes veilBloom{0%{opacity:0}16%{opacity:1}76%{opacity:1}100%{opacity:0}}
+@keyframes raysReveal{0%{opacity:0;transform:rotate(-25deg) scale(.55)}35%{opacity:.9}100%{opacity:0;transform:rotate(22deg) scale(1.2)}}
+@keyframes aureoleOpen{0%{opacity:0;transform:scale(.15) rotate(-35deg)}40%{opacity:.85}100%{opacity:0;transform:scale(1.28) rotate(35deg)}}
+@keyframes wingUnfurlLeft{0%{opacity:0;transform:translateY(-50%) translateX(6%) rotateY(-88deg) scale(.48)}28%{opacity:1}68%{transform:translateY(-50%) translateX(-2%) rotateY(8deg) scale(1.04)}100%{opacity:0;transform:translateY(-50%) translateX(-9%) rotateY(0) scale(1.08)}}
+@keyframes wingUnfurlRight{0%{opacity:0;transform:translateY(-50%) translateX(-6%) rotateY(88deg) scaleX(-1) scale(.48)}28%{opacity:1}68%{transform:translateY(-50%) translateX(2%) rotateY(-8deg) scaleX(-1) scale(1.04)}100%{opacity:0;transform:translateY(-50%) translateX(9%) rotateY(0) scaleX(-1) scale(1.08)}}
+@keyframes crestIgnite{0%{opacity:0;transform:translateZ(150px) scale(.2) rotate(-35deg)}35%{opacity:1}65%{transform:translateZ(0) scale(1.08) rotate(0)}100%{opacity:0;transform:translateZ(-80px) scale(1.3) rotate(18deg)}}
+@keyframes captionGlint{0%,100%{opacity:0;letter-spacing:12px}35%,70%{opacity:.9;letter-spacing:7px}}
+@keyframes flareStrike{0%{opacity:0;transform:scaleY(0)}30%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1.2)}}
+.scene-cinematic-forward{animation:sceneDepthForward .95s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%;}
+.scene-cinematic-backward{animation:sceneDepthBack .95s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%;}
+@keyframes sceneDepthForward{0%{opacity:0;transform:perspective(1500px) translate3d(95px,14px,-180px) rotateY(-15deg) scale(.91);filter:blur(10px)}55%{opacity:1;filter:blur(0);transform:perspective(1500px) translate3d(-7px,0,25px) rotateY(1deg) scale(1.01)}100%{opacity:1;transform:perspective(1500px) translate3d(0,0,0) rotateY(0) scale(1)}}
+@keyframes sceneDepthBack{0%{opacity:0;transform:perspective(1500px) translate3d(-95px,14px,-180px) rotateY(15deg) scale(.91);filter:blur(10px)}55%{opacity:1;filter:blur(0);transform:perspective(1500px) translate3d(7px,0,25px) rotateY(-1deg) scale(1.01)}100%{opacity:1;transform:perspective(1500px) translate3d(0,0,0) rotateY(0) scale(1)}}
+@media(max-width:600px){
+ #slots.single-card{max-width:290px;}
+ #slots.single-card .slot{width:min(205px,72vw);flex-basis:205px;}
+ #slots.single-card .slot-frame{height:270px;}
+ #slots.single-card .slot.filled .slot-frame .card-face{height:252px;}
+ .transition-wing{width:68vw;height:42vh;}
+ .transition-caption{bottom:12vh;font-size:8px;letter-spacing:4px;}
+}
+@media(prefers-reduced-motion:reduce){#wingTransition,.scene-cinematic-forward,.scene-cinematic-backward{animation:none!important;display:none!important}}
+</style>
+
+<style>
+/* 3.2.1: no oversized face card is ever mounted over the draw controls. */
+#slots.single-card{display:flex;justify-content:center;align-items:flex-start;width:100%;max-width:320px;margin:20px auto 14px;position:relative;z-index:1;isolation:isolate;}
+#slots.single-card .slot{width:min(190px,66vw);flex:0 1 190px;position:relative;z-index:0;pointer-events:none;}
+#slots.single-card .slot-frame{height:260px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+#slots.single-card .slot.filled .slot-frame{overflow:hidden;}
+#slots.single-card .selected-back{pointer-events:none;}
+#readNow{position:relative;z-index:30;pointer-events:auto;margin:12px auto 18px;}
+#draw .pick-deck-wrap{position:relative;z-index:0;isolation:isolate;}
+#draw .pick-deck{position:relative;z-index:0;}
+#draw .fan-card{pointer-events:auto;}
+.selected-back.sacred-reveal{animation:backSacredReveal .95s cubic-bezier(.16,1,.3,1) both!important;}
+@keyframes backSacredReveal{0%{opacity:1;transform:rotateY(0) scale(1);filter:brightness(1)}48%{opacity:.8;transform:rotateY(90deg) scale(.82);filter:brightness(2.1)}100%{opacity:0;transform:rotateY(180deg) scale(.55);filter:brightness(2.5)}}
+/* A richer gold-and-violet light sweep accompanies the sculpted wing transition. */
+#wingTransition.active{animation:veilBloom 1.72s cubic-bezier(.22,.72,.2,1) both;}
+#wingTransition.active .transition-wing{filter:drop-shadow(0 0 28px #f5dfb7aa) drop-shadow(0 0 54px #bd9be866);}
+#wingTransition.active .transition-aureole{box-shadow:0 0 0 12px #e6c99c12,0 0 0 26px #d6b6ec12,0 0 90px #f0d6a477;}
+@media(max-width:600px){#slots.single-card{max-width:260px}#slots.single-card .slot-frame{height:238px}}
+</style>
+
 </head>
 <body>
 <div id="ambient" aria-hidden="true"></div>
+<div id="wingTransition" aria-hidden="true">
+ <div class="transition-aureole"></div>
+ <div class="transition-wing wing-left"><svg viewBox="0 0 520 340" role="presentation" aria-hidden="true">
+ <path d="M505 304C430 285 369 239 326 175C289 119 278 58 226 24C171 -2 105 18 22 78C119 62 195 94 250 155C309 222 385 286 505 304Z" fill="#d9c0f4" fill-opacity=".055" stroke="#f0d9aa" stroke-width="2.2"/>
+ <path d="M493 293C418 266 359 210 322 143C293 91 277 45 226 24M475 285C401 244 337 177 291 103C260 55 221 27 175 22M452 274C375 224 301 157 241 99C194 54 144 40 91 48M425 263C350 209 267 153 190 111C134 80 82 76 36 91M395 249C320 199 236 159 154 137C105 123 67 125 35 145" fill="none" stroke="#efd7a6" stroke-width="1.45" stroke-linecap="round" opacity=".88"/>
+ <path d="M475 284C434 245 409 205 390 160M452 273C406 226 375 179 350 124M425 262C372 214 333 164 300 109M395 248C342 208 291 169 246 132M360 230C310 199 263 174 213 153M321 208C276 186 231 170 184 163" fill="none" stroke="#d7b9ed" stroke-width="1.1" opacity=".82"/>
+ <path d="M22 78Q80 83 124 111Q176 145 205 194M35 145Q95 142 147 166Q203 191 244 238M91 48Q139 65 178 98M175 22Q210 46 237 83" fill="none" stroke="#f4e6c7" stroke-width="1" opacity=".6"/>
+ <g fill="none" stroke="#f2dcae" stroke-width="1" opacity=".7"><path d="M320 282q-20-28-50-36 23 28 20 54M288 253q-21-28-49-38 17 30 11 54M250 222q-20-26-46-34 14 28 5 51"/><path d="M340 291q-8-21-26-35M367 300q-9-20-24-31"/></g>
+ <path d="M504 304q-20 11-40 12M22 78q-10-3-17-1" stroke="#f3dfb6" stroke-width="2" fill="none"/>
+ </svg></div>
+ <div class="transition-wing wing-right"><svg viewBox="0 0 520 340" role="presentation" aria-hidden="true">
+ <path d="M505 304C430 285 369 239 326 175C289 119 278 58 226 24C171 -2 105 18 22 78C119 62 195 94 250 155C309 222 385 286 505 304Z" fill="#d9c0f4" fill-opacity=".055" stroke="#f0d9aa" stroke-width="2.2"/>
+ <path d="M493 293C418 266 359 210 322 143C293 91 277 45 226 24M475 285C401 244 337 177 291 103C260 55 221 27 175 22M452 274C375 224 301 157 241 99C194 54 144 40 91 48M425 263C350 209 267 153 190 111C134 80 82 76 36 91M395 249C320 199 236 159 154 137C105 123 67 125 35 145" fill="none" stroke="#efd7a6" stroke-width="1.45" stroke-linecap="round" opacity=".88"/>
+ <path d="M475 284C434 245 409 205 390 160M452 273C406 226 375 179 350 124M425 262C372 214 333 164 300 109M395 248C342 208 291 169 246 132M360 230C310 199 263 174 213 153M321 208C276 186 231 170 184 163" fill="none" stroke="#d7b9ed" stroke-width="1.1" opacity=".82"/>
+ <path d="M22 78Q80 83 124 111Q176 145 205 194M35 145Q95 142 147 166Q203 191 244 238M91 48Q139 65 178 98M175 22Q210 46 237 83" fill="none" stroke="#f4e6c7" stroke-width="1" opacity=".6"/>
+ <g fill="none" stroke="#f2dcae" stroke-width="1" opacity=".7"><path d="M320 282q-20-28-50-36 23 28 20 54M288 253q-21-28-49-38 17 30 11 54M250 222q-20-26-46-34 14 28 5 51"/><path d="M340 291q-8-21-26-35M367 300q-9-20-24-31"/></g>
+ <path d="M504 304q-20 11-40 12M22 78q-10-3-17-1" stroke="#f3dfb6" stroke-width="2" fill="none"/>
+ </svg></div>
+ <div class="transition-center"><svg viewBox="0 0 180 220" fill="none"><circle cx="90" cy="104" r="76" stroke="#f1d9a7" stroke-width="1.4"/><circle cx="90" cy="104" r="65" stroke="#d9b9ed" stroke-dasharray="2 7"/><path d="M90 39C61 81 61 127 90 166c29-39 29-85 0-127Z" fill="#d9c0f4" fill-opacity=".16" stroke="#f4dfb8" stroke-width="2"/><path d="M90 65c-15 24-15 54 0 75 15-21 15-51 0-75Z" fill="#f4dfb8" fill-opacity=".22"/><path d="M54 187h72M65 198h50" stroke="#f1d9a7" stroke-width="1.4"/><path d="M90 17l5 11 12 2-9 8 2 12-10-6-10 6 2-12-9-8 12-2Z" fill="#f1d9a7"/></svg></div>
+ <div class="transition-caption">CELESTIA · SACRED PASSAGE</div>
+ <div class="transition-flare"></div>
+</div>
 <header class="grand-hero">
  <div class="hero-stars" aria-hidden="true"></div>
  <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
@@ -399,8 +537,8 @@ body.reading-mode main{padding-top:22px}
   <div class="progress"><span id="drawBar"></span></div>
   <p class="pick-instruction" id="pickInstruction">请凭直觉，点击下方任意一张牌背。</p>
   <div class="slots" id="slots"></div>
-  <div class="pick-deck-wrap"><div class="kicker">✧ TOUCH A CARD TO REVEAL ✧</div><p class="pick-note" id="pickNote">不必计算，也不必猜测。让目光停留在你想选择的那一张上。</p><div class="pick-deck" id="pickDeck"></div></div>
   <button class="primary hidden" id="readNow">揭晓全部牌意　☾</button>
+  <div class="pick-deck-wrap"><div class="kicker">✧ CHOOSE YOUR CARDS ✧</div><p class="pick-note" id="pickNote">不必计算，也不必猜测。让目光停留在你想选择的那一张上。</p><div class="pick-deck" id="pickDeck"></div></div>
  </div>
 </section>
 
@@ -421,7 +559,7 @@ body.reading-mode main{padding-top:22px}
  </div>
 </section>
 </main>
-<footer>CELESTIA 3.1 · FOLLOW THE LIGHT WITHIN YOU<br><span id="artStatus">正在唤醒经典牌面…</span><br><a href="https://tarostarot.com/tarot-card-data" target="_blank" rel="noopener">Tarot card data by Taro's Tarot · CC BY 4.0</a> · 1909 Rider–Waite–Smith artwork</footer>
+<footer>CELESTIA 3.2 · FOLLOW THE LIGHT WITHIN YOU<br><span id="artStatus">正在唤醒经典牌面…</span><br><a href="https://tarostarot.com/tarot-card-data" target="_blank" rel="noopener">Tarot card data by Taro's Tarot · CC BY 4.0</a> · 1909 Rider–Waite–Smith artwork</footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -628,24 +766,36 @@ function attachImageFallback(root){
   },{once:true});
  });
 }
+let wingTransitionTimer=null;
+function playWingTransition(forward=true){
+ const veil=$("wingTransition");
+ if(!veil)return;
+ veil.classList.remove("active","forward","backward");
+ void veil.offsetWidth;
+ veil.classList.add("active",forward?"forward":"backward");
+ if(wingTransitionTimer)clearTimeout(wingTransitionTimer);
+ wingTransitionTimer=setTimeout(()=>veil.classList.remove("active","forward","backward"),1750);
+}
 function showSection(id){
  const order=["setup","ritual","draw","result"];
  const current=order.find(x=>!$(x).classList.contains("hidden"))||"setup";
  const from=order.indexOf(current),to=order.indexOf(id);
  const target=$(id);
- if(id==="setup") document.body.classList.remove("reading-mode");
+ if(id==="setup")document.body.classList.remove("reading-mode");
  else document.body.classList.add("reading-mode");
- target.classList.remove("hidden","scene-push-next","scene-push-prev");
+ target.classList.remove("hidden","scene-push-next","scene-push-prev","scene-cinematic-forward","scene-cinematic-backward");
  void target.offsetWidth;
- target.classList.add(to>=from?"scene-push-next":"scene-push-prev");
+ target.classList.add(to>=from?"scene-cinematic-forward":"scene-cinematic-backward");
  order.filter(x=>x!==id).forEach(x=>$(x).classList.add("hidden"));
- const y=id==="setup"?0:Math.max(0,$("setup").getBoundingClientRect().top+window.scrollY-12);
- window.scrollTo({top:y,behavior:"smooth"});
+ playWingTransition(to>=from);
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 function renderAmbient(){const a=$("ambient");for(let i=0;i<35;i++){const s=document.createElement("i");s.className="spark";s.style.left=Math.random()*100+"%";s.style.top=(25+Math.random()*75)+"%";s.style.setProperty("--dur",(5+Math.random()*9)+"s");s.style.setProperty("--dx",(Math.random()*60-30)+"px");s.style.animationDelay=(-Math.random()*10)+"s";a.appendChild(s)}}
 function buildSlots(){
  const positions=SPREADS[spread].positions;
- $("slots").innerHTML=positions.map((p,i)=>`<div class="slot" id="slot${i}"><div class="slot-frame"><span class="slot-num">${String(i+1).padStart(2,"0")}</span><span class="slot-label">${safe(p[0])}</span></div><div class="slot-name">${safe(p[0])}</div></div>`).join("");
+ const slots=$("slots");
+ slots.classList.toggle("single-card",positions.length===1);
+ slots.innerHTML=positions.map((p,i)=>`<div class="slot" id="slot${i}"><div class="slot-frame"><span class="slot-num">${String(i+1).padStart(2,"0")}</span><span class="slot-label">${safe(p[0])}</span></div><div class="slot-name">${safe(p[0])}</div></div>`).join("");
 }
 function buildPickDeck(){
  const fan=$("pickDeck");
@@ -681,21 +831,21 @@ function pickCard(btn,index){
  }
 }
 function revealAndRead(){
- const positions=SPREADS[spread].positions;
- drawn.forEach((item,i)=>{
-  const slot=$("slot"+i);
-  slot.classList.remove("still-hidden");
-  slot.querySelector(".slot-frame").innerHTML=cardNode(item,positions[i][0],i*130);
+ if(!drawn.length||drawn.length!==SPREADS[spread].positions.length)return;
+ const backs=$("slots").querySelectorAll(".selected-back");
+ backs.forEach((back,i)=>{
+  back.style.animationDelay=(i*100)+"ms";
+  back.classList.add("sacred-reveal");
  });
- attachImageFallback($("slots"));
- $("readNow").disabled=true;
- $("readNow").textContent="牌面正在揭晓…";
+ const button=$("readNow");
+ button.disabled=true;
+ button.textContent="正在揭开命运的帷幕…";
  $("draw").classList.add("reveal-bloom");
  setTimeout(()=>{
-  $("readNow").disabled=false;
   $("draw").classList.remove("reveal-bloom");
+  button.disabled=false;
   showResults();
- },1300);
+ },1050+Math.min(500,drawn.length*100));
 }
 
 async function beginReading(){
@@ -715,16 +865,6 @@ function startDraw(){
 function suitCounts(){
  const counts={"权杖":0,"圣杯":0,"宝剑":0,"星币":0};drawn.forEach(x=>{if(x.card.suit)counts[x.card.suit]++});return counts;
 }
-function questionLens(){
- const q=question.trim();
- if(!q)return "没有写下具体问题也没有关系。你可以把这组牌当作对当下状态的一次开放式观察，留意最有共鸣的那张牌。";
- if(/感情|恋爱|关系|喜欢|暧昧|分手|婚姻|伴侣|爱情/.test(q))return "围绕这段关系，牌面更适合帮助你观察双方的表达、需求、边界与实际互动。它无法替你确认另一个人的内心，请把任何推测与对方真实而持续的行为核对。";
- if(/工作|事业|职业|实习|求职|职场|老板|同事/.test(q))return "放在工作与事业的语境里，这组牌可以帮助你梳理目标、资源、协作关系与长期节奏。除了机会，也请留意现实条件、职责边界和可持续性。";
- if(/学业|考试|论文|学习|学校|研究|毕业|课程/.test(q))return "放在学习与学业的语境里，重点可能是方法、专注、压力管理与阶段性目标。与其只问结果，不如看清下一步最值得投入的能力和时间。";
- if(/钱|财务|收入|投资|金钱|消费|预算|存款/.test(q))return "涉及金钱与资源时，请把牌面当作整理风险意识与价值取舍的提示，而不是投资或财务预测。实际决定应以可靠数据、预算和专业意见为基础。";
- if(/选择|决定|要不要|是否|怎么办|该不该/.test(q))return "如果你正站在选择面前，这组牌可以帮助你辨认每条路背后的需要、代价与价值观。它不替你做决定，而是让决定变得更清楚。";
- return "结合你提出的问题，建议先区分已经确认的事实、你此刻的感受，以及仍需要进一步了解的部分。牌面提供的是观察角度，真正有用的答案还要回到现实行动与反馈中。";
-}
 function overallText(){
  const major=drawn.filter(x=>x.card.major).length,rev=drawn.filter(x=>x.reversed).length,counts=suitCounts();
  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0],low=Object.entries(counts).sort((a,b)=>a[1]-b[1])[0];
@@ -732,7 +872,7 @@ function overallText(){
  let p2=rev>=Math.ceil(drawn.length*.55)?"逆位较多，提示目前有些能量尚未顺畅表达。它们可能指向内在顾虑、延迟、尚未说清的需求，或需要重新调整的旧习惯；不必把逆位理解成坏结果。":rev>0?"正逆位交错，呈现出机会与顾虑并存的状态。你并非完全没有选择，只是需要分辨哪些部分可以主动推进，哪些部分仍需要时间与澄清。":"牌面全部以正位出现，整体表达较为直接。它更像是在强调可被看见、可付诸行动的资源，但仍需要现实中的投入与判断。";
  let focus=top[1]>=2?`四个花色中，${top[0]}的能量最突出。它对应${SUITS[top[0]].focus}，说明这次问题很可能需要优先从这个领域理解。`:"四个花色分布较平均，说明这件事牵涉多个层面，不能只用单一角度解释。";
  let missing=low[1]===0?`这组牌没有出现${low[0]}，它所代表的${SUITS[low[0]].focus}或许尚未被充分纳入考虑。可以问问自己：我是否忽略了这一面？`:"";
- return `<div class="reading"><div class="badge">THE OVERALL WEATHER · 整体气候</div><h3>这组牌共同呈现的底色</h3><p>${p1}</p><p>${p2}</p><p>${focus}${missing}</p><p><b style="color:#e9d3a5">回到你的问题：</b>${safe(questionLens())}</p><div class="suit-meter">${Object.entries(counts).map(([s,n])=>`<span class="suit-chip">${s} ${n} 张 · ${SUITS[s].element}</span>`).join("")}<span class="suit-chip">大阿尔卡那 ${major} 张</span><span class="suit-chip">逆位 ${rev} 张</span></div></div>`;
+ return `<div class="reading"><div class="badge">THE OVERALL WEATHER · 整体气候</div><h3>这组牌共同呈现的底色</h3><p>${p1}</p><p>${p2}</p><p>${focus}${missing}</p><div class="suit-meter">${Object.entries(counts).map(([s,n])=>`<span class="suit-chip">${s} ${n} 张 · ${SUITS[s].element}</span>`).join("")}<span class="suit-chip">大阿尔卡那 ${major} 张</span><span class="suit-chip">逆位 ${rev} 张</span></div></div>`;
 }
 function positionNarrative(pos,idx){
  const name=pos[0];
@@ -846,15 +986,9 @@ function actionText(){
  return `<div class="analysis-grid"><div class="insight"><h4>现在可以做的第一件事</h4><p>${safe(lead.advice||suitAdvice)} 不需要一次解决全部问题，先完成最小而真实的一步。</p></div><div class="insight"><h4>值得留意的盲点</h4><p>${safe(drawn.some(x=>x.reversed)?"牌中出现逆位，提醒你留意尚未说清、尚未准备好或需要重新调整的部分。不要因此否定自己。":"即使牌面整体较顺，也要避免把希望当成保证。持续观察现实反馈，给计划留出修正空间。")}</p></div><div class="insight"><h4>给自己的三个小步骤</h4><p>① ${safe(steps[0])}<br>② ${safe(steps[1])}<br>③ ${safe(steps[2])}</p></div><div class="insight"><h4>这次占卜可以带走的问题</h4><p>如果不急着知道最终结果，我现在最需要理解的是什么？我可以怎样在尊重自己与现实的前提下，做出下一步选择？</p></div></div>`;
 }
 
-function questionKind(){
- const q=question||"";
- if(/脱单|恋爱|感情|爱情|暧昧|复合|在一起|桃花|喜欢我|有对象/.test(q))return "love";
- if(/工作|事业|求职|offer|实习|升职|面试/.test(q))return "career";
- if(/考试|成绩|论文|毕业|录取|上岸|学业/.test(q))return "study";
- if(/能否|能不能|会不会|是否|可不可以|有没有|会吗|能吗|成功吗|行不行|该不该|要不要|会.*吗|能.*吗|脱单/.test(q))return "yesno";
- return "open";
+function isBinaryQuestion(q){
+ return /(?:吗[？?]?$|能否|会否|能不能|会不会|是否|可不可以|行不行|该不该|要不要|有没有|值不值得)/.test((q||"").trim());
 }
-
 function oracleChibi(mood="hope"){
  const mouth=mood==="caution"?'<path d="M92 104q8-7 16 0" stroke="#704c68" stroke-width="3" fill="none" stroke-linecap="round"/>':'<path d="M91 100q9 11 18 0" stroke="#704c68" stroke-width="3" fill="none" stroke-linecap="round"/>';
  const cheek=mood==="caution"?"#e9a2a2":"#f2a6b7";
@@ -871,40 +1005,36 @@ function oracleChibi(mood="hope"){
  <path d="M87 126l13-9 13 9-13 10Z" fill="#f2d7a5"/>
  <path d="M50 151q-12 8-8 19 12 7 25-2m83-17q12 8 8 19-12 7-25-2" fill="#f4d9bd" stroke="#f6dfb3" stroke-width="2"/>
  <path d="M100 1v-7m-4 0h8" stroke="#f4d9a5" stroke-width="2" stroke-linecap="round"/>
- </svg><span>小天使 · Celestia</span></div>`;
+ </svg></div>`;
 }
 
 function questionVerdict(){
- if(!question)return "";
- const kind=questionKind();
- const intro={
-  love:"感情主题：牌面会特别留意情感开放度、相遇机会、互动质量与关系边界。它不能替你读取另一个人的心意，现实中的回应与行动仍然最重要。",
-  career:"事业主题：重点放在机会、准备程度、沟通协作与现实条件。把牌面当作策略提示，而不是录取或升职保证。",
-  study:"学业主题：重点放在持续投入、方法、专注和压力管理。结果仍取决于准备、反馈与实际执行。",
-  yesno:"这是一个适合做倾向性回应的问题。下面的判断来自抽到的牌及其正逆位象征，不是客观统计概率。",
-  open:"这类开放式问题不适合硬套“会/不会”。牌面会先给你一个核心方向，再指出最值得留意的条件。"
- }[kind];
- const eligible=drawn.filter(x=>x.card.yesNo);
- if(kind==="yesno"||kind==="love"||kind==="career"||kind==="study"){
-  let yes=0,no=0,maybe=0;
-  eligible.forEach(x=>{
-   const v=x.card.yesNo?.[x.reversed?"reversed":"upright"]||"maybe";
-   if(v==="yes")yes++;else if(v==="no")no++;else maybe++;
-  });
-  const total=Math.max(1,eligible.length);
-  const score=Math.round((yes/total)*100);
-  let label,sub;
-  if(yes>no&&yes>=maybe){label="偏向「会」";sub="这组牌中支持推进的象征较多，但仍需要现实行动配合。";}
-  else if(no>yes&&no>=maybe){label="偏向「暂时不会」";sub="目前的阻碍或延迟信号更明显，适合先调整条件，而不是强行等待结果。";}
-  else{label="有机会，但存在条件";sub="牌面没有给出单一方向，结果更取决于接下来的选择、时机与实际互动。";}
-  if(kind==="love"&&yes>no){label="有机会打开新的关系可能";sub="牌面偏向开放与相遇，但脱单不是被动等待的结果；扩大真实互动、表达兴趣和辨认合适对象会更重要。";}
-  if(kind==="love"&&no>yes){label="短期更适合整理与调整";sub="目前的牌面更强调边界、准备或旧模式的整理，不等于你不值得被爱，也不代表未来没有机会。";}
-  const bar=Math.round((yes+maybe*.5)/total*100);
-  return `<div class="verdict-card"><div class="verdict-eyebrow">✧ A WHISPER TO YOUR QUESTION ✧</div><div class="verdict-label">牌面给出的倾向</div>${oracleChibi(yes>no?"hope":no>yes?"caution":"hope")}<div class="verdict-answer">${label}</div><div class="verdict-bar"><span style="width:${bar}%"></span></div><div class="verdict-stats"><span>支持 ${yes}</span><span>观望 ${maybe}</span><span>阻碍 ${no}</span></div><p>${sub}</p><p class="verdict-disclaimer">${intro}「倾向条」只是本次牌面符号的汇总，不代表现实世界中发生的概率。</p></div>`;
+ if(!question.trim())return "";
+ const positions=SPREADS[spread].positions;
+ const binary=isBinaryQuestion(question);
+ const verdicts=drawn.map(item=>item.card.yesNo?.[item.reversed?"reversed":"upright"]||"").filter(v=>["yes","no","maybe"].includes(v));
+ if(binary&&verdicts.length){
+  const yes=verdicts.filter(v=>v==="yes").length;
+  const no=verdicts.filter(v=>v==="no").length;
+  const maybe=verdicts.filter(v=>v==="maybe").length;
+  let label="仍有变数",tone="hope",detail="支持与阻碍的象征同时存在，结果仍受现实条件和后续行动影响。";
+  if(yes>no){label="目前偏向肯定";tone="hope";detail="支持推进的象征稍多。可以留意哪些现实条件正在配合，也别忽略自己能主动创造的部分。";}
+  if(no>yes){label="目前偏向否定或延迟";tone="caution";detail="阻碍或延迟的象征更明显。与其把它理解成绝对不可能，不如先看清最需要调整的条件。";}
+  return `<div class="verdict-card"><div class="verdict-eyebrow">✧ THE CARDS ANSWER ✧</div><div class="verdict-label">针对这次提问的牌面倾向</div>${oracleChibi(tone)}<div class="verdict-answer">${label}</div><p>${safe(detail)}</p><div class="verdict-stats"><span>支持 ${yes}</span><span>观望 ${maybe}</span><span>阻碍 ${no}</span></div><p class="verdict-disclaimer">这是对本次牌面象征的归纳，不是现实事件的统计概率或保证。</p></div>`;
  }
- return `<div class="verdict-card open-verdict"><div class="verdict-eyebrow">✧ A WHISPER TO YOUR QUESTION ✧</div><div class="verdict-label">这次牌面想先告诉你</div>${oracleChibi("hope")}<p>${intro}</p><p>先不要急着把问题压缩成一个结果。你可以从牌阵中最有共鸣的那张牌开始，看看它正在提醒你关注什么。</p></div>`;
+ // Open questions receive a reading built from the actual drawn cards, not a generic fallback paragraph.
+ const first=drawn[0],firstPos=positions[0]||["核心位置"];
+ const firstMeaning=first.reversed?first.card.rev:first.card.up;
+ const firstName=first.card.name;
+ let body=`牌面先把焦点放在「${firstPos[0]}」的${firstName}。${firstMeaning}`;
+ if(drawn.length>1){
+  const last=drawn[drawn.length-1],lastPos=positions[drawn.length-1]||["后续位置"];
+  const lastMeaning=last.reversed?last.card.rev:last.card.up;
+  body+=` 而落在「${lastPos[0]}」的${last.card.name}，把这份讯息延伸到下一层：${lastMeaning}`;
+ }
+ const focusNames=drawn.slice(0,Math.min(3,drawn.length)).map(x=>x.card.name).join("、");
+ return `<div class="verdict-card open-verdict"><div class="verdict-eyebrow">✧ A READING FOR YOUR QUESTION ✧</div><div class="verdict-label">围绕「${safe(question)}」</div>${oracleChibi("hope")}<div class="question-reading-text"><p>${safe(body)}</p><p class="verdict-disclaimer">这段回应取自本次实际抽到的牌及其牌阵位置（${safe(focusNames)}），不是预设的通用答案。更完整的脉络请结合下方逐张解读与牌间关系一起阅读。</p></div></div>`;
 }
-
 function showResults(){
  showSection("result");
  $("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 留给内心的一次探索";
