@@ -1,588 +1,335 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#171126">
-<title>Celestia 3.3 · 天使秘境</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#e9d9c8">
+<meta name="description" content="Celestia Tarot · 在古典星辰殿堂中，抽取一张属于此刻的塔罗指引。">
+<title>Celestia Tarot · 星辰塔罗殿堂</title>
 <style>
-:root{--night:#171126;--violet:#302044;--plum:#49345f;--lav:#d9c0f4;--gold:#e8ce9b;--cream:#fff5df;--muted:#c8b8d9;--line:#dfc58b66}
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+:root{
+ --ink:#59453d;--ink-soft:#806a60;--paper:#f4eadc;--paper-light:#fff9ef;
+ --gold:#bd9660;--gold-light:#e7c994;--rose:#d7a8a0;--lav:#b6a5c7;
+ --blue:#9eb4c4;--green:#a8b6a0;--shadow:rgba(75,49,42,.18);
+ --serif:"Cormorant Garamond","Noto Serif SC",serif;
+ --cn:"Noto Serif SC","Songti SC",serif;
+}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;color:#fbf5ff;background:radial-gradient(ellipse at 50% -15%,#775c91 0,#3c2a53 29%,#21182f 60%,#14101f 100%);font-family:"Noto Serif SC","Songti SC","STSong",Georgia,serif;overflow-x:hidden}
-body:before,body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0}
-body:before{opacity:.48;background-image:radial-gradient(1px 1px at 12% 18%,#fff 98%,transparent),radial-gradient(2px 2px at 78% 14%,#f4dcae 98%,transparent),radial-gradient(1px 1px at 88% 70%,#fff 98%,transparent),radial-gradient(1px 1px at 30% 82%,#dcbaff 98%,transparent),radial-gradient(1px 1px at 54% 44%,#fff 98%,transparent);background-size:230px 210px}
-body:after{background:radial-gradient(ellipse at 50% 48%,transparent 20%,#100b1b55 100%)}
-#ambient{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff4d8;box-shadow:0 0 12px 3px #d8b7ff88;animation:floatSpark var(--dur) ease-in-out infinite;opacity:0}
-@keyframes floatSpark{0%,100%{transform:translate3d(0,15px,0) scale(.4);opacity:0}35%{opacity:.9}70%{transform:translate3d(var(--dx),-65px,0) scale(1.5);opacity:.35}}
-header,main,footer{position:relative;z-index:1}
-header{text-align:center;padding:34px 16px 20px}
-.crest{width:88px;height:88px;margin:auto;display:grid;place-items:center;position:relative}
-.crest:before,.crest:after{content:"";position:absolute;border:1px solid #e9d3a5aa;border-radius:50%;inset:4px;box-shadow:0 0 24px #d4b0f455}
-.crest:after{inset:13px;border-style:dashed;animation:slowSpin 30s linear infinite}
-.crest svg{width:66px;filter:drop-shadow(0 0 12px #e4c4ff88)}
-@keyframes slowSpin{to{transform:rotate(360deg)}}
-.brand{font-size:clamp(28px,5vw,43px);letter-spacing:10px;margin:8px 0 7px;text-shadow:0 0 24px #d8b4ff66}
-.en{font:10px Arial,sans-serif;letter-spacing:5px;color:#dbc8ec}
-.tagline{font-size:13px;color:#e1d3eb;line-height:2;margin:16px auto 0;max-width:640px}
-main{max-width:1120px;margin:auto;padding:0 18px 56px}
-.panel{background:linear-gradient(145deg,#ffffff0d,#ffffff06);border:1px solid #d9c2ee35;border-radius:20px;padding:23px;margin:15px 0;box-shadow:0 18px 50px #09061342;backdrop-filter:blur(10px)}
-.kicker{text-align:center;color:var(--lav);font:10px Arial,sans-serif;letter-spacing:3px;margin-bottom:15px}
-.section-title{text-align:center;font-size:21px;letter-spacing:3px;font-weight:400;margin:4px 0 10px}
-.muted{color:#c9bad8;font-size:12px;line-height:1.9}
-.center{text-align:center}
-label{display:block;color:#f0e3f8;font-size:13px;margin-bottom:9px}
-input{width:100%;padding:14px 15px;background:#100c1c99;border:1px solid #b99bd366;border-radius:11px;color:white;font:13px Arial,"Noto Sans SC",sans-serif;outline:none}
-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #e8ce9b18}
-.spreads{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
-.spread{background:#ffffff08;color:#f7efff;border:1px solid #c7a7df55;border-radius:14px;padding:16px 10px;cursor:pointer;min-height:112px;transition:.25s;position:relative;overflow:hidden}
-.spread:hover{transform:translateY(-3px);border-color:#dfc58b}
-.spread.active{background:linear-gradient(145deg,#a47dc13a,#e8ce9b12);border-color:var(--gold);box-shadow:0 0 24px #d6b4f32a,inset 0 0 20px #d6b4f311}
-.spread .sigil{font-size:24px;color:var(--gold);display:block}
-.spread b{display:block;font-size:13px;font-weight:400;margin:8px 0 4px}
-.spread small{color:#c7b5d8;font:10px Arial}
-button{font-family:inherit}
-button:focus-visible{outline:2px solid #f4d99f;outline-offset:4px}
-.primary{background:linear-gradient(125deg,#f1dba9,#d9b7f0 58%,#b18ad0);color:#281b37;border:1px solid #f5dfb4;border-radius:30px;padding:13px 29px;letter-spacing:2px;cursor:pointer;font-size:13px;box-shadow:0 7px 24px #100a1d77;transition:.25s}
-.primary:hover{filter:brightness(1.12);transform:translateY(-2px);box-shadow:0 10px 30px #d8b5ef35}
-.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.secondary{border:1px solid #c6a6dd88;background:#ffffff0a;color:#f4eaff;border-radius:25px;padding:10px 20px;cursor:pointer;transition:.2s}
-.secondary:hover{background:#ffffff18;border-color:var(--gold)}
-.deck-showcase{height:190px;display:flex;justify-content:center;align-items:center;position:relative;margin:8px auto 5px;max-width:430px}
-.deck-back{width:105px;height:158px;border:1px solid #e8ce9b;border-radius:10px;position:absolute;display:grid;place-items:center;background:linear-gradient(145deg,#55406d,#241a39);box-shadow:0 13px 30px #09051199;transition:.3s;overflow:hidden}
-.deck-back:before{content:"";position:absolute;inset:6px;border:1px solid #e8ce9b99;border-radius:6px}
-.deck-back:after{content:"";position:absolute;inset:13px;border:1px dashed #e8ce9b66;border-radius:4px}
-.deck-back svg{width:76%;position:relative;z-index:1}
-.deck-back:nth-child(1){transform:translateX(-29px) rotate(-12deg)}
-.deck-back:nth-child(2){transform:translateY(-8px);z-index:2}
-.deck-back:nth-child(3){transform:translateX(29px) rotate(12deg)}
-.deck-showcase:hover .deck-back:nth-child(1){transform:translate(-45px,-12px) rotate(-19deg)}
-.deck-showcase:hover .deck-back:nth-child(3){transform:translate(45px,-12px) rotate(19deg)}
-.hidden{display:none!important}
-#ritual .panel{min-height:390px}
-.ritual-orb{width:170px;height:170px;margin:25px auto 18px;border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle,#d8b6f044 0,#a77bd11c 40%,transparent 70%)}
-.ritual-orb:before,.ritual-orb:after{content:"";position:absolute;inset:7px;border:1px solid #e8ce9b77;border-radius:50%;animation:slowSpin 14s linear infinite}
-.ritual-orb:after{inset:22px;border-style:dashed;animation-direction:reverse;animation-duration:22s}
-.ritual-orb svg{width:112px;filter:drop-shadow(0 0 15px #e7c7ff88)}
-.shuffling .ritual-orb svg{animation:wingBeat .32s ease-in-out infinite alternate}
-@keyframes wingBeat{to{transform:scale(1.12) rotate(3deg)}}
-.progress{height:3px;background:#ffffff20;max-width:360px;margin:18px auto;border-radius:9px;overflow:hidden}
-.progress span{display:block;height:3px;background:linear-gradient(90deg,#c49ce9,#f0d79d);width:0;transition:width .5s}
-.pick-instruction{margin:8px 0 18px;color:#e4d5ef;font-size:13px}
-.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:12px;margin:22px auto;max-width:950px}
-.slot{min-width:0;text-align:center}
-.slot-frame{height:164px;border:1px dashed #d8bd8c77;border-radius:9px;background:#ffffff06;display:grid;place-items:center;color:#c9b2df;position:relative;overflow:hidden}
-.slot-frame .slot-num{font-size:26px;color:#e6d09f}
-.slot-frame .slot-label{position:absolute;bottom:10px;left:4px;right:4px;font-size:10px;color:#cbb9da}
-.slot.filled .slot-frame{border:0;background:transparent;overflow:visible}
-.slot.filled .slot-frame .tarot-card{width:100%;margin:0}
-.slot.filled .slot-frame .card-face{height:164px}
-.slot-name{font-size:11px;color:#e4d5ef;margin-top:7px}
-.pick-deck-wrap{padding:18px 10px 15px;border-top:1px solid #ffffff1b;margin-top:15px}
-.pick-deck{display:grid;grid-template-columns:repeat(12,minmax(48px,1fr));gap:7px;max-width:850px;margin:12px auto 0}
-.pick-card{border:0;background:transparent;padding:0;cursor:pointer;perspective:700px;min-width:0;transition:transform .22s}
-.pick-card:hover{transform:translateY(-12px) scale(1.06);z-index:3}
-.pick-card:disabled{opacity:.15;cursor:default;transform:scale(.92)}
-.pick-card svg{width:100%;display:block;filter:drop-shadow(0 5px 8px #09051188)}
-.pick-card .back-svg{transition:filter .2s}
-.pick-card:hover .back-svg{filter:drop-shadow(0 0 10px #e7ce9d99)}
-.tarot-card{width:145px;text-align:center;animation:cardArrive .65s cubic-bezier(.2,.8,.2,1) both}
-@keyframes cardArrive{from{opacity:0;transform:translateY(25px) rotateY(85deg) scale(.88)}to{opacity:1;transform:none}}
-.card-flip{perspective:1000px}
-.card-inner{position:relative;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.2,.75,.2,1)}
-.card-inner.flipped{transform:rotateY(180deg)}
-.card-back,.card-front{backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.card-back{position:absolute;inset:0;transform:rotateY(0deg)}
-.card-front{transform:rotateY(180deg)}
-.card-face{height:218px;border:1px solid #e8ce9b;border-radius:9px;overflow:hidden;background:#261b39;box-shadow:0 10px 28px #08051199;position:relative}
-.card-face svg{width:100%;height:100%;display:block}
-.card-face.reversed svg{transform:rotate(180deg)}
-.card-caption{font-size:12px;margin-top:9px;color:#f6eafa}
-.card-position{font:10px Arial,"Noto Sans SC",sans-serif;color:#c9b5db;margin-top:5px}
-.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:15px;margin:24px 0}
-.pick-note{text-align:center;color:#c8b8d9;font:11px/1.8 Arial,"Noto Sans SC",sans-serif}
-.result-head{text-align:center;margin:12px 0 20px}
-.result-title{text-align:center;font-size:24px;letter-spacing:4px;font-weight:400;margin:8px 0 9px}
-.result-subtitle{font-size:12px;color:#cbb9dc;line-height:1.8}
-.reading{background:linear-gradient(145deg,#ffffff0d,#ffffff06);border:1px solid #c5a5dc44;border-radius:15px;padding:19px;margin:13px 0}
-.reading h3{font-weight:400;color:var(--gold);font-size:16px;margin:0 0 10px}
-.reading p{font:13px/2 Arial,"Noto Sans SC",sans-serif;color:#e3d8ec;margin:8px 0}
-.reading .badge{font:10px Arial,sans-serif;color:var(--lav);letter-spacing:2px;margin-bottom:9px}
-.reading .prompt{color:#e9d2a5;border-left:2px solid #e8ce9b;padding-left:12px;margin-top:12px}
-.analysis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.insight{border:1px solid #d9c2ee33;background:#ffffff08;border-radius:13px;padding:16px}
-.insight h4{font-size:13px;color:var(--gold);font-weight:400;margin:0 0 8px}
-.insight p{font:12px/1.9 Arial,"Noto Sans SC",sans-serif;color:#d9cde4;margin:0}
-.suit-meter{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:12px 0}
-.suit-chip{font:11px Arial,"Noto Sans SC",sans-serif;border:1px solid #d9c2ee44;border-radius:20px;padding:7px 11px;color:#e6d9ef;background:#ffffff08}
-.final-note{text-align:center;padding:24px 18px;background:radial-gradient(ellipse,#a17bc02b,transparent 70%);margin-top:20px}
-.final-note .angel{font-size:25px;color:var(--gold)}
-footer{text-align:center;color:#a995bc;font:10px Arial,sans-serif;letter-spacing:2px;padding:20px 10px 30px}
-.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#332447;border:1px solid #e8ce9b88;border-radius:24px;padding:10px 17px;color:#fff0d6;font:12px Arial,"Noto Sans SC",sans-serif;z-index:20;opacity:0;transition:.3s;pointer-events:none}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:720px){.spreads{grid-template-columns:repeat(2,1fr)}.pick-deck{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;max-width:440px}.slots{grid-template-columns:repeat(3,minmax(0,1fr))}.slot-frame{height:145px}.slot.filled .slot-frame .card-face{height:145px}}
-@media(max-width:480px){header{padding-top:25px}.brand{letter-spacing:6px}.panel{padding:16px}.tarot-card{width:calc(33.33% - 10px);min-width:94px}.card-face{height:170px}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.slot-frame{height:160px}.slot.filled .slot-frame .card-face{height:160px}.analysis-grid{grid-template-columns:1fr}.pick-deck{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
-</style>
-
-<style>
-/* CELESTIA 3.0 — grand celestial sanctuary */
-:root{--night:#0b0716;--violet:#201333;--plum:#3c245c;--lav:#e2c7ff;--gold:#f2d59c;--cream:#fff4df}
-body{background:#0a0714;color:#fff8ff;font-family:"Noto Serif SC","Songti SC",serif}
-body:before{opacity:.6;background-image:radial-gradient(1px 1px at 10% 12%,#fff 98%,transparent),radial-gradient(2px 2px at 82% 21%,#f4dcae 98%,transparent),radial-gradient(1px 1px at 66% 77%,#fff 98%,transparent),radial-gradient(2px 2px at 29% 63%,#dcbaff 98%,transparent),radial-gradient(1px 1px at 91% 88%,#fff 98%,transparent);background-size:180px 170px}
-body:after{background:radial-gradient(ellipse at 50% 18%,#6c468833,transparent 45%),radial-gradient(ellipse at 50% 80%,#31164c44,transparent 60%),linear-gradient(180deg,#100a1d 0%,#0b0715 100%)}
-#ambient{z-index:0}
-header.grand-hero{min-height:790px;height:min(100svh,950px);display:grid;place-items:center;position:relative;overflow:hidden;padding:35px 18px 70px;background:radial-gradient(ellipse at 50% 43%,#68448b66 0%,#2b1948aa 26%,transparent 64%)}
-.grand-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0a071455,transparent 45%,#0a0714 100%);z-index:1}
-.hero-copy{position:relative;z-index:3;text-align:center;max-width:740px}
-.hero-overline,.hero-sub,.scroll-cue{font:10px Arial,sans-serif;letter-spacing:4px;color:#e7d5f2}
-.hero-emblem{position:absolute;width:min(52vw,530px);height:570px;top:48%;left:50%;transform:translate(-50%,-50%);opacity:.8;filter:drop-shadow(0 0 45px #b98be866);animation:emblemBreathe 7s ease-in-out infinite}
-.hero-emblem svg{width:100%;height:100%;overflow:visible}
-.hero-orbit{position:absolute;left:50%;top:48%;border:1px solid #e7d0a533;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.orbit-one{width:min(78vw,850px);height:min(78vw,850px);animation:orbitSpin 80s linear infinite}
-.orbit-two{width:min(62vw,680px);height:min(62vw,680px);border-style:dashed;animation:orbitSpin 110s linear infinite reverse}
-.hero-stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 15% 25%,#fff 99%,transparent),radial-gradient(2px 2px at 82% 17%,#f1dba9 99%,transparent),radial-gradient(1px 1px at 75% 70%,#fff 99%,transparent),radial-gradient(2px 2px at 22% 75%,#d6b7fa 99%,transparent);background-size:320px 290px;animation:starDrift 24s linear infinite}
-.brand{font-size:clamp(40px,7vw,72px);letter-spacing:clamp(7px,1.7vw,18px);margin:23px 0 12px;text-shadow:0 0 18px #f3d5ff99,0 0 55px #b98be899}
-.en{font-size:10px;letter-spacing:6px;color:#e7d2f5}
-.tagline{font-size:clamp(19px,3vw,26px);line-height:2.1;letter-spacing:3px;color:#fff7ff;margin:27px auto 0;text-shadow:0 2px 16px #100718}
-.tagline em{font-style:normal;color:#f2d9a6}
-.hero-divider{margin:24px auto 18px;width:180px;height:1px;background:linear-gradient(90deg,transparent,#f1d8a5,transparent);position:relative}
-.hero-divider span{position:absolute;top:-9px;left:calc(50% - 8px);background:#241633;padding:0 8px;color:#f2d9a6}
-.hero-sub{letter-spacing:2px;line-height:2}
-.scroll-cue{display:inline-flex;flex-direction:column;gap:12px;margin-top:55px;text-decoration:none;color:#f1d8a5;transition:.3s}
-.scroll-cue span{font-size:20px;animation:cueBounce 1.8s infinite}
-.scroll-cue:hover{letter-spacing:6px}
-@keyframes emblemBreathe{0%,100%{transform:translate(-50%,-50%) scale(.96);opacity:.6}50%{transform:translate(-50%,-50%) scale(1.04);opacity:1}}
-@keyframes orbitSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-@keyframes starDrift{to{background-position:320px -290px}}
-@keyframes cueBounce{50%{transform:translateY(8px)}}
-main{max-width:1280px;padding:0 24px 90px}
-.panel{background:linear-gradient(145deg,#2e1b47cc,#160f27ee 65%,#1b1230dd);border:1px solid #e8d0a544;border-radius:24px;padding:clamp(22px,3vw,38px);box-shadow:0 25px 90px #05030d99,inset 0 1px #ffffff15;position:relative;overflow:hidden}
-.panel:before{content:"";position:absolute;inset:7px;border:1px solid #d9b8f01a;border-radius:18px;pointer-events:none}
-.panel:after{content:"✧";position:absolute;top:16px;right:22px;color:#f1d9a355;font-size:18px}
-#setup>.panel:first-child{margin-top:-42px;z-index:4}
-.kicker{font-size:10px;letter-spacing:5px;color:#e7cda0;text-shadow:0 0 14px #dfbaff55}
-.section-title{font-size:clamp(23px,3vw,31px);letter-spacing:5px;text-shadow:0 0 20px #d4a9f044}
-input{background:#10091dcc;border:1px solid #d7b8e766;border-radius:14px;padding:17px 19px;font-size:14px}
-input:focus{border-color:#f0d6a2;box-shadow:0 0 0 4px #e8ce9b20,0 0 28px #c89de744}
-.spreads{gap:14px}
-.spread{min-height:140px;border-radius:18px;background:linear-gradient(145deg,#ffffff0d,#ffffff03);border:1px solid #d8b8ed44;box-shadow:inset 0 1px #ffffff12;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border .35s}
-.spread .sigil{font-size:31px;text-shadow:0 0 20px #e9cb9a88}
-.spread b{font-size:15px;letter-spacing:2px}
-.spread small{font-size:11px}
-.spread:hover{transform:translateY(-7px) scale(1.02);box-shadow:0 16px 34px #09051088,0 0 30px #cba4ed22}
-.spread.active{background:linear-gradient(145deg,#a67bc13c,#e8ce9b1a);box-shadow:0 0 32px #cda6f344,inset 0 0 30px #d6b4f322;border-color:#f0d7a5}
-.primary{background:linear-gradient(110deg,#f3dba4,#e8c8fa 48%,#c69ee7);padding:16px 34px;font-size:14px;letter-spacing:3px;box-shadow:0 8px 28px #0a0614,0 0 25px #cba4ed35;border:1px solid #fff0c7;transition:transform .3s,box-shadow .3s,filter .3s}
-.primary:hover{transform:translateY(-4px) scale(1.035);box-shadow:0 15px 45px #090511,0 0 40px #e4c1ff77}
-.secondary{border-color:#d5b2eb;color:#f8efff}
-.deck-showcase{height:235px;max-width:560px;perspective:900px}
-.deck-back{width:125px;height:190px;border-radius:12px;box-shadow:0 24px 42px #07040eaa,0 0 25px #d7b1f333}
-.deck-back:nth-child(1){transform:translateX(-42px) rotate(-18deg) translateY(8px)}
-.deck-back:nth-child(2){transform:translateY(-22px) scale(1.08);z-index:2}
-.deck-back:nth-child(3){transform:translateX(42px) rotate(18deg) translateY(8px)}
-.deck-showcase:hover .deck-back:nth-child(1){transform:translate(-85px,-14px) rotate(-26deg)}
-.deck-showcase:hover .deck-back:nth-child(3){transform:translate(85px,-14px) rotate(26deg)}
-.scene-enter{animation:sceneReveal .9s cubic-bezier(.16,1,.3,1) both}
-@keyframes sceneReveal{0%{opacity:0;transform:translateY(70px) scale(.94);filter:blur(12px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none}}
-#ritual .panel{min-height:600px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(ellipse at 50% 50%,#6e4a8d55,#211435 52%,#110b20)}
-.ritual-orb{width:260px;height:260px;margin:40px auto 28px;background:radial-gradient(circle,#e0bafa40,#9a69c822 40%,transparent 72%);filter:drop-shadow(0 0 35px #cba2f877)}
-.ritual-orb:before{inset:-10px;border-width:2px;box-shadow:0 0 40px #e5c2ff44}
-.ritual-orb:after{inset:10px;border-width:1px}
-.ritual-orb svg{width:175px}
-.shuffling .ritual-orb{animation:ritualPulse .65s ease-in-out infinite alternate}
-@keyframes ritualPulse{to{transform:scale(1.12);filter:drop-shadow(0 0 65px #eacfff)}}
-.progress{height:5px;background:#ffffff1a;border-radius:9px;box-shadow:0 0 15px #b78ce944}
-.progress span{height:5px;background:linear-gradient(90deg,#a77ad8,#f5dba5,#fff4dc);box-shadow:0 0 16px #f3d6a8}
-#draw .panel{background:radial-gradient(ellipse at 50% 45%,#51336d66,#1d1230 52%,#110b20);overflow:visible}
-#draw .panel:before{inset:9px}
-.pick-deck-wrap{border:0;margin-top:25px;padding:10px 0 0}
-.fan-deck{position:relative;height:410px;max-width:100%;margin:28px auto 4px;display:block;overflow:visible;isolation:isolate}
-.fan-card{position:absolute;left:50%;bottom:0;width:clamp(42px,5.2vw,65px);height:clamp(68px,8vw,104px);padding:0;border:0;background:transparent;transform-origin:50% 100%;transform:translateX(-50%) rotate(var(--angle)) translateY(-205px);z-index:calc(1 + var(--order));transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .3s,opacity .3s;filter:drop-shadow(0 7px 7px #06030d99)}
-.fan-card svg{width:100%;height:100%;display:block;border-radius:7px}
-.fan-card:hover{transform:translateX(-50%) rotate(var(--angle)) translateY(calc(-225px - var(--lift))) scale(1.22);z-index:1000;filter:drop-shadow(0 0 16px #efd39e)}
-.fan-card:disabled{opacity:.1;filter:grayscale(1);transform:translateX(-50%) rotate(var(--angle)) translateY(-185px) scale(.8);pointer-events:none}
-.fan-card:focus-visible{z-index:1200}
-.pick-instruction{font-size:15px;letter-spacing:1px;color:#f6eaff}
-.pick-note{font-size:12px;letter-spacing:1px}
-.slots{max-width:1080px;gap:18px}
-.slot-frame{height:200px;border:1px solid #e5c99977;border-radius:12px;background:linear-gradient(145deg,#ffffff0d,#ffffff03);box-shadow:inset 0 0 35px #c9a5ed0c}
-.slot-frame .slot-num{font-family:Georgia,serif;font-size:33px;color:#f0d7a3;text-shadow:0 0 18px #d8b1f4}
-.slot.filled .slot-frame .card-face{height:200px}
-.tarot-card{width:165px;filter:drop-shadow(0 16px 22px #05030e88)}
-.card-face{height:250px;border:1px solid #f0d6a2;border-radius:12px;padding:5px;background:linear-gradient(145deg,#f4dba8,#7b5a94,#f4dba8);box-shadow:0 0 0 1px #f9e6c455,0 14px 35px #05030eaa,0 0 28px #caa3ed33}
-.card-face svg{border-radius:7px}
-.card-art{width:100%;height:100%;position:relative;border-radius:7px;overflow:hidden;background:#241936}
-.card-art img{width:100%;height:100%;object-fit:cover;display:block}
-.art-frame{position:absolute;inset:4px;border:1px solid #f2d7a3;box-shadow:inset 0 0 22px #160c2388;pointer-events:none}
-.art-caption{position:absolute;bottom:7px;left:6px;right:6px;text-align:center;background:#130b20cc;color:#fff0d0;font-size:10px;letter-spacing:1px;padding:5px 3px;border:1px solid #d9bb8a66}
-.card-face.reversed img{transform:rotate(180deg)}
-.card-caption{font-size:12px;color:#fff4df;letter-spacing:1px}
-.card-position{font-size:10px;letter-spacing:1px}
-#result .panel{background:linear-gradient(150deg,#2a1942,#120c21 60%,#1d1230)}
-#allcards{gap:22px}
-#allcards .tarot-card{width:clamp(115px,15vw,175px)}
-#allcards .card-face{height:clamp(175px,23vw,260px)}
-.reading{background:linear-gradient(135deg,#ffffff0c,#ffffff04);border:1px solid #d8b7eb44;border-radius:18px;padding:24px;box-shadow:0 12px 30px #05030c44}
-.reading h3{font-size:18px;letter-spacing:2px}
-.reading p{font-size:14px;line-height:2.05}
-.analysis-grid{gap:15px}
-.insight{border:1px solid #d8b7eb44;background:linear-gradient(145deg,#ffffff0c,#ffffff04);border-radius:17px;padding:20px}
-.insight h4{font-size:15px;letter-spacing:1px}
-.insight p{font-size:13px;line-height:2}
-.verdict-card{position:relative;margin:24px 0;padding:clamp(24px,4vw,42px);border:1px solid #f0d7a577;border-radius:22px;text-align:center;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#8a63aa55,transparent 65%),linear-gradient(145deg,#35204f,#171027);box-shadow:0 20px 60px #05030d99,0 0 38px #cda6f322}
-.verdict-card:before{content:"✧";position:absolute;top:12px;left:20px;color:#f0d7a6;font-size:26px}.verdict-card:after{content:"✧";position:absolute;bottom:12px;right:20px;color:#f0d7a6;font-size:26px}
-.verdict-eyebrow{font:10px Arial,sans-serif;letter-spacing:5px;color:#e8d1a8}
-.verdict-label{font-size:13px;color:#d8c4e7;margin-top:20px;letter-spacing:2px}
-.verdict-answer{font-size:clamp(27px,5vw,44px);letter-spacing:5px;color:#f5dca8;text-shadow:0 0 26px #e6c28e66;margin:13px 0}
-.verdict-bar{height:8px;max-width:420px;margin:20px auto 8px;border-radius:20px;background:linear-gradient(90deg,#6f536f,#ffffff18);overflow:hidden}
-.verdict-bar span{display:block;height:100%;background:linear-gradient(90deg,#a17bd2,#f1d7a0);border-radius:20px;box-shadow:0 0 18px #e7c9a2}
-.verdict-stats{display:flex;justify-content:center;gap:25px;color:#d8c5e7;font:11px Arial,sans-serif;letter-spacing:1px}
-.verdict-card p{max-width:760px;margin:16px auto 0;font-size:13px;line-height:2;color:#e8deef}
-.verdict-card .verdict-disclaimer{font-size:11px;color:#bdaecb}
-.final-note{padding:40px 20px;background:radial-gradient(ellipse,#a17bc044,transparent 70%)}
-.final-note .angel{font-size:36px;text-shadow:0 0 24px #e6c4ff}
-footer{line-height:2.1;letter-spacing:2px;color:#a995bc}
-footer a{color:#cbb0e8;text-decoration:none}
-footer a:hover{color:#f1d6a4}
-.toast{background:#291a40;border-color:#efd6a3;box-shadow:0 0 24px #c9a0ed44}
-@media(max-width:720px){
- header.grand-hero{min-height:720px;height:90svh}
- .hero-emblem{width:85vw;height:480px}
- .orbit-one{width:110vw;height:110vw}.orbit-two{width:90vw;height:90vw}
- .fan-deck{height:360px}
- .fan-card{width:clamp(28px,7vw,42px);height:clamp(48px,11vw,70px);transform:translateX(-50%) rotate(var(--angle)) translateY(-180px)}
- .fan-card:hover{transform:translateX(-50%) rotate(var(--angle)) translateY(-202px) scale(1.28)}
- .fan-card:disabled{transform:translateX(-50%) rotate(var(--angle)) translateY(-160px) scale(.8)}
- .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
- .slot-frame{height:170px}.slot.filled .slot-frame .card-face{height:170px}
+body{margin:0;background:#e7d9cb;color:var(--ink);font-family:var(--cn);overflow-x:hidden}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #a77b55;outline-offset:4px}
+#app{min-height:100vh;position:relative;isolation:isolate}
+#app:before{content:"";position:fixed;inset:0;z-index:-3;background:
+ radial-gradient(ellipse at 15% 18%,#fff8e9 0,transparent 36%),
+ radial-gradient(ellipse at 88% 80%,#d9c8dd 0,transparent 35%),
+ linear-gradient(135deg,#e9d9c8,#f5eadb 50%,#d9d1d7)}
+#app:after{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.18;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E")}
+.stage{min-height:100vh;position:relative;display:none;overflow:hidden}
+.stage.active{display:flex;animation:stageIn 1.15s cubic-bezier(.16,1,.3,1) both}
+@keyframes stageIn{0%{opacity:0;transform:scale(1.035);filter:blur(8px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1)}}
+.stage-curtain{position:fixed;inset:0;z-index:100;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,#fff8e8 0,#d6b4c2 34%,#8e7a9e 100%);transform:scale(.1);border-radius:50%}
+.stage-curtain.play{animation:curtainBloom 1.15s cubic-bezier(.2,.75,.15,1) both}
+@keyframes curtainBloom{0%{opacity:0;transform:scale(.05);border-radius:50%}25%{opacity:.95}70%{opacity:.75;transform:scale(1.8);border-radius:30%}100%{opacity:0;transform:scale(2.5);border-radius:0}}
+.ornate-frame{position:relative;border:1px solid #b78e5b;padding:clamp(22px,4vw,48px);background:linear-gradient(135deg,#fff9eeeb,#f2e4d3e8);box-shadow:0 18px 60px var(--shadow),inset 0 0 0 5px #fff8ef,inset 0 0 0 6px #c6a475}
+.ornate-frame:before,.ornate-frame:after{content:"✧ ❧ ✧";position:absolute;left:50%;transform:translateX(-50%);color:#b78e5b;background:#f7ecdd;padding:0 14px;letter-spacing:8px;font-size:15px}
+.ornate-frame:before{top:-10px}.ornate-frame:after{bottom:-10px}
+.eyebrow{font:500 12px var(--serif);letter-spacing:5px;text-transform:uppercase;color:#9c7b5e}
+.wordmark{font:italic 600 clamp(44px,7vw,84px) var(--serif);letter-spacing:1px;color:#896847;text-shadow:0 2px #fff7e9,0 8px 22px #98764b33;margin:0}
+.wordmark-sub{font:500 12px var(--serif);letter-spacing:7px;color:#987c65;margin-top:-3px}
+h1,h2,h3,p{margin-top:0}
+.section-title{font:500 clamp(28px,4vw,44px) var(--serif);letter-spacing:2px;color:#755b49;margin:0 0 10px}
+.section-sub{font-size:13px;letter-spacing:2px;color:#a48c79;margin:0}
+.gold-button{border:1px solid #b68b55;color:#fff9ed;background:linear-gradient(135deg,#caa36e,#9f754c 58%,#d4b27c);padding:13px 36px;letter-spacing:3px;box-shadow:0 7px 0 #8c6948,0 13px 25px #71533c35,inset 0 1px #fff2d8;border-radius:2px;transition:.35s;position:relative;overflow:hidden}
+.gold-button:before{content:"";position:absolute;inset:-60% auto -60% -40%;width:25%;background:#fff9e9aa;transform:rotate(25deg);transition:.7s}
+.gold-button:hover{transform:translateY(-3px);box-shadow:0 10px 0 #8c6948,0 20px 34px #71533c40}
+.gold-button:hover:before{left:130%}
+.ghost-button{border:1px solid #b99b78;background:#fff9ee99;color:#80664f;padding:10px 22px;letter-spacing:2px;transition:.25s}
+.ghost-button:hover{background:#fffaf2;box-shadow:0 5px 18px #8d6c4a20}
+.small-link{background:none;border:0;color:#97785e;text-decoration:underline;text-underline-offset:4px;font-size:12px;letter-spacing:1px}
+.corner{position:absolute;width:54px;height:54px;border-color:#bd9660;opacity:.8;pointer-events:none}
+.corner.tl{top:10px;left:10px;border-top:1px solid;border-left:1px solid}
+.corner.tr{top:10px;right:10px;border-top:1px solid;border-right:1px solid}
+.corner.bl{bottom:10px;left:10px;border-bottom:1px solid;border-left:1px solid}
+.corner.br{bottom:10px;right:10px;border-bottom:1px solid;border-right:1px solid}
+.petal{position:fixed;top:-10vh;z-index:20;pointer-events:none;color:#d9a7a5;text-shadow:0 2px 5px #fff9;font-size:17px;animation:petalFall linear forwards}
+@keyframes petalFall{to{transform:translate3d(var(--drift),115vh,0) rotate(520deg);opacity:.05}}
+/* Opening */
+#home{align-items:center;justify-content:center;padding:26px;min-height:100vh;background:
+ linear-gradient(90deg,#e8d8c5aa 0%,#f1e3d2a0 40%,#e7d8d1a0 100%),
+ url("assets/celestia-hero.webp") center 42%/cover no-repeat}
+#home:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 25%,#5a3f3520 100%),linear-gradient(0deg,#f1e4d4aa,transparent 28%,transparent 70%,#e8d9c866)}
+.home-content{position:relative;z-index:2;text-align:center;width:min(700px,96vw);padding:clamp(24px,5vw,54px) 22px}
+.home-content .wordmark{font-size:clamp(54px,10vw,104px)}
+.home-ornament{font-size:25px;color:#b38b58;letter-spacing:12px;margin:12px 0 16px;text-shadow:0 2px #fff}
+.home-tagline{font:italic 22px var(--serif);color:#896c55;letter-spacing:2px;margin:12px 0 34px}
+.home-content .gold-button{font-size:15px;min-width:210px}
+.home-bottom{position:absolute;bottom:28px;left:0;right:0;text-align:center;font:italic 13px var(--serif);letter-spacing:3px;color:#927c69}
+.home-halo{position:absolute;width:min(65vw,650px);aspect-ratio:1;border:1px solid #d8b98666;border-radius:50%;box-shadow:0 0 0 16px #fff8ef18,0 0 0 17px #d4b17b35,0 0 90px #fff4d477;animation:haloBreath 6s ease-in-out infinite;pointer-events:none}
+@keyframes haloBreath{50%{transform:scale(1.035);opacity:.65}}
+/* Question */
+#questionStage{align-items:center;justify-content:center;padding:28px 18px}
+.question-layout{width:min(940px,100%);display:grid;grid-template-columns:minmax(180px,.8fr) minmax(300px,1.2fr);gap:clamp(18px,4vw,56px);align-items:center}
+.question-angel{min-height:390px;position:relative;background:url("assets/celestia-hero.webp") 76% 38%/auto 120% no-repeat;mix-blend-mode:multiply;filter:saturate(.8);border-radius:48% 48% 8px 8px;opacity:.86}
+.question-angel:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,#f3e6d8 95%);pointer-events:none}
+.question-box{width:100%;text-align:center}
+.question-box .ornate-frame{padding:clamp(26px,4vw,48px)}
+.question-box textarea{width:100%;min-height:120px;resize:vertical;background:#fffaf2b8;border:1px solid #cdb38e;padding:18px;color:#6d5545;line-height:1.9;box-shadow:inset 0 2px 9px #8b694322}
+.question-box textarea::placeholder{color:#b7a18d}
+.question-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:15px 0 23px}
+.question-chip{border:1px solid #d0b897;background:#fff9ef99;color:#94785f;padding:7px 13px;font-size:12px;letter-spacing:1px;border-radius:30px;transition:.25s}
+.question-chip.active,.question-chip:hover{background:#d8c5d9;color:#65516d;border-color:#a890b5}
+.question-footnote{font-size:11px;color:#aa9582;margin:14px 0 0}
+/* Ritual */
+#ritual{align-items:center;justify-content:center;padding:30px 16px;text-align:center}
+.ritual-card-table{position:relative;width:min(760px,95vw);height:350px;margin:10px auto 0;perspective:1200px}
+.ritual-card{position:absolute;width:116px;height:180px;left:50%;top:70px;margin-left:-58px;border-radius:9px;border:1px solid #bd9660;background:linear-gradient(145deg,#d6c3d9,#a28eb3 45%,#75627f);box-shadow:0 14px 28px #5b435433;transform-origin:50% 85%;animation:shuffleFloat 2.6s ease-in-out infinite}
+.ritual-card:before{content:"";position:absolute;inset:8px;border:1px solid #f5dfb3;border-radius:5px;background:repeating-radial-gradient(circle at center,#f5e7cc22 0 2px,transparent 3px 9px)}
+.ritual-card:after{content:"✺";position:absolute;inset:0;display:grid;place-items:center;font:42px var(--serif);color:#f5dfb3;text-shadow:0 0 20px #fff}
+.ritual-card:nth-child(1){--r:-22deg;--x:-105px;animation-delay:-.4s}
+.ritual-card:nth-child(2){--r:-14deg;--x:-65px;animation-delay:-.8s}
+.ritual-card:nth-child(3){--r:-7deg;--x:-25px;animation-delay:-1.2s}
+.ritual-card:nth-child(4){--r:0deg;--x:15px;animation-delay:-1.6s}
+.ritual-card:nth-child(5){--r:8deg;--x:55px;animation-delay:-2s}
+.ritual-card:nth-child(6){--r:16deg;--x:95px;animation-delay:-2.4s}
+@keyframes shuffleFloat{0%,100%{transform:translate(calc(-50% + var(--x)),0) rotate(var(--r)) translateY(0)}50%{transform:translate(calc(-50% + var(--x)),0) rotate(calc(var(--r) * -1)) translateY(-30px)}}
+.ritual-glow{position:absolute;width:330px;height:230px;left:50%;top:85px;transform:translateX(-50%);background:radial-gradient(ellipse,#f7dba877,transparent 70%);filter:blur(14px)}
+/* Draw */
+#drawStage{display:none;padding:36px 16px 70px;min-height:100vh}
+#drawStage.active{display:block}
+.draw-header{text-align:center;margin:0 auto 18px}
+.deck-wrap{width:min(1120px,100%);margin:15px auto 20px;position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;perspective:1600px}
+.deck-aura{position:absolute;width:min(900px,95vw);height:300px;top:85px;border-radius:50%;background:radial-gradient(ellipse,#fff6df 0,#ead6db88 40%,transparent 72%);filter:blur(8px);animation:haloBreath 5s infinite}
+.fan{position:relative;width:min(1000px,96vw);height:390px;display:flex;align-items:flex-end;justify-content:center;transform-style:preserve-3d}
+.fan-card{position:absolute;left:50%;bottom:28px;width:76px;height:124px;margin-left:-38px;border:1px solid #d2b17e;border-radius:7px;background:linear-gradient(145deg,#d8c8df,#a99abc 52%,#75647f);box-shadow:0 8px 15px #5a425326,inset 0 0 0 4px #fff5e8;transform-origin:50% 125%;transform:rotate(var(--angle)) translateY(var(--lift));transition:transform .55s cubic-bezier(.2,.85,.2,1),filter .4s,box-shadow .4s;cursor:pointer}
+.fan-card:before{content:"";position:absolute;inset:6px;border:1px solid #f6e3bd;border-radius:4px;background:repeating-radial-gradient(circle at 50% 48%,#f6e7ce24 0 2px,transparent 3px 8px)}
+.fan-card:after{content:"✺";position:absolute;inset:0;display:grid;place-items:center;font:29px var(--serif);color:#f9e8c8;text-shadow:0 0 14px #fff}
+.fan-card:hover{z-index:90;transform:rotate(var(--angle)) translateY(calc(var(--lift) - 62px)) scale(1.18);filter:brightness(1.12);box-shadow:0 18px 30px #6d4c3d45,0 0 30px #fff2c8}
+.fan-card.selected{z-index:100;transform:translateY(-155px) rotate(0deg) scale(1.45);box-shadow:0 0 0 3px #f7e4bc,0 0 60px #fff0c6}
+.fan-card:disabled{cursor:default}
+.fan-hint{text-align:center;color:#9c816a;font-size:13px;letter-spacing:2px;margin-top:-8px}
+.deck-progress{width:min(280px,70vw);height:3px;background:#cdb99f;margin:18px auto 0;overflow:hidden}
+.deck-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#bda0c8,#c39b63);transition:width .7s}
+/* Reveal */
+#reveal{align-items:center;justify-content:center;padding:35px 16px;text-align:center;min-height:100vh}
+.reveal-stage{position:relative;width:min(900px,100%);min-height:620px;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:visible}
+.wing{position:absolute;width:clamp(180px,30vw,350px);height:260px;top:120px;opacity:0;filter:drop-shadow(0 8px 15px #987b5a30)}
+.wing.left{left:calc(50% - 330px);transform-origin:100% 75%;transform:rotate(55deg) scale(.3)}
+.wing.right{right:calc(50% - 330px);transform-origin:0 75%;transform:scaleX(-1) rotate(55deg) scale(.3)}
+.reveal-stage.flipping .wing{animation:wingOpen 1.5s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes wingOpen{0%{opacity:0;transform:rotate(55deg) scale(.3)}45%{opacity:.8}100%{opacity:.92;transform:rotate(0) scale(1)}}
+.wing.right{--flip:-1}
+.wing svg{width:100%;height:100%}.wing.right svg{transform:scaleX(-1)}
+.reveal-card-space{position:relative;perspective:1600px;width:245px;height:390px;z-index:2;margin:10px auto 25px}
+.reveal-card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 1.4s cubic-bezier(.2,.8,.15,1);border-radius:12px;box-shadow:0 30px 55px #72553d44}
+.reveal-card.turn{transform:rotateY(180deg) rotateZ(-1deg)}
+.card-side{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;overflow:hidden}
+.card-back{background:linear-gradient(145deg,#d6c4dd,#8e7a9f 55%,#6f617c);border:2px solid #c6a16c;box-shadow:inset 0 0 0 7px #f7eddb,inset 0 0 0 9px #c6a16c}
+.card-back:before{content:"";position:absolute;inset:17px;border:1px solid #f5dfb3;background:repeating-radial-gradient(circle at center,#f7e5c922 0 2px,transparent 3px 11px)}
+.card-back:after{content:"✧";position:absolute;inset:0;display:grid;place-items:center;color:#f9e8ca;font:76px var(--serif)}
+.card-front{transform:rotateY(180deg);background:#f4ead8;border:2px solid #c5a16c;padding:7px}
+.card-front-inner{height:100%;border:1px solid #b99361;position:relative;overflow:hidden;background:linear-gradient(180deg,#f8edda,#e7d6cb)}
+.card-front-inner svg{width:100%;height:100%;display:block}.classic-card-image{width:100%;height:100%;object-fit:cover;display:block}
+.reveal-caption{font:italic 24px var(--serif);letter-spacing:2px;color:#80644c;margin:6px 0}
+.reveal-cta{margin-top:10px}
+.reveal-stage.flipping .reveal-card{animation:cardLift 1.2s cubic-bezier(.2,.8,.15,1) both}
+@keyframes cardLift{0%{transform:translateY(100px) rotateY(0) scale(.65);filter:brightness(.8)}50%{transform:translateY(-25px) rotateY(40deg) scale(1.05);filter:brightness(1.35)}100%{transform:translateY(0) rotateY(180deg) scale(1)}}
+/* Result */
+#result{display:none;padding:40px 16px 80px;min-height:100vh}
+#result.active{display:block}
+.result-shell{width:min(1100px,100%);margin:0 auto}
+.result-top{text-align:center;margin-bottom:24px}
+.result-grid{display:grid;grid-template-columns:minmax(250px,.8fr) minmax(300px,1.2fr);gap:clamp(22px,4vw,48px);align-items:start}
+.result-card-col{position:sticky;top:22px;text-align:center}
+.result-card{width:min(300px,72vw);margin:0 auto 18px;aspect-ratio:2/3;filter:drop-shadow(0 22px 28px #71543c44)}
+.result-card svg{width:100%;height:100%;display:block}
+.card-name{font:500 29px var(--serif);color:#755a45;letter-spacing:2px}
+.card-orientation{font:12px var(--cn);letter-spacing:3px;color:#a28770;margin:8px 0}
+.result-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.reading-paper{background:linear-gradient(145deg,#fffaf1,#f0e2d1);border:1px solid #c8a77b;box-shadow:0 18px 45px #7b5d4530,inset 0 0 0 5px #fff8ee;padding:clamp(20px,3.5vw,38px);position:relative}
+.reading-paper:before{content:"";position:absolute;inset:9px;border:1px solid #d9c09a;pointer-events:none}
+.reading-section{position:relative;padding:18px 0;border-bottom:1px solid #d8c5a7}
+.reading-section:last-child{border-bottom:0}
+.reading-kicker{font:500 11px var(--serif);letter-spacing:3px;color:#a1825f;margin-bottom:9px}
+.reading-section h3{font:600 19px var(--cn);color:#765c49;margin:0 0 10px}
+.reading-section p{font-size:14px;line-height:2.05;color:#6f5b50;margin:0 0 10px}
+.reading-section p:last-child{margin-bottom:0}
+.keyword-row{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 3px}
+.keyword{font-size:11px;color:#7e6b6a;background:#eadce3;border:1px solid #d8c4d5;border-radius:30px;padding:5px 11px}
+.question-answer{background:linear-gradient(100deg,#e8dce7,#f5eadb);border-left:3px solid #b99b70;padding:15px 17px;margin:12px 0}
+.question-answer strong{display:block;color:#86684e;font:500 12px var(--serif);letter-spacing:2px;margin-bottom:7px}
+.question-answer p{margin:0}
+.note{font-size:11px;color:#a18c78;line-height:1.8;margin-top:18px}
+.history-drawer{position:fixed;inset:0;z-index:80;background:#4b3b3b66;display:none;align-items:flex-end;justify-content:center;padding:16px}
+.history-drawer.open{display:flex;animation:fadeIn .3s}
+.drawer-panel{background:#f7ecdc;border:1px solid #c6a16c;box-shadow:0 15px 50px #35251e55;width:min(760px,100%);max-height:78vh;overflow:auto;padding:24px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.library-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:18px}
+.library-item{border:1px solid #d3b78e;background:#fff8ee;padding:8px 5px;text-align:center;color:#7a624d}
+.library-item svg{width:100%;height:100px;display:block;margin-bottom:6px}
+.library-item span{font-size:11px}
+.mobile-back{display:none}
+@media(max-width:760px){
+ .question-layout{grid-template-columns:1fr}.question-angel{display:none}
+ .result-grid{grid-template-columns:1fr}.result-card-col{position:relative;top:auto}
+ .result-card{width:min(245px,65vw)}
+ .fan{height:auto;min-height:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));grid-auto-rows:96px;gap:3px;align-content:center;transform:none;width:100%}
+ .fan-card{position:relative;left:auto;bottom:auto;width:100%;height:92px;margin:0;transform:none!important;border-radius:5px}
+ .fan-card:hover{transform:translateY(-8px) scale(1.04)!important}
+ .fan-card:after{font-size:20px}
+ .fan-card:before{inset:3px}
+ .fan-card.selected{transform:translateY(-10px) scale(1.06)!important}
+ .deck-wrap{min-height:0}
+ .wing{width:150px;top:150px}.wing.left{left:calc(50% - 190px)}.wing.right{right:calc(50% - 190px)}
+ .reveal-stage{min-height:580px}
 }
 @media(max-width:480px){
- header.grand-hero{min-height:680px}
- .hero-overline{letter-spacing:2px}
- .brand{letter-spacing:6px}
- .en{letter-spacing:3px}
- .fan-deck{height:300px;margin-top:15px}
- .fan-card{width:clamp(22px,6.2vw,31px);height:clamp(38px,9vw,50px);transform:translateX(-50%) rotate(var(--angle)) translateY(-145px)}
- .fan-card:hover{transform:translateX(-50%) rotate(var(--angle)) translateY(-168px) scale(1.35)}
- .fan-card:disabled{transform:translateX(-50%) rotate(var(--angle)) translateY(-128px) scale(.8)}
- .tarot-card{width:calc(33.33% - 10px);min-width:96px}
- .card-face{height:170px}
- #allcards .tarot-card{width:calc(33.33% - 10px);min-width:94px}
- #allcards .card-face{height:170px}
- .verdict-stats{gap:12px}
+ #home{padding:12px;background-position:58% center}
+ .home-content{padding:30px 12px;background:#f6ead9aa;backdrop-filter:blur(3px)}
+ .home-tagline{font-size:18px}
+ .fan{grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:76px}
+ .fan-card{height:70px}
+ .ritual-card-table{height:300px;transform:scale(.86)}
+ .ornate-frame{padding:24px 17px}
+ .section-title{font-size:30px}
 }
-@media(prefers-reduced-motion:reduce){.hero-emblem,.hero-orbit,.hero-stars,.scroll-cue span{animation:none!important}}
-</style>
-
-<style>
-/* Celestia 3.1 — one opening cover, lateral scene transitions, sacred reveal */
-body.reading-mode header.grand-hero{display:none}
-body.reading-mode main{padding-top:22px}
-.scene-push-next{animation:scenePushNext .78s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%}
-.scene-push-prev{animation:scenePushPrev .78s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%}
-@keyframes scenePushNext{0%{opacity:0;transform:translateX(110px) scale(.96);filter:blur(12px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateX(0) scale(1)}}
-@keyframes scenePushPrev{0%{opacity:0;transform:translateX(-110px) scale(.96);filter:blur(12px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateX(0) scale(1)}}
-.scene-push-next:before,.scene-push-prev:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;background:linear-gradient(90deg,transparent,#e5c7ff22,transparent);animation:lightSweep .85s ease-out both}
-@keyframes lightSweep{0%{transform:translateX(-120%);opacity:0}25%{opacity:1}100%{transform:translateX(120%);opacity:0}}
-.selected-back{height:100%;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;animation:backSettle .5s cubic-bezier(.2,.8,.2,1) both}
-.selected-back svg{height:calc(100% - 24px);width:auto;max-width:88%;filter:drop-shadow(0 8px 14px #080511aa)}
-.selected-back span{font:9px Arial,sans-serif;letter-spacing:2px;color:#f0d8a7}
-.slot.still-hidden .slot-frame{background:radial-gradient(ellipse,#9e79c522,transparent 72%),#ffffff06;border:1px solid #e8ce9b88;box-shadow:0 0 22px #cda4f322,inset 0 0 30px #e1c0ff0e}
-@keyframes backSettle{from{opacity:0;transform:translateY(16px) rotateY(35deg) scale(.9)}to{opacity:1;transform:none}}
-#readNow{margin-top:20px;animation:revealButtonPulse 2.4s ease-in-out infinite}
-@keyframes revealButtonPulse{0%,100%{box-shadow:0 8px 28px #0a0614,0 0 20px #cba4ed35}50%{box-shadow:0 8px 28px #0a0614,0 0 42px #f0d6a277}}
-.reveal-bloom .slot.filled .card-face{animation:cardFlipReveal 1.05s cubic-bezier(.16,1,.3,1) both}
-@keyframes cardFlipReveal{0%{opacity:0;transform:rotateY(90deg) scale(.8);filter:brightness(2) blur(5px)}55%{opacity:1;filter:brightness(1.4) blur(0)}100%{opacity:1;transform:rotateY(0) scale(1);filter:brightness(1)}}
-.pro-reading{padding:clamp(20px,3vw,30px)}
-.pro-card-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid #e8ce9b33;padding-bottom:13px;margin-bottom:14px}
-.pro-card-heading h3{margin:0;font-size:21px;letter-spacing:3px}
-.orientation-tag{font:10px Arial,sans-serif;color:#cbb5df;letter-spacing:2px;margin-top:8px}
-.mini-glyph{width:42px;height:42px;border:1px solid #e8ce9b88;border-radius:50%;display:grid;place-items:center;color:#f2d59c;font-size:22px;box-shadow:0 0 20px #d7b4f333}
-.meaning-layer{padding:13px 0;border-bottom:1px solid #e8ce9b22}
-.meaning-layer:last-child{border-bottom:0}
-.layer-label{font:10px Arial,sans-serif;letter-spacing:2px;color:#d8b8ed;margin-bottom:9px}
-.keyword-line{color:#f3d9a5!important;letter-spacing:1px}
-.symbolic-layer{background:linear-gradient(90deg,#b68fdf0c,transparent);padding:17px 15px;margin:6px -15px;border-left:2px solid #c9a3e7}
-.advice-layer{padding-bottom:0}
-.chibi-oracle{width:112px;margin:12px auto 3px;text-align:center;filter:drop-shadow(0 8px 14px #08051177);animation:chibiFloat 3.6s ease-in-out infinite}
-.chibi-oracle svg{width:100%;display:block;overflow:visible}
-.chibi-oracle span{font:9px Arial,sans-serif;letter-spacing:2px;color:#e7d3f1}
-@keyframes chibiFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
-.verdict-card{isolation:isolate}
-@media(max-width:600px){.pro-card-heading h3{font-size:18px}.chibi-oracle{width:94px}.selected-back span{font-size:8px}}
-@media(prefers-reduced-motion:reduce){.scene-push-next,.scene-push-prev,.scene-push-next:before,.scene-push-prev:before,.chibi-oracle,#readNow{animation:none!important}}
-</style>
-
-<style>
-.traditional-note{
- margin:14px 0 18px;
- padding:14px 17px;
- border:1px solid #d8b7eb55;
- border-left:3px solid #e8ce9b;
- border-radius:12px;
- background:linear-gradient(110deg,#c7a4e817,#ffffff05);
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
-.traditional-label{
- margin-bottom:9px;
- color:#e8ce9b;
- font-size:10px;
- letter-spacing:2px;
-}
-.traditional-note p{
- margin:5px 0;
- color:#d9cce5;
- font-size:12px;
- line-height:1.85;
-}
-.traditional-note b{color:#f1d9ad;font-weight:600}
-</style>
-
-<style>
-/* CELESTIA 3.2 · engraved fresco, gilded relief, and angel-wing passage */
-.panel{
- border:1px solid #e8d0a577;
- border-radius:17px;
- background:
-  radial-gradient(ellipse at 50% 0%,#c8a7e514,transparent 58%),
-  repeating-linear-gradient(135deg,#ffffff03 0 2px,transparent 2px 8px),
-  linear-gradient(145deg,#38234dcc,#160f27f2 66%,#211431ee);
- box-shadow:0 26px 75px #05030d99, inset 0 1px #fff5dc22, inset 0 0 45px #d2b0ef0b;
-}
-.panel:before{
- inset:9px;border:1px solid #e8ce9b38;border-radius:11px;
- background:
-  linear-gradient(#f0d7a6,#f0d7a6) left top/26px 1px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) left top/1px 26px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) right top/26px 1px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) right top/1px 26px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) left bottom/26px 1px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) left bottom/1px 26px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) right bottom/26px 1px no-repeat,
-  linear-gradient(#f0d7a6,#f0d7a6) right bottom/1px 26px no-repeat;
- pointer-events:none;
-}
-.panel:after{content:"❧";top:12px;right:20px;color:#f0d7a677;font-family:Georgia,serif;font-size:22px;transform:rotate(12deg)}
-.kicker{position:relative;text-shadow:0 0 18px #dcb8f466}
-.kicker:before,.kicker:after{content:"✧";display:inline-block;margin:0 12px;color:#e8ce9b99;font-size:11px}
-.reading,.insight,.verdict-card{
- border-radius:13px;
- border:1px solid #e6cb9866;
- background:radial-gradient(ellipse at 50% 0%,#b78dd71a,transparent 62%),linear-gradient(145deg,#ffffff0e,#ffffff04);
- box-shadow:inset 0 1px #fff4dc12,0 14px 38px #05030d55;
- position:relative;
-}
-.reading:before,.insight:before,.verdict-card:before{
- content:"";position:absolute;inset:5px;border:1px solid #d7b9ed22;border-radius:9px;pointer-events:none;
-}
-.reading h3{letter-spacing:3px;text-shadow:0 0 18px #e5c18d33}
-.traditional-note{background:linear-gradient(110deg,#d4b5ee12,#e8ce9b08);border-color:#e7d1a044;border-left-color:#e8ce9b}
-/* Single-card draw: keep the revealed card in a narrow, centered slot and in normal document flow. */
-#slots.single-card{display:flex;justify-content:center;align-items:flex-start;width:100%;max-width:360px;margin:28px auto;}
-#slots.single-card .slot{width:min(230px,68vw);flex:0 1 230px;position:relative;z-index:0;}
-#slots.single-card .slot-frame{height:300px;overflow:visible;display:flex;align-items:center;justify-content:center;}
-#slots.single-card .slot.filled .slot-frame{overflow:visible;}
-#slots.single-card .slot.filled .slot-frame .tarot-card{width:100%;max-width:220px;margin:0 auto;position:relative;z-index:0;}
-#slots.single-card .slot.filled .slot-frame .card-face{height:282px;}
-#slots.single-card .slot.filled .slot-frame .card-art{height:100%;}
-#slots.single-card .slot-name{margin-top:9px;}
-#draw .panel{overflow:visible;}
-#readNow{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;}
-#draw .pick-deck-wrap{position:relative;z-index:1;}
-.selected-back{pointer-events:none;}
-/* Winged passage overlay: decorative only, never intercepts clicks. */
-#wingTransition{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;pointer-events:none;opacity:0;visibility:hidden;background:radial-gradient(ellipse at 50% 48%,#674781ee 0%,#241633f5 48%,#090612 100%);perspective:1500px;}
-#wingTransition.active{visibility:visible;animation:veilBloom 1.72s cubic-bezier(.22,.72,.2,1) both;}
-#wingTransition:before{content:"";position:absolute;inset:-25%;background:repeating-conic-gradient(from 0deg at 50% 50%,#f2dba90b 0deg 2deg,transparent 2deg 14deg);opacity:0;}
-#wingTransition.active:before{animation:raysReveal 1.7s ease-out both;}
-.transition-aureole{position:absolute;width:min(72vw,850px);aspect-ratio:1;border:1px solid #f0d9a655;border-radius:50%;box-shadow:0 0 0 12px #e6c99c0a,0 0 0 26px #d6b6ec0a,0 0 70px #d8b7f455;transform:scale(.15) rotate(-35deg);opacity:0;}
-#wingTransition.active .transition-aureole{animation:aureoleOpen 1.65s cubic-bezier(.16,1,.3,1) both;}
-.transition-wing{position:absolute;top:50%;width:min(54vw,760px);height:min(57vh,520px);transform-style:preserve-3d;filter:drop-shadow(0 0 24px #e9c9f755);opacity:0;}
-.transition-wing svg{width:100%;height:100%;overflow:visible;}
-.wing-left{right:50%;transform-origin:100% 72%;transform:translateY(-50%) translateX(6%) rotateY(-88deg) scale(.48);}
-.wing-right{left:50%;transform-origin:0% 72%;transform:translateY(-50%) translateX(-6%) rotateY(88deg) scaleX(-1) scale(.48);}
-#wingTransition.active .wing-left{animation:wingUnfurlLeft 1.35s cubic-bezier(.16,1,.3,1) .08s both;}
-#wingTransition.active .wing-right{animation:wingUnfurlRight 1.35s cubic-bezier(.16,1,.3,1) .08s both;}
-.transition-center{position:absolute;width:clamp(110px,17vw,210px);filter:drop-shadow(0 0 28px #f4dfb6aa);opacity:0;transform:translateZ(150px) scale(.2) rotate(-35deg);}
-.transition-center svg{width:100%;height:auto;}
-#wingTransition.active .transition-center{animation:crestIgnite 1.5s cubic-bezier(.16,1,.3,1) .15s both;}
-.transition-caption{position:absolute;bottom:9vh;color:#f0d9ad;font:9px Arial,sans-serif;letter-spacing:7px;text-shadow:0 0 15px #e8c99a;opacity:0;}
-#wingTransition.active .transition-caption{animation:captionGlint 1.4s ease .35s both;}
-.transition-flare{position:absolute;width:2px;height:120vh;top:-10vh;left:50%;background:linear-gradient(transparent,#fff7df,#e5c18b,transparent);box-shadow:0 0 35px 12px #e5c18b88;transform:scaleY(0);opacity:0;}
-#wingTransition.active .transition-flare{animation:flareStrike .8s ease-out .32s both;}
-@keyframes veilBloom{0%{opacity:0}16%{opacity:1}76%{opacity:1}100%{opacity:0}}
-@keyframes raysReveal{0%{opacity:0;transform:rotate(-25deg) scale(.55)}35%{opacity:.9}100%{opacity:0;transform:rotate(22deg) scale(1.2)}}
-@keyframes aureoleOpen{0%{opacity:0;transform:scale(.15) rotate(-35deg)}40%{opacity:.85}100%{opacity:0;transform:scale(1.28) rotate(35deg)}}
-@keyframes wingUnfurlLeft{0%{opacity:0;transform:translateY(-50%) translateX(6%) rotateY(-88deg) scale(.48)}28%{opacity:1}68%{transform:translateY(-50%) translateX(-2%) rotateY(8deg) scale(1.04)}100%{opacity:0;transform:translateY(-50%) translateX(-9%) rotateY(0) scale(1.08)}}
-@keyframes wingUnfurlRight{0%{opacity:0;transform:translateY(-50%) translateX(-6%) rotateY(88deg) scaleX(-1) scale(.48)}28%{opacity:1}68%{transform:translateY(-50%) translateX(2%) rotateY(-8deg) scaleX(-1) scale(1.04)}100%{opacity:0;transform:translateY(-50%) translateX(9%) rotateY(0) scaleX(-1) scale(1.08)}}
-@keyframes crestIgnite{0%{opacity:0;transform:translateZ(150px) scale(.2) rotate(-35deg)}35%{opacity:1}65%{transform:translateZ(0) scale(1.08) rotate(0)}100%{opacity:0;transform:translateZ(-80px) scale(1.3) rotate(18deg)}}
-@keyframes captionGlint{0%,100%{opacity:0;letter-spacing:12px}35%,70%{opacity:.9;letter-spacing:7px}}
-@keyframes flareStrike{0%{opacity:0;transform:scaleY(0)}30%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1.2)}}
-.scene-cinematic-forward{animation:sceneDepthForward .95s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%;}
-.scene-cinematic-backward{animation:sceneDepthBack .95s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 50%;}
-@keyframes sceneDepthForward{0%{opacity:0;transform:perspective(1500px) translate3d(95px,14px,-180px) rotateY(-15deg) scale(.91);filter:blur(10px)}55%{opacity:1;filter:blur(0);transform:perspective(1500px) translate3d(-7px,0,25px) rotateY(1deg) scale(1.01)}100%{opacity:1;transform:perspective(1500px) translate3d(0,0,0) rotateY(0) scale(1)}}
-@keyframes sceneDepthBack{0%{opacity:0;transform:perspective(1500px) translate3d(-95px,14px,-180px) rotateY(15deg) scale(.91);filter:blur(10px)}55%{opacity:1;filter:blur(0);transform:perspective(1500px) translate3d(7px,0,25px) rotateY(-1deg) scale(1.01)}100%{opacity:1;transform:perspective(1500px) translate3d(0,0,0) rotateY(0) scale(1)}}
-@media(max-width:600px){
- #slots.single-card{max-width:290px;}
- #slots.single-card .slot{width:min(205px,72vw);flex-basis:205px;}
- #slots.single-card .slot-frame{height:270px;}
- #slots.single-card .slot.filled .slot-frame .card-face{height:252px;}
- .transition-wing{width:68vw;height:42vh;}
- .transition-caption{bottom:12vh;font-size:8px;letter-spacing:4px;}
-}
-@media(prefers-reduced-motion:reduce){#wingTransition,.scene-cinematic-forward,.scene-cinematic-backward{animation:none!important;display:none!important}}
-</style>
-
-<style>
-/* 3.2.1: no oversized face card is ever mounted over the draw controls. */
-#slots.single-card{display:flex;justify-content:center;align-items:flex-start;width:100%;max-width:320px;margin:20px auto 14px;position:relative;z-index:1;isolation:isolate;}
-#slots.single-card .slot{width:min(190px,66vw);flex:0 1 190px;position:relative;z-index:0;pointer-events:none;}
-#slots.single-card .slot-frame{height:260px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-#slots.single-card .slot.filled .slot-frame{overflow:hidden;}
-#slots.single-card .selected-back{pointer-events:none;}
-#readNow{position:relative;z-index:30;pointer-events:auto;margin:12px auto 18px;}
-#draw .pick-deck-wrap{position:relative;z-index:0;isolation:isolate;}
-#draw .pick-deck{position:relative;z-index:0;}
-#draw .fan-card{pointer-events:auto;}
-.selected-back.sacred-reveal{animation:backSacredReveal .95s cubic-bezier(.16,1,.3,1) both!important;}
-@keyframes backSacredReveal{0%{opacity:1;transform:rotateY(0) scale(1);filter:brightness(1)}48%{opacity:.8;transform:rotateY(90deg) scale(.82);filter:brightness(2.1)}100%{opacity:0;transform:rotateY(180deg) scale(.55);filter:brightness(2.5)}}
-/* A richer gold-and-violet light sweep accompanies the sculpted wing transition. */
-#wingTransition.active{animation:veilBloom 1.72s cubic-bezier(.22,.72,.2,1) both;}
-#wingTransition.active .transition-wing{filter:drop-shadow(0 0 28px #f5dfb7aa) drop-shadow(0 0 54px #bd9be866);}
-#wingTransition.active .transition-aureole{box-shadow:0 0 0 12px #e6c99c12,0 0 0 26px #d6b6ec12,0 0 90px #f0d6a477;}
-@media(max-width:600px){#slots.single-card{max-width:260px}#slots.single-card .slot-frame{height:238px}}
-</style>
-
-
-<style>
-.card-reading{padding:clamp(20px,3vw,30px);margin-bottom:22px}
-.card-reading h3{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.scene-reading,.personal-reading{padding:16px 0;border-top:1px solid #e8ce9b24}
-.scene-reading{background:linear-gradient(90deg,#b58bda12,transparent);padding:16px 18px;margin:8px -18px 0;border-left:2px solid #d6b4ed}
-.scene-reading p,.personal-reading p{line-height:2.05;font-size:14px;color:#e8deef}
-.layer-label{font:10px Arial,sans-serif;letter-spacing:2.4px;color:#e5c99c;margin-bottom:8px}
-.position-context{color:#f1d9ad!important}
-.image-question{margin-top:14px;padding:12px 15px;border-left:2px solid #d6b4ed;background:#c6a4e80c;color:#e6d3f4!important}
-.pair-count{font:11px Arial,sans-serif;letter-spacing:1px;color:#c6afd8;margin:14px 0}
-.pair-list{list-style:none;padding:0;margin:12px 0;display:grid;gap:12px}
-.pair-list li{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;padding:13px 14px;border:1px solid #d8b7eb33;border-radius:13px;background:linear-gradient(120deg,#ffffff09,#ffffff02)}
-.pair-index{font:12px Georgia,serif;color:#f0d7a2;border:1px solid #e8ce9b77;border-radius:50%;width:28px;height:28px;display:grid;place-items:center}
-.pair-list p{margin:0;line-height:1.95;font-size:13px;color:#e9dfef}
-.pair-reading>p{line-height:2}
-@media(max-width:560px){.scene-reading,.personal-reading p{font-size:13px}.pair-list li{padding:11px}}
 </style>
 </head>
 <body>
-<div id="ambient" aria-hidden="true"></div>
-<div id="wingTransition" aria-hidden="true">
- <div class="transition-aureole"></div>
- <div class="transition-wing wing-left"><svg viewBox="0 0 520 340" role="presentation" aria-hidden="true">
- <path d="M505 304C430 285 369 239 326 175C289 119 278 58 226 24C171 -2 105 18 22 78C119 62 195 94 250 155C309 222 385 286 505 304Z" fill="#d9c0f4" fill-opacity=".055" stroke="#f0d9aa" stroke-width="2.2"/>
- <path d="M493 293C418 266 359 210 322 143C293 91 277 45 226 24M475 285C401 244 337 177 291 103C260 55 221 27 175 22M452 274C375 224 301 157 241 99C194 54 144 40 91 48M425 263C350 209 267 153 190 111C134 80 82 76 36 91M395 249C320 199 236 159 154 137C105 123 67 125 35 145" fill="none" stroke="#efd7a6" stroke-width="1.45" stroke-linecap="round" opacity=".88"/>
- <path d="M475 284C434 245 409 205 390 160M452 273C406 226 375 179 350 124M425 262C372 214 333 164 300 109M395 248C342 208 291 169 246 132M360 230C310 199 263 174 213 153M321 208C276 186 231 170 184 163" fill="none" stroke="#d7b9ed" stroke-width="1.1" opacity=".82"/>
- <path d="M22 78Q80 83 124 111Q176 145 205 194M35 145Q95 142 147 166Q203 191 244 238M91 48Q139 65 178 98M175 22Q210 46 237 83" fill="none" stroke="#f4e6c7" stroke-width="1" opacity=".6"/>
- <g fill="none" stroke="#f2dcae" stroke-width="1" opacity=".7"><path d="M320 282q-20-28-50-36 23 28 20 54M288 253q-21-28-49-38 17 30 11 54M250 222q-20-26-46-34 14 28 5 51"/><path d="M340 291q-8-21-26-35M367 300q-9-20-24-31"/></g>
- <path d="M504 304q-20 11-40 12M22 78q-10-3-17-1" stroke="#f3dfb6" stroke-width="2" fill="none"/>
- </svg></div>
- <div class="transition-wing wing-right"><svg viewBox="0 0 520 340" role="presentation" aria-hidden="true">
- <path d="M505 304C430 285 369 239 326 175C289 119 278 58 226 24C171 -2 105 18 22 78C119 62 195 94 250 155C309 222 385 286 505 304Z" fill="#d9c0f4" fill-opacity=".055" stroke="#f0d9aa" stroke-width="2.2"/>
- <path d="M493 293C418 266 359 210 322 143C293 91 277 45 226 24M475 285C401 244 337 177 291 103C260 55 221 27 175 22M452 274C375 224 301 157 241 99C194 54 144 40 91 48M425 263C350 209 267 153 190 111C134 80 82 76 36 91M395 249C320 199 236 159 154 137C105 123 67 125 35 145" fill="none" stroke="#efd7a6" stroke-width="1.45" stroke-linecap="round" opacity=".88"/>
- <path d="M475 284C434 245 409 205 390 160M452 273C406 226 375 179 350 124M425 262C372 214 333 164 300 109M395 248C342 208 291 169 246 132M360 230C310 199 263 174 213 153M321 208C276 186 231 170 184 163" fill="none" stroke="#d7b9ed" stroke-width="1.1" opacity=".82"/>
- <path d="M22 78Q80 83 124 111Q176 145 205 194M35 145Q95 142 147 166Q203 191 244 238M91 48Q139 65 178 98M175 22Q210 46 237 83" fill="none" stroke="#f4e6c7" stroke-width="1" opacity=".6"/>
- <g fill="none" stroke="#f2dcae" stroke-width="1" opacity=".7"><path d="M320 282q-20-28-50-36 23 28 20 54M288 253q-21-28-49-38 17 30 11 54M250 222q-20-26-46-34 14 28 5 51"/><path d="M340 291q-8-21-26-35M367 300q-9-20-24-31"/></g>
- <path d="M504 304q-20 11-40 12M22 78q-10-3-17-1" stroke="#f3dfb6" stroke-width="2" fill="none"/>
- </svg></div>
- <div class="transition-center"><svg viewBox="0 0 180 220" fill="none"><circle cx="90" cy="104" r="76" stroke="#f1d9a7" stroke-width="1.4"/><circle cx="90" cy="104" r="65" stroke="#d9b9ed" stroke-dasharray="2 7"/><path d="M90 39C61 81 61 127 90 166c29-39 29-85 0-127Z" fill="#d9c0f4" fill-opacity=".16" stroke="#f4dfb8" stroke-width="2"/><path d="M90 65c-15 24-15 54 0 75 15-21 15-51 0-75Z" fill="#f4dfb8" fill-opacity=".22"/><path d="M54 187h72M65 198h50" stroke="#f1d9a7" stroke-width="1.4"/><path d="M90 17l5 11 12 2-9 8 2 12-10-6-10 6 2-12-9-8 12-2Z" fill="#f1d9a7"/></svg></div>
- <div class="transition-caption">CELESTIA · SACRED PASSAGE</div>
- <div class="transition-flare"></div>
+<div id="app">
+ <div class="stage-curtain" id="curtain"></div>
+ <section class="stage active" id="home">
+  <div class="home-halo"></div>
+  <div class="home-content">
+   <div class="eyebrow">A CELESTIAL TAROT EXPERIENCE</div>
+   <h1 class="wordmark">Celestia</h1>
+   <div class="wordmark-sub">T A R O T</div>
+   <div class="home-ornament">❧ ✧ ❧</div>
+   <p class="home-tagline">星辰低语 · 聆听此刻的回响</p>
+   <button class="gold-button" id="enterBtn">进入占卜</button>
+   <div style="margin-top:22px"><button class="small-link" id="libraryBtn">漫游 78 张牌的图鉴</button></div>
+  </div>
+  <div class="home-bottom">FOLLOW THE LIGHT WITHIN YOU</div>
+ </section>
+
+ <section class="stage" id="questionStage">
+  <div class="question-layout">
+   <div class="question-angel" aria-hidden="true"></div>
+   <div class="question-box">
+    <div class="ornate-frame">
+     <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+     <div class="eyebrow">THE QUIET MOMENT</div>
+     <h2 class="section-title">把心中的问题交给星辰</h2>
+     <p class="section-sub">可以写下问题，也可以只在心里默念</p>
+     <textarea id="questionInput" maxlength="180" placeholder="此刻，你最想知道的是什么？"></textarea>
+     <div class="question-options">
+      <button class="question-chip" data-prompt="爱情与关系">爱情与关系</button>
+      <button class="question-chip" data-prompt="学业与成长">学业与成长</button>
+      <button class="question-chip" data-prompt="工作与方向">工作与方向</button>
+      <button class="question-chip" data-prompt="关于自己">关于自己</button>
+     </div>
+     <button class="gold-button" id="startRitual">开始洗牌</button>
+     <p class="question-footnote">不必追求正确的问题，只需诚实地面对你真正关心的事。</p>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="stage" id="ritual">
+  <div style="width:min(850px,100%);text-align:center">
+   <div class="eyebrow">THE SHUFFLING RITUAL</div>
+   <h2 class="section-title" id="ritualTitle">让思绪慢慢安静下来</h2>
+   <p class="section-sub" id="ritualText">78 张牌正在重新排列。</p>
+   <div class="ritual-card-table">
+    <div class="ritual-glow"></div>
+    <div class="ritual-card"></div><div class="ritual-card"></div><div class="ritual-card"></div>
+    <div class="ritual-card"></div><div class="ritual-card"></div><div class="ritual-card"></div>
+   </div>
+   <button class="gold-button" id="cutBtn">切牌 · 展开牌堆</button>
+  </div>
+ </section>
+
+ <section class="stage" id="drawStage">
+  <div class="draw-header">
+   <div class="eyebrow">THE MOMENT OF CHOICE</div>
+   <h2 class="section-title">让直觉替你选择</h2>
+   <p class="section-sub">78 张牌已在此展开，点击其中一张</p>
+  </div>
+  <div class="deck-wrap">
+   <div class="deck-aura"></div>
+   <div class="fan" id="fan"></div>
+  </div>
+  <p class="fan-hint" id="fanHint">不必寻找“最好”的那张，选择第一眼让你停留的牌。</p>
+  <div class="deck-progress"><span id="progress"></span></div>
+  <div style="text-align:center;margin-top:25px"><button class="ghost-button" id="drawBack">重新整理心绪</button></div>
+ </section>
+
+ <section class="stage" id="reveal">
+  <div class="reveal-stage" id="revealStage">
+   <div class="eyebrow">THE CARD REVEALS ITSELF</div>
+   <h2 class="section-title">星辰为你留下了一张牌</h2>
+   <div class="wing left" aria-hidden="true"><svg viewBox="0 0 360 270" aria-hidden="true"><defs><linearGradient id="wingGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9e9"/><stop offset=".45" stop-color="#e8d4b4"/><stop offset="1" stop-color="#b89a77"/></linearGradient></defs><g fill="url(#wingGold)" stroke="#b89568" stroke-width="1.5"><path d="M330 240C252 224 188 185 128 116 83 65 42 48 16 56c35-28 94-15 143 28 62 54 111 106 171 156Z"/><path d="M313 229C248 203 197 162 151 105 116 61 78 43 48 48c37-15 79 4 117 41 51 49 95 98 148 140Z"/><path d="M292 211C236 181 194 142 160 94 132 56 101 37 73 38c34-8 69 12 99 46 41 47 77 88 120 127Z"/><path d="M265 190C219 159 187 122 163 82 143 49 119 31 95 29c29-1 58 18 80 48 31 42 59 77 90 113Z"/><path d="M236 168C203 138 181 106 166 70 153 42 135 25 115 20c25 5 46 23 61 50 21 36 39 67 60 98Z"/></g><path d="M332 242C251 205 189 155 137 96 89 42 47 31 15 57" fill="none" stroke="#fff9e9" stroke-width="3" opacity=".8"/><path d="M310 227C239 182 183 130 133 72" fill="none" stroke="#fffaf0" stroke-width="1.4" opacity=".8"/></svg></div><div class="wing right" aria-hidden="true"><svg viewBox="0 0 360 270" aria-hidden="true"><defs><linearGradient id="wingGoldRight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9e9"/><stop offset=".45" stop-color="#e8d4b4"/><stop offset="1" stop-color="#b89a77"/></linearGradient></defs><g fill="url(#wingGoldRight)" stroke="#b89568" stroke-width="1.5"><path d="M330 240C252 224 188 185 128 116 83 65 42 48 16 56c35-28 94-15 143 28 62 54 111 106 171 156Z"/><path d="M313 229C248 203 197 162 151 105 116 61 78 43 48 48c37-15 79 4 117 41 51 49 95 98 148 140Z"/><path d="M292 211C236 181 194 142 160 94 132 56 101 37 73 38c34-8 69 12 99 46 41 47 77 88 120 127Z"/><path d="M265 190C219 159 187 122 163 82 143 49 119 31 95 29c29-1 58 18 80 48 31 42 59 77 90 113Z"/><path d="M236 168C203 138 181 106 166 70 153 42 135 25 115 20c25 5 46 23 61 50 21 36 39 67 60 98Z"/></g><path d="M332 242C251 205 189 155 137 96 89 42 47 31 15 57" fill="none" stroke="#fff9e9" stroke-width="3" opacity=".8"/><path d="M310 227C239 182 183 130 133 72" fill="none" stroke="#fffaf0" stroke-width="1.4" opacity=".8"/></svg></div>
+   <div class="reveal-card-space">
+    <div class="reveal-card" id="revealCard">
+     <div class="card-side card-back"></div>
+     <div class="card-side card-front"><div class="card-front-inner" id="revealArt"></div></div>
+    </div>
+   </div>
+   <div class="reveal-caption" id="revealName">A card is waiting</div>
+   <button class="gold-button reveal-cta" id="readBtn" disabled>展开牌意</button>
+  </div>
+ </section>
+
+ <section class="stage" id="result">
+  <div class="result-shell">
+   <div class="result-top">
+    <div class="eyebrow">YOUR CELESTIAL MESSAGE</div>
+    <h2 class="section-title">此刻，牌想对你说</h2>
+    <p class="section-sub" id="resultQuestion"></p>
+   </div>
+   <div class="result-grid">
+    <div class="result-card-col">
+     <div class="result-card" id="resultArt"></div>
+     <div class="card-name" id="resultName"></div>
+     <div class="card-orientation" id="resultOrientation"></div>
+     <div class="result-actions">
+      <button class="ghost-button" id="saveBtn">♡ 收藏这张牌</button>
+      <button class="ghost-button" id="againBtn">再抽一张</button>
+     </div>
+    </div>
+    <div class="reading-paper" id="readingPaper"></div>
+   </div>
+   <p class="note">塔罗是一种借由象征整理感受与思路的工具，并不能替代现实中的沟通、专业意见或个人判断。请把有共鸣的部分带走，把不适合你的部分留在这里。</p>
+  </div>
+ </section>
+
+ <div class="history-drawer" id="libraryDrawer">
+  <div class="drawer-panel">
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <div><div class="eyebrow">THE TAROT LIBRARY</div><h2 class="section-title" style="margin:5px 0">七十八张牌</h2></div>
+    <button class="ghost-button" id="closeLibrary">关闭</button>
+   </div>
+   <div class="question-options" id="libraryFilters">
+    <button class="question-chip active" data-filter="all">全部</button>
+    <button class="question-chip" data-filter="major">大阿尔卡那</button>
+    <button class="question-chip" data-filter="权杖">权杖</button>
+    <button class="question-chip" data-filter="圣杯">圣杯</button>
+    <button class="question-chip" data-filter="宝剑">宝剑</button>
+    <button class="question-chip" data-filter="星币">星币</button>
+   </div>
+   <div class="library-grid" id="libraryGrid"></div>
+  </div>
+ </div>
 </div>
-<header class="grand-hero">
- <div class="hero-stars" aria-hidden="true"></div>
- <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
- <div class="hero-emblem" aria-hidden="true">
-  <svg viewBox="0 0 260 300" fill="none">
-   <path d="M128 148C68 30 10 45 36 128c17 53 54 73 93 54M132 148C192 30 250 45 224 128c-17 53-54 73-93 54" stroke="#f3dcae" stroke-width="3"/>
-   <path d="M130 75c-31 45-33 104 0 154 33-50 31-109 0-154Z" fill="#b99adf" fill-opacity=".4" stroke="#f8e4bd" stroke-width="2"/>
-   <path d="M130 100c-18 24-19 61 0 87 19-26 18-63 0-87Z" fill="#f4e1c0" fill-opacity=".35"/>
-   <circle cx="130" cy="119" r="9" fill="#fff4d8"/>
-   <path d="M93 235h74M105 248h50" stroke="#efd8a6" stroke-width="2" stroke-linecap="round"/>
-   <circle cx="130" cy="147" r="118" stroke="#e8ce9b" stroke-opacity=".45"/>
-   <circle cx="130" cy="147" r="105" stroke="#d9baf1" stroke-opacity=".5" stroke-dasharray="2 9"/>
-  </svg>
- </div>
- <div class="hero-copy">
-  <div class="hero-overline">✧ A SANCTUARY BETWEEN STARS ✧</div>
-  <div class="brand">天 使 秘 境</div>
-  <div class="en">CELESTIA · ANGEL TAROT SANCTUARY</div>
-  <p class="tagline">在星光与羽翼之间，<br><em>听见内心尚未说出的答案。</em></p>
-  <div class="hero-divider"><span>✦</span></div>
-  <p class="hero-sub">78 张塔罗 · 4 种牌阵 · 一场属于你的静谧仪式</p>
-  <a class="scroll-cue" href="#setup">DESCEND INTO THE SANCTUARY <span>↓</span></a>
- </div>
-</header>
-<main>
-<section id="setup">
- <div class="panel"><div class="kicker">✧ YOUR QUESTION ✧</div><label for="question">在心中默念你的问题（选填）</label><input id="question" maxlength="140" placeholder="例如：这段关系正在经历什么？我该如何面对最近的变化？"></div>
- <div class="panel"><div class="kicker">✧ CHOOSE YOUR SPREAD · 选择牌阵 ✧</div><div class="spreads" id="spreads">
-  <button class="spread active" data-id="one"><span class="sigil">☾</span><b>单张指引</b><small>1 张 · 此刻的核心讯息</small></button>
-  <button class="spread" data-id="three"><span class="sigil">✧</span><b>时间之流</b><small>3 张 · 过去 / 现在 / 未来</small></button>
-  <button class="spread" data-id="love"><span class="sigil">♡</span><b>爱情关系</b><small>5 张 · 看见关系的两面</small></button>
-  <button class="spread" data-id="cross"><span class="sigil">✥</span><b>凯尔特十字</b><small>10 张 · 深入探索全貌</small></button>
- </div></div>
- <div class="panel center"><div class="kicker">✧ THE COMPLETE DECK · 78 CARDS ✧</div>
-  <div class="deck-showcase" aria-hidden="true"><div class="deck-back"></div><div class="deck-back"></div><div class="deck-back"></div></div>
-  <p class="muted">22 张大阿尔卡那 · 56 张小阿尔卡那<br>权杖、圣杯、宝剑、星币四个花色。每一次抽取都会重新洗牌。</p>
-  <button class="primary" id="begin">✧　进入抽牌仪式　✧</button>
- </div>
-</section>
-
-<section id="ritual" class="hidden">
- <div class="panel center">
-  <div class="kicker">✧ A MOMENT OF STILLNESS ✧</div>
-  <h2 class="section-title" id="ritualTitle">让心慢慢安静下来</h2>
-  <p class="muted" id="ritualText">呼吸，想起你的问题。牌正在被重新洗匀。</p>
-  <div class="ritual-orb" id="orb"><svg viewBox="0 0 120 120" fill="none"><path d="M58 63C39 24 11 31 23 60c8 19 22 24 35 17M62 63c19-39 47-32 35-3-8 19-22 24-35 17" stroke="#ead4a7" stroke-width="3"/><path d="M60 37c-12 16-13 37 0 54 13-17 12-38 0-54Z" fill="#d9b9f1" stroke="#fff0cb" stroke-width="2"/><circle cx="60" cy="52" r="7" fill="#fff0cf"/><path d="M38 96h44" stroke="#e8ce9b" stroke-width="2"/></svg></div>
-  <div class="progress"><span id="ritualBar"></span></div>
-  <button class="primary hidden" id="cutDeck">完成切牌，开始抽取　✧</button>
- </div>
-</section>
-
-<section id="draw" class="hidden">
- <div class="panel center">
-  <div class="kicker">✧ CHOOSE YOUR CARDS ✧</div>
-  <h2 class="section-title" id="drawTitle"></h2>
-  <p class="muted" id="drawDesc"></p>
-  <div class="progress"><span id="drawBar"></span></div>
-  <p class="pick-instruction" id="pickInstruction">请凭直觉，点击下方任意一张牌背。</p>
-  <div class="slots" id="slots"></div>
-  <button class="primary hidden" id="readNow">揭晓全部牌意　☾</button>
-  <div class="pick-deck-wrap"><div class="kicker">✧ CHOOSE YOUR CARDS ✧</div><p class="pick-note" id="pickNote">不必计算，也不必猜测。让目光停留在你想选择的那一张上。</p><div class="pick-deck" id="pickDeck"></div></div>
- </div>
-</section>
-
-<section id="result" class="hidden">
- <div class="panel">
-  <div class="result-head"><div class="kicker">✧ THE LANGUAGE OF THE CARDS ✧</div><h2 class="result-title">你的专属塔罗解读</h2><p class="result-subtitle" id="qtext"></p></div>
-  <div class="cards" id="allcards"></div>
-  <div id="questionVerdict"></div><div id="overall"></div>
-  <div class="kicker" style="margin-top:28px">✧ CARD BY CARD · 逐张解读 ✧</div>
-  <div id="meanings"></div>
-  <div class="kicker" style="margin-top:28px">✧ THE PATTERN BETWEEN THE CARDS ✧</div>
-  <div id="connections"></div>
-  <div class="kicker" style="margin-top:28px">✧ A GENTLE WAY FORWARD ✧</div>
-  <div id="actions"></div>
-  <div class="final-note"><div class="angel">༺ 🪽 ༻</div><h3 style="font-weight:400;color:var(--gold)">来自天使秘境的温柔提醒</h3><p class="muted" id="summary"></p></div>
-  <p class="muted center" style="margin-top:22px">塔罗是一种象征性自我探索工具，不是对未来的确定预言。请将牌面作为整理感受与思路的参考；涉及健康、法律、财务或人身安全的重要决定，请结合现实信息并寻求适当的专业帮助。</p>
-  <div class="center" style="margin-top:25px"><button class="primary" id="again">重新开始一场占卜　☾</button></div>
- </div>
-</section>
-</main>
-<footer>CELESTIA 3.2 · FOLLOW THE LIGHT WITHIN YOU<br><span id="artStatus">正在唤醒经典牌面…</span><br><a href="https://tarostarot.com/tarot-card-data" target="_blank" rel="noopener">Tarot card data by Taro's Tarot · CC BY 4.0</a> · 1909 Rider–Waite–Smith artwork</footer>
-<div class="toast" id="toast"></div>
 
 <script>
-/* Celestia 2.0 — original angelic tarot artwork and interpretive text.
-   Interpretations are inspired by traditional tarot symbolism; no deck artwork or guidebook text is reproduced. */
+const $=id=>document.getElementById(id);
+const escapeHTML=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const MAJORS = [
 {n:"愚者",r:"0",k:"启程 · 信任 · 未知",motif:"butterfly",up:"愚者站在旅程的边缘，身后是尚未被走过的道路。它不是要求你毫无准备地冒险，而是在提醒：过度等待一个绝对安全的时机，也可能让你错过真正想体验的生活。此刻最重要的不是掌握所有答案，而是辨认什么让你心里重新亮起来。",rev:"逆位的愚者像是脚步已经迈出，心却还没有跟上。你可能在冲动与迟疑之间摇摆，也可能把自由误认为不必承担后果。先区分：你是在回应真实的召唤，还是只想逃离眼前的不舒服？",advice:"给新计划一个小而真实的起点。出发前确认底线与必要准备，但不要要求自己预先消除所有不确定。",image:"悬崖、远方的晨光、白花与轻盈的羽翼"},
 {n:"魔术师",r:"I",k:"意志 · 创造 · 资源",motif:"wand",up:"魔术师让不同的工具汇聚在同一张桌面上，象征想法、情感、行动与现实资源可以被你组织起来。你未必缺少能力，真正的问题可能是有没有把注意力集中在最重要的一件事上。它鼓励你从“我希望发生”走向“我准备怎样促成”。",rev:"逆位时，工具仍在桌上，却没有被有效使用。你可能分散精力、怀疑自己的能力，或被漂亮的承诺吸引而忽略实际行动。也要留意沟通中的夸大与模糊，不要只听说法，要看持续的行动。",advice:"把目标写成一个可验证的步骤，先动用手边已有的资源。清楚表达意图，也为自己的承诺负责。",image:"四元素圣器、桌面、炼金术光环与引导之手"},
@@ -607,7 +354,6 @@ const MAJORS = [
 {n:"审判",r:"XX",k:"召唤 · 复盘 · 更新",motif:"judgement",up:"审判像一声从远处传来的号角，邀请你回看经历，并决定如何带着经验进入下一阶段。它关乎觉醒，也关乎承担：过去发生的事不能重来，但你可以改变自己如何理解它、回应它。某个被搁置的问题，可能已经到了值得认真面对的时候。",rev:"逆位可能是害怕被评判、迟迟不肯原谅自己，或明明知道需要改变却不断推迟。也要留意过度复盘，把每一次失误都变成对自己的定罪。",advice:"从过去提炼经验，而不是反复惩罚自己。选一个现在能够完成的回应，让新的阶段有真实的开始。",image:"号角、云层、展翼天使与苏醒的花园"},
 {n:"世界",r:"XXI",k:"完成 · 整合 · 圆满",motif:"world",up:"世界象征一段旅程的整合与完成。你可能已经积累了足够的经验，能够看见自己走过的距离；也可能需要把分散的成果收束起来，给阶段性的努力一个正式结束。圆满不是毫无遗憾，而是能够带着完整的经验继续前行。",rev:"逆位可能表示最后一步尚未完成、成果没有被好好承认，或你已经站在门口却迟迟不肯结束。请辨认是现实细节仍待处理，还是对下一阶段的不确定让你停留在原地。",advice:"列出尚未收尾的事项，完成必要的告别与整理。承认自己已经学会的东西，再决定下一段旅程。",image:"星环、四方守护者、花环与中央舞者"}
 ];
-
 const SUITS = {
 "权杖":{element:"火",color:["#c77c70","#f0bd83","#59314b"],focus:"行动、热情、创意、事业与个人意志",gift:"点燃行动力，把想法带入现实",shadow:"急躁、耗竭、争强或只有热情没有持续",advice:"把灵感变成有节奏的行动，留意精力分配。",symbol:"wand"},
 "圣杯":{element:"水",color:["#769ab6","#c6d9e8","#334567"],focus:"情感、关系、直觉、想象与内在需求",gift:"感受、连结、共情与情绪流动",shadow:"理想化、逃避、情绪淹没或过度依赖",advice:"尊重感受，也用清楚沟通确认彼此的真实意愿。",symbol:"cup"},
@@ -630,332 +376,6 @@ const RANKS = [
 {r:"Queen",cn:"王后",key:"内在掌握与滋养",up:"王后已经理解这组元素的语言，能够以成熟方式照料、判断与运用它。她提示你把能力落实在日常，也让自己拥有接收支持与表达需求的空间。",rev:"成熟的特质可能走向过度：照顾变成控制，敏感变成封闭，独立变成拒绝帮助。重新找回弹性，不必永远扮演最可靠的人。"},
 {r:"King",cn:"国王",key:"整合与担当",up:"国王象征对这组元素的成熟掌握，能够看见全局并承担影响。此牌鼓励你以稳定、清晰和负责任的方式做决定，同时记得权威应当服务于成长，而不是压制他人。",rev:"掌控可能变成僵硬，判断也可能受到自尊或恐惧影响。真正的成熟包括承认局限、听取反馈，并在必要时调整自己的立场。"}
 ];
-const SPREADS={
-one:{title:"单张指引",desc:"一张牌，照见此刻最值得留意的主题。",positions:[["当下的核心","这张牌指出此刻最值得看见的主题与内在资源。"]]},
-three:{title:"时间之流",desc:"沿着过去、现在与未来趋势，观察事情如何走到此刻。",positions:[["过去 · 根源","它不只是回忆，也包括仍在影响现在的经验、选择与旧模式。"],["现在 · 核心","这是目前最鲜明的处境、态度或需要面对的课题。"],["未来 · 趋势","它呈现当前路径若持续发展，可能出现的方向；不是不可改变的定局。"]]},
-love:{title:"爱情关系",desc:"把自己、对方与关系放在同一张图景里，理解情感的流动。",positions:[["你的内心","你真正的感受、期待、顾虑，以及你在关系中的需要。"],["对方的状态","对方可能呈现的态度或处境；请结合实际行为验证，不把牌当作读心术。"],["关系的连接","你们之间正在形成的互动模式、吸引力与共同基础。"],["隐含的阻碍","尚未被充分表达的恐惧、误解、边界或现实压力。"],["关系的发展方向","如果双方维持目前的互动方式，关系可能呈现的趋势与需要的选择。"]]},
-cross:{title:"凯尔特十字",desc:"十个位置交织成一幅全景图，探索表层处境与深层动力。",positions:[["当前处境","问题此刻最核心的状态。"],["交叉挑战","正在阻碍、推动或考验你的力量。"],["潜意识 · 根基","深层需求、习惯或尚未意识到的动机。"],["过去影响","已经发生、但仍在塑造当下的经验。"],["显意识 · 目标","你希望抵达的方向，以及你正在关注的目标。"],["近期趋势","现有条件下较可能展开的下一阶段。"],["你的内在位置","你如何看待自己，以及你带入问题的态度。"],["外部环境","他人、环境与现实条件对局面的影响。"],["希望与恐惧","你渴望发生的事，以及你担心面对的部分。"],["整合趋势","把前面所有因素放在一起后，呈现的整体发展方向。"]]}
-};
-let spread="one",shuffled=[],drawn=[],step=0,question="";
-const $=id=>document.getElementById(id);
-function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1800)}
-function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
-function slug(s){return s.replace(/[^\w\u4e00-\u9fa5]/g,"")}
-function makeDeck(){
- const minors=[];
- for(const [suit,meta] of Object.entries(SUITS)){
-  RANKS.forEach((rank,i)=>{
-   const label=rank.r==="Ace"?"王牌":rank.cn;
-   const name=suit+" · "+label;
-   const up=rank.up+" 在"+suit+"的语境里，这份力量落在"+meta.focus+"之中。"+meta.gift+"，但它需要结合现实条件，而不是只凭愿望推动。";
-   const rev=rank.rev+" 放在"+suit+"的领域里，尤其要留意"+meta.shadow+"。"+meta.advice;
-   minors.push({id:suit+i,name,roman:rank.r==="Ace"?"A":rank.r==="Page"?"侍":rank.r==="Knight"?"骑":rank.r==="Queen"?"后":rank.r==="King"?"王":String(i+1),suit,element:meta.element,rank:rank.cn,keywords:rank.key+" · "+meta.focus.split("、").slice(0,2).join("、"),up,rev,advice:meta.advice,image:meta.focus,motif:meta.symbol,rankIndex:i+1,major:false});
-  });
- }
- const majors=MAJORS.map((m,i)=>({id:"major"+i,name:m.n,roman:m.r,keywords:m.k,up:m.up,rev:m.rev,advice:m.advice,image:m.image,motif:m.motif,major:true}));
- return [...majors,...minors];
-}
-const FULL_DECK=makeDeck();
-function svgBack(){
- return `<svg viewBox="0 0 120 180" aria-hidden="true"><defs><linearGradient id="backg" x2="1" y2="1"><stop stop-color="#68517d"/><stop offset="1" stop-color="#20172f"/></linearGradient></defs><rect x="2" y="2" width="116" height="176" rx="8" fill="url(#backg)" stroke="#e8ce9b" stroke-width="1.5"/><rect x="8" y="8" width="104" height="164" rx="5" fill="none" stroke="#e8ce9b" opacity=".7"/><rect x="14" y="14" width="92" height="152" rx="3" fill="none" stroke="#d9baf1" stroke-dasharray="2 4" opacity=".7"/><path d="M60 45C34 26 18 48 34 67c8 10 17 12 26 7 9 5 18 3 26-7 16-19 0-41-26-22Z" fill="#d6b4ed" fill-opacity=".2" stroke="#f0dba9" stroke-width="1.4"/><path d="M60 52c-10 15-10 34 0 48 10-14 10-33 0-48Z" fill="#d6b4ed" stroke="#f0dba9"/><circle cx="60" cy="88" r="34" fill="none" stroke="#e8ce9b" opacity=".8"/><circle cx="60" cy="88" r="26" fill="none" stroke="#d9baf1" stroke-dasharray="2 4"/><path d="M58 87C37 42 17 53 31 81c8 15 17 18 29 14M62 87c21-45 41-34 27-6-8 15-17 18-29 14" fill="none" stroke="#f0dba9" stroke-width="2"/><path d="M60 61c-10 15-10 35 0 52 10-17 10-37 0-52Z" fill="#d6b4ed" stroke="#f0dba9"/><path d="M60 18v10M60 148v14M19 88h10M91 88h10M31 36l7 7M82 133l7 7M89 36l-7 7M38 133l-7 7" stroke="#e8ce9b" stroke-linecap="round"/><circle cx="60" cy="88" r="4" fill="#fff1ca"/></svg>`;
-}
-function motifSvg(motif,color){
- const stroke=`stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
- const motifs={
-  wand:`<path d="M150 116L150 258" ${stroke}/><path d="M150 139c-28-25-34-4-15 8M150 174c28-25 34-4 15 8M150 209c-28-25-34-4-15 8" ${stroke}/><path d="M150 103l-8 12h16Z" fill="${color}"/>`,
-  cup:`<path d="M122 135h56l-7 53c-3 19-39 19-42 0Z" ${stroke}/><path d="M150 207v30m-25 0h50M178 146h17c0 25-9 34-22 34M122 146h-17c0 25 9 34 22 34" ${stroke}/><path d="M150 117c-16-18 10-22 0-38" ${stroke}/>`,
-  sword:`<path d="M150 80l-15 125 15 20 15-20Z" fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="3"/><path d="M115 209h70M150 225v31m-13 0h26" ${stroke}/><path d="M150 80v-18" ${stroke}/>`,
-  coin:`<circle cx="150" cy="160" r="53" ${stroke}/><circle cx="150" cy="160" r="42" ${stroke}/><path d="M150 125l9 22 23 1-18 14 6 23-20-13-20 13 6-23-18-14 23-1Z" fill="${color}" fill-opacity=".25" stroke="${color}" stroke-width="2"/>`,
-  butterfly:`<path d="M150 155c-58-86-98-43-54 8 18 21 37 18 54 2 17 16 36 19 54-2 44-51 4-94-54-8Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><path d="M150 143v73m0-65c-14-24-22-22-27-33m27 33c14-24 22-22 27-33" ${stroke}/><circle cx="150" cy="141" r="7" fill="${color}"/>`,
-  moon:`<path d="M170 102c-49-13-78 41-49 78 20 26 56 21 72-3-41 7-59-45-23-75Z" fill="${color}" fill-opacity=".24" stroke="${color}" stroke-width="3"/><path d="M95 202l5 10 11 2-8 7 2 11-10-6-10 6 2-11-8-7 11-2Z" fill="${color}"/>`,
-  flower:`<g fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="2"><ellipse cx="150" cy="119" rx="17" ry="38"/><ellipse cx="150" cy="201" rx="17" ry="38"/><ellipse cx="109" cy="160" rx="38" ry="17"/><ellipse cx="191" cy="160" rx="38" ry="17"/><ellipse cx="121" cy="131" rx="17" ry="34" transform="rotate(-45 121 131)"/><ellipse cx="179" cy="189" rx="17" ry="34" transform="rotate(-45 179 189)"/><ellipse cx="179" cy="131" rx="17" ry="34" transform="rotate(45 179 131)"/><ellipse cx="121" cy="189" rx="17" ry="34" transform="rotate(45 121 189)"/></g><circle cx="150" cy="160" r="13" fill="${color}"/>`,
-  crown:`<path d="M105 202l12-72 32 34 32-34 14 72Z" ${stroke}/><path d="M113 214h74M119 185h62" ${stroke}/><circle cx="150" cy="151" r="8" fill="${color}"/>`,
-  book:`<path d="M150 125c-28-19-52-17-72-8v91c25-10 49-9 72 10 23-19 47-20 72-10v-91c-20-9-44-11-72 8Z" ${stroke}/><path d="M150 126v92M92 142c18-5 35-2 48 7m-48 14c18-5 35-2 48 7m68-28c-18-5-35-2-48 7m48 14c-18-5-35-2-48 7" ${stroke}/>`,
-  heart:`<path d="M150 215s-67-40-67-83c0-37 47-49 67-14 20-35 67-23 67 14 0 43-67 83-67 83Z" fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="3"/><path d="M150 105v112" stroke="${color}" opacity=".45"/>`,
-  chariot:`<path d="M103 190h94l-10 45h-74Z" ${stroke}/><circle cx="125" cy="241" r="12" ${stroke}/><circle cx="175" cy="241" r="12" ${stroke}/><path d="M150 95v93m-28-75h56l-28-25Z" ${stroke}/><path d="M111 110l-17-20m95 20 17-20" ${stroke}/>`,
-  lion:`<circle cx="150" cy="160" r="51" ${stroke}/><path d="M119 137l-13-25 29 8 15-18 15 18 29-8-13 25M132 161h1m34 0h1m-35 19c11 12 25 12 36 0" ${stroke}/><path d="M150 145v18m-11 6h22" ${stroke}/>`,
-  lantern:`<path d="M126 115h48l-6 88h-36Z" ${stroke}/><path d="M137 115V99c0-18 26-18 26 0v16m-26 88h26m-13-78c-19 25 17 30 0 53" ${stroke}/><path d="M105 160l-18 0m118 0h18M150 72V54" ${stroke}/>`,
-  wheel:`<circle cx="150" cy="160" r="62" ${stroke}/><circle cx="150" cy="160" r="14" ${stroke}/><path d="M150 98v48m0 28v48m-62-62h48m28 0h48m-106-44 34 34m36 36 34 34m0-104-34 34m-36 36-34 34" ${stroke}/>`,
-  scales:`<path d="M150 102v137m-42 0h84M112 125h76M150 102l-12-14h24Z" ${stroke}/><path d="M112 125l-24 45h48Zm64 0-24 45h48Z" ${stroke}/><path d="M88 170c6 16 42 16 48 0m16 0c6 16 42 16 48 0" ${stroke}/>`,
-  hanged:`<path d="M104 92h92m-46 0v34m-35-34v143m70-143v143" ${stroke}/><circle cx="150" cy="145" r="15" ${stroke}/><path d="M150 160v50m-23-32 23-18 23 18m-23 32-18 26m18-26 18 26" ${stroke}/>`,
-  moth:`<path d="M150 155c-48-65-78-30-49 17 16 25 34 20 49 3 15 17 33 22 49-3 29-47-1-82-49-17Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><path d="M150 151v72m-4-63-25-28m29 28 25-28" ${stroke}/><circle cx="150" cy="143" r="6" fill="${color}"/>`,
-  temperance:`<path d="M112 127h76l-9 52h-58Z" ${stroke}/><path d="M150 179v51m-28 0h56M128 137c-20 18 20 25 0 43m44-43c-20 18 20 25 0 43" ${stroke}/>`,
-  chains:`<circle cx="150" cy="160" r="38" ${stroke}/><path d="M112 160H86m128 0h-26M150 122V96m0 128v-26M125 135l-18-18m86 86-18-18m0-50 18-18m-86 86 18-18" ${stroke}/><path d="M139 149l22 22m0-22-22 22" ${stroke}/>`,
-  tower:`<path d="M112 226V122h76v104M104 122l46-35 46 35M126 122v-24m48 24v-24" ${stroke}/><path d="M140 154l-12 18 18 10-13 23m27-84 12-18-15-9" ${stroke}/><path d="M150 70l-12-22 23 12" ${stroke}/>`,
-  star:`<path d="M150 85l18 53 56 2-44 34 16 54-46-32-46 32 16-54-44-34 56-2Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><circle cx="150" cy="160" r="11" fill="${color}"/>`,
-  sun:`<circle cx="150" cy="160" r="39" ${stroke}/><circle cx="150" cy="160" r="25" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-width="2"/><path d="M150 93v-19m0 172v-19m67-67h19m-172 0h19m114-48 14-14m-122 122 14-14m94 0 14 14M99 99l14 14" ${stroke}/>`,
-  judgement:`<path d="M150 104v94m-32-70h64m-32-24-14-18h28Z" ${stroke}/><path d="M115 139l-23 35h46Zm70 0-23 35h46Z" ${stroke}/><path d="M150 198c-20 15-20 31 0 42 20-11 20-27 0-42Z" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-width="2"/>`,
-  world:`<ellipse cx="150" cy="160" rx="60" ry="78" ${stroke}/><circle cx="150" cy="160" r="30" ${stroke}/><path d="M150 130v60m-30-30h60m-45-21 30 42m0-42-30 42" ${stroke}/>`
- };
- return motifs[motif]||motifs.star;
-}
-function cardSVG(card){
- const suit=card.suit?SUITS[card.suit]:null;
- const colors=suit?suit.color:({butterfly:["#b38bce","#f1d9a7","#3b2b58"],moon:["#8d8dc4","#e9d6ae","#252544"],heart:["#d28ca9","#f0d7ad","#482b4b"],sun:["#d5a45f","#fff0b7","#51364b"],tower:["#a58bb9","#f0d19c","#302642"],star:["#88a9bd","#e8d6b2","#28394e"]}[card.motif]||["#aa91c8","#f0d8a4","#332747"]);
- const [a,b,bg]=colors,uid="g"+slug(card.id);
- const pipCount=card.major?0:Math.min(card.rankIndex||1,10);
- const pips=card.major?"":(pipCount<=10?Array.from({length:pipCount},(_,i)=>{const side=i%2===0?37:263;const row=Math.floor(i/2);const yy=135+row*29;return `<g><circle cx="${side}" cy="${yy}" r="5" fill="${b}" fill-opacity=".2" stroke="${b}" stroke-width="1.2"/><path d="M${side} ${yy-3}l1.5 3 3 1-3 1.5-1.5 3-1.5-3-3-1.5 3-1Z" fill="${b}"/></g>`}).join(""):"");
- const courtMark=!card.major&&card.rankIndex>10?`<path d="M39 292l7-13 7 13 7-13 7 13M233 292l7-13 7 13 7-13 7 13" fill="none" stroke="${b}" stroke-width="2"/>`:"";
- const angel= `<g opacity=".95">
- <path d="M137 245C93 191 64 188 58 211c-7 29 30 54 75 55M163 245c44-54 73-57 79-34 7 29-30 54-75 55" fill="${a}" fill-opacity=".24" stroke="${b}" stroke-width="2.4"/>
- <path d="M132 210c-21-29-37-42-51-40 11 20 19 37 39 55m48-15c21-29 37-42 51-40-11 20-19 37-39 55" fill="none" stroke="${b}" stroke-width="1.3" opacity=".8"/>
- <path d="M150 118c-17 0-26 13-25 30 1 16 11 27 25 27s24-11 25-27c1-17-8-30-25-30Z" fill="#e9c6b3" stroke="${b}" stroke-width="1.5"/>
- <path d="M126 139c-3-25 11-39 26-39 17 0 28 16 22 40-7-9-12-20-14-26-7 12-19 21-34 25Z" fill="#4b355c" stroke="${b}" stroke-width="1.5"/>
- <path d="M137 177c-7 14-17 30-20 59l33 19 33-19c-3-29-13-45-20-59-9 8-17 8-26 0Z" fill="${a}" stroke="${b}" stroke-width="2"/>
- <path d="M117 231c-20 27-22 54-11 73 17 10 61 10 88 0 11-19 9-46-11-73l-33 24Z" fill="${bg}" stroke="${b}" stroke-width="2"/>
- <path d="M150 256v47m-18-38 18 17 18-17" fill="none" stroke="${b}" stroke-width="1.4" opacity=".9"/>
- <path d="M130 122c5-27 35-31 47-7" fill="none" stroke="${b}" stroke-width="2"/>
- <ellipse cx="150" cy="112" rx="34" ry="10" fill="none" stroke="${b}" stroke-width="2"/>
- </g>`;
- const ornament=Array.from({length:12},(_,i)=>{let angle=i*Math.PI/6,x=150+Math.cos(angle)*116,y=205+Math.sin(angle)*150;return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.2" fill="${b}" opacity=".8"/>`}).join("");
- const stars=`<g fill="${b}" opacity=".8"><path d="M49 82l3 8 8 3-8 3-3 8-3-8-8-3 8-3Zm203 24 2 6 6 2-6 2-2 6-2-6-6-2 6-2ZM58 306l3 7 7 3-7 3-3 7-3-7-7-3 7-3Zm184-12 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/></g>`;
- return `<svg viewBox="0 0 300 440" role="img" aria-label="${safe(card.name)} 塔罗牌插画">
- <defs><linearGradient id="${uid}bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${bg}"/><stop offset=".55" stop-color="${a}" stop-opacity=".48"/><stop offset="1" stop-color="#171126"/></linearGradient><radialGradient id="${uid}halo"><stop stop-color="${b}" stop-opacity=".5"/><stop offset="1" stop-color="${b}" stop-opacity="0"/></radialGradient></defs>
- <rect width="300" height="440" fill="url(#${uid}bg)"/><circle cx="150" cy="180" r="116" fill="url(#${uid}halo)"/>
- <rect x="8" y="8" width="284" height="424" rx="8" fill="none" stroke="${b}" stroke-width="2"/><rect x="15" y="15" width="270" height="410" rx="5" fill="none" stroke="${b}" stroke-width=".8" opacity=".7"/>
- <path d="M27 58Q150 22 273 58M27 378Q150 414 273 378" stroke="${b}" fill="none" opacity=".55"/>
- ${stars}${ornament}
- <circle cx="150" cy="185" r="91" fill="none" stroke="${b}" stroke-width="1.4" opacity=".55"/><circle cx="150" cy="185" r="82" fill="none" stroke="${b}" stroke-dasharray="2 6" opacity=".6"/>
- ${angel}
- ${pips}${courtMark}
- <g transform="translate(0 4)">${motifSvg(card.motif,b)}</g>
- <path d="M32 342h236" stroke="${b}" opacity=".6"/><text x="150" y="33" fill="${b}" text-anchor="middle" font-size="11" letter-spacing="4" font-family="Georgia,serif">${safe(card.roman||"✧")}</text>
- <text x="150" y="369" fill="#fff2d8" text-anchor="middle" font-size="${card.name.length>8?13:16}" letter-spacing="2" font-family="Georgia,'Noto Serif SC',serif">${safe(card.name)}</text>
- <text x="150" y="393" fill="${b}" text-anchor="middle" font-size="8" letter-spacing="2" font-family="Arial,sans-serif">${card.major?"MAJOR ARCANA":safe(card.suit.toUpperCase())+" · "+safe(card.element)}</text>
- <path d="M135 408l15-8 15 8-15 8Z" fill="none" stroke="${b}" opacity=".7"/>
- </svg>`;
-}
-function shuffleArray(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
-function cardBackMini(){return svgBack()}
-function cardNode(item,pos,delay=0){
- const c=item.card,orientation=item.reversed?"reversed":"";
- const face=c.artImage
-   ? `<img data-card-id="${safe(c.id)}" src="${safe(c.artImage)}" alt="${safe(c.name)}" loading="eager" decoding="async">`
-   : cardSVG(c);
- return `<div class="tarot-card" style="animation-delay:${delay}ms"><div class="card-face ${orientation}"><div class="card-art">${face}<div class="art-frame"></div><div class="art-caption">${safe(c.name)}</div></div></div><div class="card-caption">${safe(c.name)} · ${item.reversed?"逆位":"正位"}</div><div class="card-position">${safe(pos)}</div></div>`;
-}
-
-const TAROT_DATA_URL="https://tarostarot.com/tarot-card-data/tarot-cards.json";
-const SUIT_EN={"权杖":"wands","圣杯":"cups","宝剑":"swords","星币":"pentacles"};
-let artworkPromise=null;
-async function loadClassicArtwork(){
- try{
-  const response=await fetch(TAROT_DATA_URL,{cache:"force-cache",mode:"cors"});
-  if(!response.ok)throw new Error("HTTP "+response.status);
-  const payload=await response.json();
-  const records=Array.isArray(payload)?payload:(payload.cards||payload.data||[]);
-  if(!records.length)throw new Error("empty card data");
-  let matched=0;
-  for(const c of FULL_DECK){
-   const record=records.find(x=>{
-    if(c.major)return x.arcana==="major"&&Number(x.number)===Number(c.id.replace("major",""));
-    return x.arcana==="minor"&&(x.suit||"").toLowerCase()===SUIT_EN[c.suit]&&Number(x.number)===Number(c.rankIndex);
-   });
-   if(record){
-    if(typeof record.image==="string"&&record.image.startsWith("https://"))c.artImage=record.image;
-    if(record.yes_no)c.yesNo=record.yes_no;
-    if(Array.isArray(record.keywords))c.standardKeywords=record.keywords;
-    if(record.upright)c.standardUp=record.upright;
-    if(record.reversed)c.standardRev=record.reversed;
-    c.sourceName=record.name;
-    matched++;
-   }
-  }
-  if(matched<70)throw new Error("matched only "+matched+" cards");
-  $("artStatus").textContent="经典牌图已连接 · "+matched+"/78";
- }catch(e){
-  $("artStatus").textContent="外部牌图暂不可用 · 已启用内置原创牌面";
- }
-}
-function ensureArtwork(){
- if(!artworkPromise)artworkPromise=loadClassicArtwork();
- return artworkPromise;
-}
-function attachImageFallback(root){
- root.querySelectorAll("img[data-card-id]").forEach(img=>{
-  img.addEventListener("error",()=>{
-   const card=FULL_DECK.find(c=>c.id===img.dataset.cardId);
-   if(!card)return;
-   const holder=document.createElement("div");
-   holder.innerHTML=cardSVG(card);
-   img.replaceWith(holder.firstElementChild);
-   $("artStatus").textContent="部分外部牌图无法加载 · 已自动切换内置牌面";
-  },{once:true});
- });
-}
-let wingTransitionTimer=null;
-function playWingTransition(forward=true){
- const veil=$("wingTransition");
- if(!veil)return;
- veil.classList.remove("active","forward","backward");
- void veil.offsetWidth;
- veil.classList.add("active",forward?"forward":"backward");
- if(wingTransitionTimer)clearTimeout(wingTransitionTimer);
- wingTransitionTimer=setTimeout(()=>veil.classList.remove("active","forward","backward"),1750);
-}
-function showSection(id){
- const order=["setup","ritual","draw","result"];
- const current=order.find(x=>!$(x).classList.contains("hidden"))||"setup";
- const from=order.indexOf(current),to=order.indexOf(id);
- const target=$(id);
- if(id==="setup")document.body.classList.remove("reading-mode");
- else document.body.classList.add("reading-mode");
- target.classList.remove("hidden","scene-push-next","scene-push-prev","scene-cinematic-forward","scene-cinematic-backward");
- void target.offsetWidth;
- target.classList.add(to>=from?"scene-cinematic-forward":"scene-cinematic-backward");
- order.filter(x=>x!==id).forEach(x=>$(x).classList.add("hidden"));
- playWingTransition(to>=from);
- window.scrollTo({top:0,behavior:"smooth"});
-}
-function renderAmbient(){const a=$("ambient");for(let i=0;i<35;i++){const s=document.createElement("i");s.className="spark";s.style.left=Math.random()*100+"%";s.style.top=(25+Math.random()*75)+"%";s.style.setProperty("--dur",(5+Math.random()*9)+"s");s.style.setProperty("--dx",(Math.random()*60-30)+"px");s.style.animationDelay=(-Math.random()*10)+"s";a.appendChild(s)}}
-function buildSlots(){
- const positions=SPREADS[spread].positions;
- const slots=$("slots");
- slots.classList.toggle("single-card",positions.length===1);
- slots.innerHTML=positions.map((p,i)=>`<div class="slot" id="slot${i}"><div class="slot-frame"><span class="slot-num">${String(i+1).padStart(2,"0")}</span><span class="slot-label">${safe(p[0])}</span></div><div class="slot-name">${safe(p[0])}</div></div>`).join("");
-}
-function buildPickDeck(){
- const fan=$("pickDeck");
- fan.className="pick-deck fan-deck";
- fan.innerHTML=Array.from({length:78},(_,i)=>{
-   const angle=-72+(144*i/77);
-   const lift=Math.abs(angle)*.38;
-   return `<button class="pick-card fan-card" type="button" data-index="${i}" aria-label="选择第 ${i+1} 张牌" style="--angle:${angle.toFixed(2)}deg;--lift:${lift.toFixed(1)}px;--order:${i}">${svgBack()}</button>`;
- }).join("");
- fan.querySelectorAll(".pick-card").forEach(btn=>btn.addEventListener("click",()=>pickCard(btn,Number(btn.dataset.index))));
-}
-function pickCard(btn,index){
- if(step>=SPREADS[spread].positions.length||btn.disabled)return;
- btn.disabled=true;
- const c=shuffled[index];
- if(!c)return;
- const item={card:c,reversed:Math.random()<.27};
- drawn.push(item);
- const pos=SPREADS[spread].positions[step][0];
- const slot=$("slot"+step);slot.classList.add("filled","still-hidden");
- slot.querySelector(".slot-frame").innerHTML=`<div class="selected-back">${svgBack()}<span>已选中 · ${String(step+1).padStart(2,"0")}</span></div>`;
- $("drawBar").style.width=(drawn.length/SPREADS[spread].positions.length*100)+"%";
- step++;
- if(step<SPREADS[spread].positions.length){
-  $("pickInstruction").textContent=`第 ${step+1} 张：${SPREADS[spread].positions[step][0]}。从 78 张牌中继续选择。`;
-  $("pickNote").textContent="已选中的牌仍然保持背面朝上，不会影响你下一次的直觉选择。";
- }else{
-  $("pickInstruction").textContent="全部选择完成。你的牌阵已经准备好。";
-  $("pickNote").textContent="所有牌仍然背面朝上。你可以决定何时揭晓，不必在抽取过程中提前知道答案。";
-  $("pickDeck").querySelectorAll("button").forEach(b=>b.disabled=true);
-  $("readNow").textContent="✧　揭晓全部牌面　✧";
-  $("readNow").classList.remove("hidden");
- }
-}
-function revealAndRead(){
- if(!drawn.length||drawn.length!==SPREADS[spread].positions.length)return;
- const backs=$("slots").querySelectorAll(".selected-back");
- backs.forEach((back,i)=>{
-  back.style.animationDelay=(i*100)+"ms";
-  back.classList.add("sacred-reveal");
- });
- const button=$("readNow");
- button.disabled=true;
- button.textContent="正在揭开命运的帷幕…";
- $("draw").classList.add("reveal-bloom");
- setTimeout(()=>{
-  $("draw").classList.remove("reveal-bloom");
-  button.disabled=false;
-  showResults();
- },1050+Math.min(500,drawn.length*100));
-}
-
-async function beginReading(){
- $("begin").disabled=true;
- $("begin").textContent="正在唤醒牌库…";
- await ensureArtwork();
- $("begin").disabled=false;
- $("begin").textContent="✧　进入抽牌仪式　✧";
- question=$("question").value.trim();spread=document.querySelector(".spread.active").dataset.id;
- shuffled=shuffleArray(FULL_DECK);drawn=[];step=0;
- showSection("ritual");$("orb").classList.add("shuffling");$("ritualTitle").textContent="正在洗牌";$("ritualText").textContent="让问题停留在心里，牌正在重新排列。";$("ritualBar").style.width="0%";$("cutDeck").classList.add("hidden");
- let n=0;const timer=setInterval(()=>{n++;$("ritualBar").style.width=Math.min(100,n*14)+"%";if(n>=7){clearInterval(timer);$("orb").classList.remove("shuffling");$("ritualTitle").textContent="牌已经洗匀";$("ritualText").textContent="想象自己轻轻切开牌堆。准备好后，开始选择你的牌。";$("cutDeck").classList.remove("hidden")}},220);
-}
-function startDraw(){
- showSection("draw");$("drawTitle").textContent=SPREADS[spread].title;$("drawDesc").textContent=SPREADS[spread].desc;$("drawBar").style.width="0%";$("pickInstruction").textContent=`第 1 张：${SPREADS[spread].positions[0][0]}。请点击一张牌背。`;$("readNow").classList.add("hidden");buildSlots();buildPickDeck();
-}
-function suitCounts(){
- const counts={"权杖":0,"圣杯":0,"宝剑":0,"星币":0};drawn.forEach(x=>{if(x.card.suit)counts[x.card.suit]++});return counts;
-}
-function overallText(){
- const counts=suitCounts(),major=drawn.filter(x=>x.card.major),reversed=drawn.filter(x=>x.reversed);
- const active=Object.entries(counts).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
- const first=drawn[0],last=drawn[drawn.length-1];
- const majorLine=major.length?`大阿尔卡那出现了${major.map(x=>x.card.name).join("、")}，它们把这件事从单纯的日常事件推向更深的选择或阶段变化。`:`这组牌没有大阿尔卡那，叙事更贴近具体的人、沟通、安排与现实行动。`;
- const reverseLine=reversed.length?`逆位落在${reversed.map(x=>x.card.name).join("、")}：这些牌的力量并非消失，而是表现得不顺、过量、延迟，或暂时难以被当事人承认。`:`本次没有逆位，牌面表达较直接；真正要辨认的是这些资源能否在现实里落实。`;
- const suitLine=active.length?active.map(([s,n])=>`${s}${n}张，涉及${SUITS[s].focus}`).join("；"):"";
- const sequence=drawn.length>1?`从第一张${first.card.name}走到最后一张${last.card.name}，这组牌的重点会从「${(cardThemes(first.card).slice(0,2)).join("、")}」移动到「${cardThemes(last.card).slice(0,2).join("、")}」。`:`${first.card.name}是这次牌阵唯一的焦点，值得把它的画面、位置和你提问时最在意的部分放在一起看。`;
- return `<div class="reading"><div class="badge">THE WHOLE PICTURE · 整体脉络</div><h3>这组牌真正把焦点放在哪里</h3><p>${safe(majorLine)}</p><p>${safe(reverseLine)}</p><p>${safe(suitLine)}</p><p>${safe(sequence)}</p></div>`;
-}
-
-function positionNarrative(pos,idx){
- const name=pos[0];
- const map={
- "过去 · 根源":"把它看作一段仍在回响的经验，而不是已经写死的命运。它说明你为什么会走到今天，也提示哪些旧反应可能需要更新。",
- "现在 · 核心":"这是当下最需要诚实面对的部分。与其急着问结果，不如先看清自己正在怎样参与这件事。",
- "未来 · 趋势":"这张牌描述的是当前路径的延伸。如果你希望趋势改变，最有影响力的往往是现在能够调整的沟通、选择与行动。",
- "你的内心":"它帮助你辨认自己的真实需求。请把“我希望对方怎样”与“我在这段关系里需要什么”分开看。",
- "对方的状态":"这不是对对方内心的确定判断，而是一个观察角度。请把牌面提示与对方实际表达、持续行为放在一起验证。",
- "你们之间的连接":"关系不是单方面的感觉，而是两个人反复形成的互动。观察彼此是否能够回应、修复与共同承担。",
- "关系中的阻碍":"阻碍未必意味着没有感情，也可能是时机、表达方式、边界或现实条件尚未协调。",
- "未来的发展趋势":"这张牌不是保证某种结局，而是展示目前互动模式可能延伸出的方向。双方的选择仍会改变它。",
- "当前处境":"先承认事情现在是什么样子，不急着美化或否定。清楚描述现状，是所有有效调整的起点。",
- "面临的挑战":"挑战的位置不只是坏消息，也可能是推动你改变策略的力量。看看它要求你学会什么，而不只是想办法绕开。",
- "潜意识 · 深层动机":"这张牌可能触及你尚未充分表达的渴望、担忧或熟悉的应对模式。给它一点空间，但不要急着给自己贴标签。",
- "过去的影响":"过去提供了背景，却不必决定未来。辨认哪些经验仍有价值，哪些反应已经不再适合现在。",
- "理想目标 · 显意识":"这是你清楚意识到、希望抵达的方向。也可以检查：这个目标真的是你想要的，还是来自外界期待？",
- "近期发展":"它呈现当前条件下较容易展开的下一步。把它当作观察和准备的线索，而不是不可更改的预言。",
- "你自身的状态":"这张牌邀请你观察自己带入问题的态度、优势与盲点。你可以调整自己的参与方式，而不必控制所有人。",
- "外部环境":"外界确实会影响局面，但它不等于你完全无能为力。分清环境限制与可争取的空间。",
- "希望与恐惧":"愿望和担心有时来自同一个地方：你很在乎这件事。先承认情绪，再决定怎样照顾它。",
- "最终发展趋势":"把它理解为整组牌的综合走向，而非绝对结局。前面的位置已经告诉你，哪些选择会影响这条路径。"
- };
- return map[name]||"这张牌在此处补充了整组牌的另一个层面。结合它前后的牌来看，重点不是孤立地判断好坏，而是理解它如何参与整体变化。";
-}
-
-const TRADITIONAL_MAJOR = {
- "愚者":{up:"新开始、自由、自发、信任、冒险",rev:"鲁莽、轻率、准备不足、逃避责任"},
- "魔术师":{up:"意志、技能、资源整合、创造、行动力",rev:"操纵、欺瞒、才能未发挥、目标涣散"},
- "女祭司":{up:"直觉、潜意识、静默、内在知识",rev:"隐瞒、直觉受阻、信息不明、表里不一"},
- "皇后":{up:"丰饶、创造、滋养、感官与生命力",rev:"过度付出、依赖、创造力受阻、自我忽略"},
- "皇帝":{up:"秩序、权威、结构、稳定、责任",rev:"控制欲、僵化、专断、缺乏秩序"},
- "教皇":{up:"传统、学习、信念、制度、导师",rev:"教条、盲从、反叛传统、另辟蹊径"},
- "恋人":{up:"爱、结合、和谐、价值选择",rev:"失衡、价值冲突、关系不协调、犹豫"},
- "战车":{up:"胜利、意志、方向、自律、推进",rev:"失控、阻碍、缺乏方向、急于求成"},
- "力量":{up:"勇气、耐心、温柔、内在力量、自我驾驭",rev:"自我怀疑、情绪失控、脆弱、过度压抑"},
- "隐士":{up:"内省、独处、寻求真理、内在指引",rev:"孤立、封闭、过度退缩、拒绝帮助"},
- "命运之轮":{up:"转折、周期、机遇、命运变化",rev:"延误、反复、抗拒变化、失去节奏"},
- "正义":{up:"公平、真相、责任、因果、理性判断",rev:"不公、偏见、逃避责任、判断失衡"},
- "倒吊人":{up:"暂停、牺牲、换位思考、放下控制",rev:"拖延、无谓牺牲、停滞、抗拒改变"},
- "死神":{up:"结束、转化、放下、更新、阶段更替",rev:"抗拒改变、停滞、无法释怀、拖延结束"},
- "节制":{up:"平衡、调和、耐心、整合、适度",rev:"失衡、过度、缺乏协调、节奏紊乱"},
- "恶魔":{up:"束缚、欲望、依附、物质执着、诱惑",rev:"挣脱束缚、觉察、恢复自主、松开依赖"},
- "塔":{up:"突变、崩塌、真相揭露、旧结构瓦解",rev:"抗拒改变、延迟崩解、恐惧动荡"},
- "星星":{up:"希望、疗愈、灵感、信念、重新相信",rev:"失望、信心不足、迷失方向、暂时枯竭"},
- "月亮":{up:"潜意识、幻象、未知、直觉与不安",rev:"迷雾消散、真相浮现、释放恐惧"},
- "太阳":{up:"喜悦、成功、活力、清晰、生命力",rev:"短暂低落、过度乐观、延迟成功"},
- "审判":{up:"觉醒、召唤、复盘、重生、回应使命",rev:"自我怀疑、拒绝觉醒、苛责、错失召唤"},
- "世界":{up:"完成、整合、圆满、抵达、新阶段",rev:"未完成、延迟、缺少收尾、整合不足"}
-};
-function traditionalMeaning(card, reversed){
- if(card.major){
-  const item=TRADITIONAL_MAJOR[card.name];
-  return item ? (reversed?item.rev:item.up) : card.keywords;
- }
- const rank=RANKS[(card.rankIndex||1)-1]||RANKS[0];
- const suit=SUITS[card.suit]||{focus:"现实生活",gift:"逐步发展",shadow:"失衡或受阻"};
- return reversed
-  ? `${rank.key}的失衡面；留意${suit.shadow}`
-  : `${rank.key}；在${card.suit}领域中体现为${suit.focus}，并可发展出${suit.gift}`;
-}
-
-
 const RWS_SCENES = {
  "愚者":"青年站在悬崖边，白玫瑰握在手中，小狗正抬头提醒他；太阳照亮前路，行囊却轻得近乎空白。画面同时有勇气与天真，也有尚未估量的风险。",
  "魔术师":"桌上摆着权杖、圣杯、宝剑与星币，一只手指向天空，另一只指向大地；头顶的无限符号把灵感与实践连在一起。关键不是凭空变出奇迹，而是把手里的资源真正用起来。",
@@ -986,211 +406,419 @@ const MINOR_SCENES = {
  "宝剑":["云中之手举起宝剑，剑尖顶着王冠：真相、决断或清晰表达出现，锋利也意味着责任。","蒙眼女子交叉双剑坐在海边：两种选择僵持不下，暂时的平衡可能来自拒绝看见关键事实。","红心被三把剑刺穿，雨云压在背景：伤害与失望不能被粉饰；说清痛处，才有可能开始处理。","骑士躺在墓床上，三把剑悬挂墙上：休息、沉静与暂时退出冲突，是恢复判断力的必要部分。","一人带走数把剑，远处有人回望：策略、隐瞒或不光彩的胜利；得到想要的东西，不代表没有代价。","船载着乘客驶离岸边，六把剑插在船头：从动荡走向较平静处，改变可能缓慢，却已经发生。","人物悄悄带走五把剑，远处营帐仍有人：试探、保留或绕开正面冲突；要分辨机敏与失信的界线。","蒙眼女子被松散绳索束缚，八把剑围在周围：限制感强烈，但部分出口可能被恐惧遮住；先确认哪些障碍真实存在。","人物坐在床上掩面，九把剑悬在黑暗墙面：夜间反复思虑、内疚或恐惧放大；担忧是真实感受，却不一定是事实预告。","人物倒在地上，十把剑刺入背部，远方天色微亮：一个痛苦阶段走到尽头，承认结束比继续假装无事更有力量。","侍从举剑迎风，云层快速移动：观察敏锐、消息来得快，也可能言语急切、尚未理解全貌。","骑士举剑疾驰，马匹与云都向前冲：果断推进、争取答案，但速度可能压过倾听与周全。","王后端坐云端，剑直立在手，另一手向前：清醒、独立、直言不讳；她要求诚实，也要求表达有分寸。","国王举剑端坐高处，目光直接：理性、判断与规则带来秩序；要防止把逻辑变成冷酷或不容质疑。"],
  "星币":["云中之手托出一枚星币，花园小径通向远方：具体机会已经出现，需要时间、技能和资源把它养大。","杂耍者在海边抛接两枚星币，身后船只随浪起伏：多任务与现实变化并存，灵活是能力，失衡也是风险。","工匠在教堂里雕刻星币，旁人审视作品：专业能力在合作中被看见，成果来自练习和分工。","人物紧抱一枚星币，脚下与头顶也各守着星币：安全感来自积累，也可能因害怕失去而拒绝流动。","两名贫困者在雪夜经过教堂彩窗：资源匮乏、被排除在外的感受很真实；求助与支持可能比独自硬撑更重要。","富人手持天平分发钱币：资源、帮助与公平分配成为主题；施与受之间要保留尊严和边界。","农夫扶着锄头凝视藤蔓上的星币：投入已经发生，成果尚在成熟；现在需要评估，而不是一味加码。","工匠专注敲打星币，成品一枚枚排列：技能、耐心与重复练习带来稳定进步。","女子站在葡萄园中，手停在驯鹰上：独立、生活品质与自我掌控；享受成果，也要知道自己真正珍视什么。","家族在拱门下相聚，老人、孩童与犬只同框：财富不只是金钱，也包括传承、归属与长期建立的安全网。","侍从双手托着星币专注端详：学习现实技能、规划资源或收到务实消息，机会需要认真对待。","骑士停在田野中端详星币：稳定、耐心、按部就班；进展不快，但可靠性可能正是优势。","王后坐在繁花与兔子之间，低头凝视星币：善于经营资源与生活，务实中有温柔，也懂得让成果滋养自己。","国王坐在葡萄藤与公牛纹饰的王座上，手握星币：成熟的资源管理、长期建设与责任；真正的富足需要稳健而非炫耀。"]
 };
-function sceneForCard(c){
- if(c.major)return RWS_SCENES[c.name]||c.image||"这张牌的图像细节需要结合传统牌面观察。";
- const list=MINOR_SCENES[c.suit]||[];
- return list[(c.rankIndex||1)-1]||c.image||"观察牌面中的人物、器物与背景，寻找它们之间的关系。";
-}
-
-function interpretItem(item,pos,idx){
- const c=item.card,reverse=item.reversed,orientation=reverse?"逆位":"正位";
- const authored=reverse?c.rev:c.up;
- const standard=reverse?(c.standardRev||traditionalMeaning(c,true)):(c.standardUp||traditionalMeaning(c,false));
- const keywords=Array.isArray(c.standardKeywords)?c.standardKeywords.join(" · "):c.keywords;
- const scene=sceneForCard(c);
- const placeText=pos[1]||positionNarrative(pos,idx);
- const suitContext=c.major?"这张大阿尔卡那把焦点放在一个更大的心理阶段或人生课题上。":`作为${c.suit}牌，它把故事落在${SUITS[c.suit].focus}：${SUITS[c.suit].gift}，但也要留意${SUITS[c.suit].shadow}。`;
- const reversedNuance=reverse?`逆位不等于把正位简单改成坏事。这里更像是这股力量受阻、过量、向内收缩，或尚未找到合适出口；要看它落在哪个位置，以及周围的牌怎样回应。`:"正位让这股力量较容易被看见和使用，但不代表事情会自动发生；它仍需要现实中的选择与行动。";
- const reflection=reverse?"这张牌最值得追问的不是“是不是要失败”，而是：我在哪个环节失去了主动权？有什么事实还没问清？":"这张牌最值得追问的是：它指出的机会或能力，已经在哪里出现？我能否把它变成一个具体行动？";
- return `<article class="reading card-reading">
-  <div class="badge">CARD ${String(idx+1).padStart(2,"0")} · ${safe(pos[0])}</div>
-  <h3>${safe(c.name)} <span class="orientation-tag">${orientation}</span></h3>
-  <div class="traditional-note">
-   <div class="traditional-label">✧ 传统牌意 · 初学者参考</div>
-   <p><b>关键词：</b>${safe(keywords)}</p>
-   <p><b>${orientation}常见含义：</b>${safe(standard)}</p>
-  </div>
-  <div class="scene-reading">
-   <div class="layer-label">THE RIDER–WAITE–SMITH IMAGE · 牌面图像</div>
-   <p>${safe(scene)}</p>
-  </div>
-  <div class="personal-reading">
-   <div class="layer-label">IN THIS SPREAD · 放回你的牌阵</div>
-   <p class="position-context">${safe(placeText)}</p>
-   <p>${safe(suitContext)}${safe(reversedNuance)}</p>
-   <p>${safe(authored)}</p>
-   <p class="image-question">${safe(reflection)}</p>
-  </div>
- </article>`;
-}
-
-
-const MAJOR_THEMES = {
- "愚者":["开始","自由","冒险","未知"],"魔术师":["意志","技能","行动","表达"],"女祭司":["直觉","秘密","等待","内在"],"皇后":["滋养","创造","丰盛","身体"],"皇帝":["秩序","边界","责任","控制"],"教皇":["传统","学习","制度","信念"],"恋人":["关系","选择","价值","结合"],"战车":["推进","方向","自律","胜利"],"力量":["勇气","温柔","调节","本能"],"隐士":["独处","研究","内省","指引"],"命运之轮":["变化","时机","周期","转折"],"正义":["公平","判断","责任","真相"],"倒吊人":["暂停","牺牲","视角","等待"],"死神":["结束","转化","放下","更新"],"节制":["平衡","整合","耐心","调和"],"恶魔":["欲望","依附","束缚","诱惑"],"高塔":["崩塌","冲击","真相","突变"],"星星":["希望","疗愈","信任","灵感"],"月亮":["迷雾","恐惧","潜意识","投射"],"太阳":["清晰","喜悦","成功","活力"],"审判":["觉醒","召唤","复盘","重生"],"世界":["完成","整合","圆满","抵达"]
+const SUIT_NAMES=Object.keys(SUITS);
+const SUIT_SCENE_LABEL={"权杖":"火焰与枝叶","圣杯":"水与情感","宝剑":"风与思想","星币":"土地与丰收"};
+const SUIT_COLORS={
+ "权杖":["#c77d68","#efd0a0","#7b5147"],
+ "圣杯":["#7fa7b7","#e9d9d0","#4b6574"],
+ "宝剑":["#8798bd","#e6dce9","#4a5578"],
+ "星币":["#91a88c","#e8d8ae","#526b59"],
+ "major":["#b99ab7","#ecd4a4","#705d77"]
 };
-const ELEMENT_RELATIONS = {
- "火-风":"风助火势：想法、表达或消息会推动行动，但也可能让节奏过快。",
- "风-火":"风助火势：想法、表达或消息会推动行动，但也可能让节奏过快。",
- "水-土":"水滋养土：感受若能得到稳定照料，就有机会变成长期关系或具体成果。",
- "土-水":"水滋养土：现实条件为情绪提供容器，关系也更容易落到日常。",
- "火-水":"火水相遇：热情与感受同时升高，吸引力可能很强，也容易出现情绪过载。",
- "水-火":"火水相遇：感受与冲动彼此牵动，先辨认真实需要，再决定要不要推进。",
- "火-土":"火土相遇：愿望需要接受现实检验；热情能启动事情，耐心才能把它建成。",
- "土-火":"火土相遇：现实基础限制速度，但也能让热情有落脚处。",
- "风-水":"风水相遇：想法与感受互相影响，沟通能澄清情绪，也可能让猜测变多。",
- "水-风":"风水相遇：感受需要被说出来，语言也需要顾及情绪。",
- "风-土":"风土相遇：计划必须经过现实条件检验；细节、资源和时间表会决定成败。",
- "土-风":"风土相遇：务实经验帮助想法落地，但过度求稳也可能压住新思路。",
- "火-火":"双火叠加：行动力、竞争心或创造欲增强；留意急于求成和精力透支。",
- "水-水":"双水叠加：情感浓度升高，共情与亲密感增强；也要防止理想化或情绪淹没。",
- "风-风":"双风叠加：思考、谈判、消息与判断成为主轴；信息很多时更要核对事实。",
- "土-土":"双土叠加：现实、工作、金钱或长期安排被放大；进展慢，但能检验稳定性。"
+const MAJOR_KEYWORDS = {
+ "愚者":"新生、自由、信任、冒险","魔术师":"意志、创造、技巧、资源整合","女祭司":"直觉、潜意识、静默、未知",
+ "皇后":"丰饶、滋养、创造、感官","皇帝":"秩序、边界、权威、责任","教皇":"传统、学习、信念、导师",
+ "恋人":"吸引、结合、选择、价值观","战车":"意志、推进、自律、方向","力量":"勇气、耐心、温柔、内在力量",
+ "隐士":"内省、独处、寻找、指引","命运之轮":"转折、周期、机遇、变化","正义":"公平、真相、责任、判断",
+ "倒吊人":"暂停、牺牲、换位思考、放下","死神":"结束、转化、告别、更新","节制":"平衡、调和、耐心、整合",
+ "恶魔":"欲望、依附、束缚、诱惑","高塔":"突变、崩塌、揭露、解放","星星":"希望、疗愈、灵感、信任",
+ "月亮":"迷雾、恐惧、潜意识、投射","太阳":"喜悦、清晰、活力、成功","审判":"觉醒、召唤、复盘、重生","世界":"完成、圆满、整合、抵达"
 };
-function cardThemes(c){
- if(c.major)return MAJOR_THEMES[c.name]||[];
- const suitTheme={
-  "权杖":["行动","热情","创造","事业"],
-  "圣杯":["情感","关系","直觉","想象"],
-  "宝剑":["思想","沟通","判断","冲突"],
-  "星币":["现实","工作","资源","长期积累"]
- };
- const rankTheme={
-  "王牌":["开端","机会"],"二":["选择","平衡"],"三":["成长","协作"],"四":["稳定","结构"],"五":["冲突","考验"],"六":["回应","交换"],"七":["评估","坚持"],"八":["推进","练习"],"九":["成熟","压力"],"十":["完成","负担"],"侍从":["学习","消息"],"骑士":["行动","追求"],"王后":["掌握","照料"],"国王":["责任","整合"]
- };
- return [...(suitTheme[c.suit]||[]),...(rankTheme[c.rank]||[])];
+const MINOR_KEYWORDS={
+ "权杖":["灵感萌芽","选择方向","远方计划","庆祝归属","竞争摩擦","认可胜利","守住立场","迅速进展","韧性防守","责任过载","热情消息","冲动追求","自信创造","成熟领导"],
+ "圣杯":["情感开启","互相回应","友谊欢庆","情绪倦怠","失落遗憾","温柔回忆","幻想选择","离开寻找","满足愿望","情感圆满","敏感讯息","浪漫靠近","共情照料","情绪成熟"],
+ "宝剑":["真相决断","两难僵持","心痛失落","休息恢复","冲突代价","离开动荡","策略隐瞒","困局自限","焦虑失眠","痛苦终结","敏锐观察","急切行动","清醒独立","理性判断"],
+ "星币":["现实机会","资源平衡","技能协作","守成与安全","匮乏孤立","给予接受","耐心评估","勤勉精进","独立丰足","家族传承","学习机会","稳定耕耘","丰盛照料","长期经营"]
+};
+const MINOR_REVERSED={
+ "权杖":["灵感迟滞或热情不足","方向摇摆，计划难以落地","等待回应而焦躁","对归属感不安，庆祝被延迟","冲突失控或回避竞争","胜利感短暂，过度依赖认可","防守疲惫，立场开始松动","进展受阻或消息延误","精疲力竭，难以继续警觉","承担过多，接近崩溃","新点子缺少耐心或执行","热情变成鲁莽，行动先于判断","自信受挫或控制欲过强","权威僵化，愿景压过他人声音"],
+ "圣杯":["情感封闭或新关系迟迟不开","关系失衡，回应并不对等","社交过度或表面热闹","麻木、封闭，错过眼前的邀请","沉溺遗憾，难以看见仍在的支持","美化过去，困在旧日情绪","沉迷幻想，选择越来越混乱","离开后悔或无法真正告别","满足感短暂，纵欲或自满","家庭表面和谐，真实情绪被压下","情绪表达不成熟，讯息含混","浪漫承诺多于实际行动","共情过度，边界模糊","情绪压抑或用冷静回避感受"],
+ "宝剑":["判断混乱或真相被延迟","僵局延长，拒绝面对选择","伤痛难以释放，旧事反复刺痛","休息不足，恢复过程被打断","冲突余波未平，胜负心仍在","过渡受阻，旧环境仍牵绊","欺瞒暴露或策略适得其反","困局加深，恐惧限制行动","焦虑加剧，担忧侵占生活","痛苦延长，无法接受结束","言语尖锐或消息不完整","冲动争执，忽视后果","偏见、冷酷或过度防御","判断武断，理性成为控制"],
+ "星币":["机会被忽视或实际条件不足","资源分配失衡，顾此失彼","合作失调，技能尚未磨合","吝啬、防御，害怕失去","财务或支持压力加重","给予带有条件，交换不公平","急于收获，耐心不足","工作倦怠或粗心出错","过度依赖物质安全","家庭资源纠纷或基础不稳","学习计划松散，缺乏投入","停滞、懒散或只守不进","过度照料他人，忽视自己","固守财富与地位，缺少弹性"]
+};
+function makeDeck(){
+ const deck=[];
+ MAJORS.forEach((m,i)=>deck.push({
+  id:"major-"+i,name:m.n,roman:m.r,major:true,keywords:MAJOR_KEYWORDS[m.n]||m.k,
+  up:m.up,rev:m.rev,advice:m.advice,image:m.image,motif:m.motif,
+  scene:RWS_SCENES[m.n]||m.image,element:"灵性"
+ }));
+ const rankNames=["王牌","二","三","四","五","六","七","八","九","十","侍从","骑士","王后","国王"];
+ SUIT_NAMES.forEach(suit=>{
+  RANKS.forEach((rank,i)=>{
+   const scene=MINOR_SCENES[suit][i];
+   const meta=SUITS[suit];
+   const focus={
+    "权杖":"行动、热情、创作与事业中的主动性",
+    "圣杯":"感情、亲密、直觉与内在需要",
+    "宝剑":"思考、沟通、判断以及必须面对的事实",
+    "星币":"学业、工作、金钱、身体与长期经营"
+   }[suit];
+   const up=`${scene} ${rank.up}在这里不再只是抽象的“${rank.key}”，而是落在${focus}上：${suit==="权杖"?"你需要决定是否把热情变成持续行动，而不是只靠一时兴奋。":suit==="圣杯"?"感受本身值得尊重，但也要分清真心、期待与想象，看看彼此是否真的有回应。":suit==="宝剑"?"关键在于把事实、推测和情绪分开；清晰的判断会比反复猜测更有帮助。":"现实条件与时间投入会决定结果，耐心、资源和具体安排比空想更重要。"}`;
+   const rev=`${scene}到了逆位，这个画面里的力量可能没有顺畅地流动。${MINOR_REVERSED[suit][i]}。${rank.rev} ${suit==="权杖"?"火元素受阻时，常表现为急躁、耗竭，或想做很多却无法持续。":suit==="圣杯"?"水元素受阻时，容易把感受压下去，或让期待淹没真实互动。":suit==="宝剑"?"风元素受阻时，想法可能变成过度分析、尖锐表达或自我困住。":"土元素受阻时，常见的是害怕失去、拖延落实，或被现实压力压得难以调整。"}`;
+   deck.push({
+    id:`${suit}-${i}`,name:`${suit} · ${rank.cn}`,roman:rank.r==="Ace"?"A":rank.r==="Page"?"侍":rank.r==="Knight"?"骑":rank.r==="Queen"?"后":rank.r==="King"?"王":String(i+1),
+    major:false,suit,rank:rank.cn,rankIndex:i+1,element:meta.element,
+    keywords:`${rank.key} · ${MINOR_KEYWORDS[suit][i]} · ${focus.split("、").slice(0,2).join("、")}`,
+    up,rev,traditionalUp:rank.up,traditionalRev:rank.rev,rankKey:rank.key,scene,advice:meta.advice,motif:meta.symbol
+   });
+  });
+ });
+ return deck;
 }
-function pairReading(aItem,bItem,aPos,bPos){
- const a=aItem.card,b=bItem.card,ta=cardThemes(a),tb=cardThemes(b);
- const common=ta.filter(x=>tb.includes(x));
- const ea=a.element||(a.suit?SUITS[a.suit].element:"");
- const eb=b.element||(b.suit?SUITS[b.suit].element:"");
- const pairKey=[a.name,b.name].sort().join("|");
- const classic={
-  "恋人|恶魔":"恋人与恶魔同场时，吸引力和依附需要分开看：一边是清醒地选择彼此，一边是被欲望、恐惧或不对等牵住。关键不是判断这段关系“好或坏”，而是看双方是否仍有自由说不、说真话。",
-  "星星|高塔":"高塔之后出现星星，常像灾后重新看见天空：旧结构已经裂开，但恢复并非空谈。先处理损失，再慢慢建立新的信任，不必急着假装一切如常。",
-  "月亮|太阳":"月亮与太阳并列，模糊与清晰同时存在。事情可能正从猜测走向可验证的事实；不要只挑自己想相信的部分，等光线真正照到细节。",
-  "死神|世界":"死神与世界相遇，结束和完成形成强烈呼应。某个阶段可能已经走到尽头，真正的任务是完成收尾，而不是把旧身份带进新阶段。",
-  "恶魔|高塔":"恶魔与高塔相遇，原本维持依附或控制的结构可能经不起现实冲击。它指出的不是惩罚，而是看清自己被什么牵制，以及代价已经累积到什么程度。",
-  "女祭司|月亮":"女祭司与月亮让直觉、沉默和不确定感变得浓厚。此时适合观察和核实，不宜把每个细节都解释成暗示；未知仍然是未知。",
-  "皇帝|皇后":"皇帝与皇后并列，结构与滋养需要共同存在。只有规则没有照料会变得僵硬，只有付出没有边界又会耗尽；关系或计划需要两者互相支撑。",
-  "战车|力量":"战车与力量把重点放在驾驭：向前推进需要意志，也需要情绪调节。真正的掌控不是压过所有阻力，而是知道何时用力、何时收住。",
-  "隐士|星星":"隐士与星星把独处和希望连在一起。暂时退后未必是退缩，也可能是为了找回自己的方向；但独处之后，仍要允许自己重新与世界连接。",
-  "高塔|审判":"高塔与审判常带来无法再忽略的醒悟。某件事的真相或后果已经摆到面前，接下来需要回应，而不是继续沿用旧解释。",
-  "愚者|世界":"愚者与世界形成旅程的两端：一个刚刚启程，一个已经完成整合。它们一起出现时，结束也可能是下一段旅程的入口。",
-  "倒吊人|战车":"倒吊人与战车的节奏相反：一个要求暂停，一个要求推进。先确认眼前的停滞是在积累新视角，还是已经变成拖延，再决定何时重新出发。",
-  "正义|月亮":"正义与月亮提示事实和感受尚未对齐。把证据、猜测、恐惧分开，尤其不要在信息不完整时急着判定谁对谁错。",
-  "节制|恶魔":"节制与恶魔相遇，主题是欲望的管理而非否认。找到适当的界线，才能分清享受、依赖与失去自主之间的差别。"
+const DECK=makeDeck();
+
+function esc(s){return escapeHTML(s)}
+function cardPalette(card){return card.major?SUIT_COLORS.major:SUIT_COLORS[card.suit]}
+function slug(s){return Array.from(String(s)).map(c=>c.codePointAt(0).toString(16)).join("-");}
+function motifSvg(motif,color){
+ const stroke=`stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
+ const motifs={
+  wand:`<path d="M150 116L150 258" ${stroke}/><path d="M150 139c-28-25-34-4-15 8M150 174c28-25 34-4 15 8M150 209c-28-25-34-4-15 8" ${stroke}/><path d="M150 103l-8 12h16Z" fill="${color}"/>`,
+  cup:`<path d="M122 135h56l-7 53c-3 19-39 19-42 0Z" ${stroke}/><path d="M150 207v30m-25 0h50M178 146h17c0 25-9 34-22 34M122 146h-17c0 25 9 34 22 34" ${stroke}/><path d="M150 117c-16-18 10-22 0-38" ${stroke}/>`,
+  sword:`<path d="M150 80l-15 125 15 20 15-20Z" fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="3"/><path d="M115 209h70M150 225v31m-13 0h26" ${stroke}/><path d="M150 80v-18" ${stroke}/>`,
+  coin:`<circle cx="150" cy="160" r="53" ${stroke}/><circle cx="150" cy="160" r="42" ${stroke}/><path d="M150 125l9 22 23 1-18 14 6 23-20-13-20 13 6-23-18-14 23-1Z" fill="${color}" fill-opacity=".25" stroke="${color}" stroke-width="2"/>`,
+  butterfly:`<path d="M150 155c-58-86-98-43-54 8 18 21 37 18 54 2 17 16 36 19 54-2 44-51 4-94-54-8Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><path d="M150 143v73m0-65c-14-24-22-22-27-33m27 33c14-24 22-22 27-33" ${stroke}/><circle cx="150" cy="141" r="7" fill="${color}"/>`,
+  moon:`<path d="M170 102c-49-13-78 41-49 78 20 26 56 21 72-3-41 7-59-45-23-75Z" fill="${color}" fill-opacity=".24" stroke="${color}" stroke-width="3"/><path d="M95 202l5 10 11 2-8 7 2 11-10-6-10 6 2-11-8-7 11-2Z" fill="${color}"/>`,
+  flower:`<g fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="2"><ellipse cx="150" cy="119" rx="17" ry="38"/><ellipse cx="150" cy="201" rx="17" ry="38"/><ellipse cx="109" cy="160" rx="38" ry="17"/><ellipse cx="191" cy="160" rx="38" ry="17"/><ellipse cx="121" cy="131" rx="17" ry="34" transform="rotate(-45 121 131)"/><ellipse cx="179" cy="189" rx="17" ry="34" transform="rotate(-45 179 189)"/><ellipse cx="179" cy="131" rx="17" ry="34" transform="rotate(45 179 131)"/><ellipse cx="121" cy="189" rx="17" ry="34" transform="rotate(45 121 189)"/></g><circle cx="150" cy="160" r="13" fill="${color}"/>`,
+  crown:`<path d="M105 202l12-72 32 34 32-34 14 72Z" ${stroke}/><path d="M113 214h74M119 185h62" ${stroke}/><circle cx="150" cy="151" r="8" fill="${color}"/>`,
+  book:`<path d="M150 125c-28-19-52-17-72-8v91c25-10 49-9 72 10 23-19 47-20 72-10v-91c-20-9-44-11-72 8Z" ${stroke}/><path d="M150 126v92M92 142c18-5 35-2 48 7m-48 14c18-5 35-2 48 7m68-28c-18-5-35-2-48 7m48 14c-18-5-35-2-48 7" ${stroke}/>`,
+  heart:`<path d="M150 215s-67-40-67-83c0-37 47-49 67-14 20-35 67-23 67 14 0 43-67 83-67 83Z" fill="${color}" fill-opacity=".22" stroke="${color}" stroke-width="3"/><path d="M150 105v112" stroke="${color}" opacity=".45"/>`,
+  chariot:`<path d="M103 190h94l-10 45h-74Z" ${stroke}/><circle cx="125" cy="241" r="12" ${stroke}/><circle cx="175" cy="241" r="12" ${stroke}/><path d="M150 95v93m-28-75h56l-28-25Z" ${stroke}/><path d="M111 110l-17-20m95 20 17-20" ${stroke}/>`,
+  lion:`<circle cx="150" cy="160" r="51" ${stroke}/><path d="M119 137l-13-25 29 8 15-18 15 18 29-8-13 25M132 161h1m34 0h1m-35 19c11 12 25 12 36 0" ${stroke}/><path d="M150 145v18m-11 6h22" ${stroke}/>`,
+  lantern:`<path d="M126 115h48l-6 88h-36Z" ${stroke}/><path d="M137 115V99c0-18 26-18 26 0v16m-26 88h26m-13-78c-19 25 17 30 0 53" ${stroke}/><path d="M105 160l-18 0m118 0h18M150 72V54" ${stroke}/>`,
+  wheel:`<circle cx="150" cy="160" r="62" ${stroke}/><circle cx="150" cy="160" r="14" ${stroke}/><path d="M150 98v48m0 28v48m-62-62h48m28 0h48m-106-44 34 34m36 36 34 34m0-104-34 34m-36 36-34 34" ${stroke}/>`,
+  scales:`<path d="M150 102v137m-42 0h84M112 125h76M150 102l-12-14h24Z" ${stroke}/><path d="M112 125l-24 45h48Zm64 0-24 45h48Z" ${stroke}/><path d="M88 170c6 16 42 16 48 0m16 0c6 16 42 16 48 0" ${stroke}/>`,
+  hanged:`<path d="M104 92h92m-46 0v34m-35-34v143m70-143v143" ${stroke}/><circle cx="150" cy="145" r="15" ${stroke}/><path d="M150 160v50m-23-32 23-18 23 18m-23 32-18 26m18-26 18 26" ${stroke}/>`,
+  moth:`<path d="M150 155c-48-65-78-30-49 17 16 25 34 20 49 3 15 17 33 22 49-3 29-47-1-82-49-17Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><path d="M150 151v72m-4-63-25-28m29 28 25-28" ${stroke}/><circle cx="150" cy="143" r="6" fill="${color}"/>`,
+  temperance:`<path d="M112 127h76l-9 52h-58Z" ${stroke}/><path d="M150 179v51m-28 0h56M128 137c-20 18 20 25 0 43m44-43c-20 18 20 25 0 43" ${stroke}/>`,
+  chains:`<circle cx="150" cy="160" r="38" ${stroke}/><path d="M112 160H86m128 0h-26M150 122V96m0 128v-26M125 135l-18-18m86 86-18-18m0-50 18-18m-86 86 18-18" ${stroke}/><path d="M139 149l22 22m0-22-22 22" ${stroke}/>`,
+  tower:`<path d="M112 226V122h76v104M104 122l46-35 46 35M126 122v-24m48 24v-24" ${stroke}/><path d="M140 154l-12 18 18 10-13 23m27-84 12-18-15-9" ${stroke}/><path d="M150 70l-12-22 23 12" ${stroke}/>`,
+  star:`<path d="M150 85l18 53 56 2-44 34 16 54-46-32-46 32 16-54-44-34 56-2Z" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="3"/><circle cx="150" cy="160" r="11" fill="${color}"/>`,
+  sun:`<circle cx="150" cy="160" r="39" ${stroke}/><circle cx="150" cy="160" r="25" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-width="2"/><path d="M150 93v-19m0 172v-19m67-67h19m-172 0h19m114-48 14-14m-122 122 14-14m94 0 14 14M99 99l14 14" ${stroke}/>`,
+  judgement:`<path d="M150 104v94m-32-70h64m-32-24-14-18h28Z" ${stroke}/><path d="M115 139l-23 35h46Zm70 0-23 35h46Z" ${stroke}/><path d="M150 198c-20 15-20 31 0 42 20-11 20-27 0-42Z" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-width="2"/>`,
+  world:`<ellipse cx="150" cy="160" rx="60" ry="78" ${stroke}/><circle cx="150" cy="160" r="30" ${stroke}/><path d="M150 130v60m-30-30h60m-45-21 30 42m0-42-30 42" ${stroke}/>`
  };
- let special=classic[pairKey]||"";
- let relation="";
- if(common.length>=2) relation=`两张牌共同触及${common.slice(0,3).join("、")}，这不是简单重复，而是同一主题从两个角度被照亮。`;
- else if(ea&&eb&&ELEMENT_RELATIONS[ea+"-"+eb]) relation=ELEMENT_RELATIONS[ea+"-"+eb];
- else if(a.major&&b.major) relation=`两张大阿尔卡那把视线从「${ta.slice(0,2).join("、")}」推向「${tb.slice(0,2).join("、")}」：这更像两个阶段或两种内在力量之间的对话。`;
- else if(a.major||b.major) relation=`大阿尔卡那「${a.major?a.name:b.name}」给这组小阿尔卡那的日常事件加上更深的背景；${a.major?b.name:a.name}则把课题落实到具体的${(a.major?b.suit:a.suit)||"生活"}层面。`;
- else relation=`一张牌谈${ta.slice(0,2).join("与")}，另一张谈${tb.slice(0,2).join("与")}；两者分别指出内在动机与现实表现，不宜只取其中一张当结论。`;
- const orientation=(aItem.reversed?"前牌逆位":"前牌正位")+"，"+(bItem.reversed?"后牌逆位":"后牌正位");
- let nuance="";
- if(aItem.reversed&&bItem.reversed)nuance="两张都逆位，相关主题可能暂时向内收缩，或在同一处反复打结；先找出共同卡点，比急着推进更重要。";
- else if(aItem.reversed&&!bItem.reversed)nuance="前一张逆位、后一张正位，像是先有阻滞，随后出现出口；后牌提供的方向值得尝试，但不能跳过前面的原因。";
- else if(!aItem.reversed&&bItem.reversed)nuance="前一张正位、后一张逆位，说明起点或资源并不差，困难可能出在后续执行、承接或结果预期。";
- else nuance="两张都正位，彼此的力量较容易直接表达；仍需看它们是否指向同一目标，而不是只因为都正位就视为顺利。";
- const positional=`「${aPos[0]}」的${a.name}与「${bPos[0]}」的${b.name}形成前后关系。`;
- return {score:(common.length*3)+(a.major||b.major?2:0)+(ea&&eb&&ea===eb?2:0)+(special?5:0)+(aItem.reversed!==bItem.reversed?1:0),text:`${positional}${special||relation} ${nuance}`,orientation};
+ return motifs[motif]||motifs.star;
 }
-function evaluateAllPairs(){
- const positions=SPREADS[spread].positions;
- const pairs=[];
- for(let i=0;i<drawn.length;i++){
-  for(let j=i+1;j<drawn.length;j++){
-   pairs.push(pairReading(drawn[i],drawn[j],positions[i],positions[j]));
-  }
+function cardArt(card){
+ const suit=card.suit?SUITS[card.suit]:null;
+ const colors=suit?suit.color:({butterfly:["#c3a8c9","#f2ddb3","#7b647f"],moon:["#aab5cf","#f0dfc1","#66718b"],heart:["#d7a4ae","#f5dfc0","#865c65"],sun:["#e6c27e","#fff0c6","#8b7049"],tower:["#b3a1bd","#f1d7a8","#76617d"],star:["#a2bdc8","#f0dfbd","#5f7985"]}[card.motif]||["#aa91c8","#f0d8a4","#332747"]);
+ const [a,b,bg]=colors,uid="g"+slug(card.id)+"-"+Math.random().toString(36).slice(2,8);
+ const pipCount=card.major||card.rankIndex>10?0:Math.min(card.rankIndex||1,10);
+ const pipIcon={wand:`<path d="M0 10L0-10M-5-3Q0-10 5-3M-5 4Q0-3 5 4" stroke="${b}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,cup:`<path d="M-7-8H7L5 2Q0 8-5 2Z M-10-7Q-14 2-5 2 M10-7Q14 2 5 2 M0 8V12M-5 12H5" stroke="${b}" stroke-width="1.8" fill="none" stroke-linejoin="round"/>`,sword:`<path d="M0-12L-4 5 0 10 4 5Z M-8 5H8 M0 10V14" stroke="${b}" stroke-width="1.8" fill="none" stroke-linejoin="round"/>`,coin:`<circle r="8" fill="none" stroke="${b}" stroke-width="1.8"/><path d="M0-5L2-1 6 0 2 2 0 6-2 2-6 0-2-1Z" fill="${b}"/>`}[card.motif]||`<circle r="7" fill="none" stroke="${b}" stroke-width="2"/>`;
+ const pips=Array.from({length:pipCount},(_,i)=>{const side=i%2===0?42:258;const row=Math.floor(i/2);const yy=125+row*27;return `<g transform="translate(${side} ${yy})">${pipIcon}</g>`}).join("");
+ const courtMark=!card.major&&card.rankIndex>10?`<path d="M39 292l7-13 7 13 7-13 7 13M233 292l7-13 7 13 7-13 7 13" fill="none" stroke="${b}" stroke-width="2"/>`:"";
+ const figureOnCard=card.major?!["高塔","恶魔","死神","命运之轮"].includes(card.name):card.rankIndex>10;
+ const angel= `<g opacity=".95">
+ <path d="M137 245C93 191 64 188 58 211c-7 29 30 54 75 55M163 245c44-54 73-57 79-34 7 29-30 54-75 55" fill="${a}" fill-opacity=".24" stroke="${b}" stroke-width="2.4"/>
+ <path d="M132 210c-21-29-37-42-51-40 11 20 19 37 39 55m48-15c21-29 37-42 51-40-11 20-19 37-39 55" fill="none" stroke="${b}" stroke-width="1.3" opacity=".8"/>
+ <path d="M150 118c-17 0-26 13-25 30 1 16 11 27 25 27s24-11 25-27c1-17-8-30-25-30Z" fill="#e9c6b3" stroke="${b}" stroke-width="1.5"/>
+ <path d="M126 139c-3-25 11-39 26-39 17 0 28 16 22 40-7-9-12-20-14-26-7 12-19 21-34 25Z" fill="#4b355c" stroke="${b}" stroke-width="1.5"/>
+ <path d="M137 177c-7 14-17 30-20 59l33 19 33-19c-3-29-13-45-20-59-9 8-17 8-26 0Z" fill="${a}" stroke="${b}" stroke-width="2"/>
+ <path d="M117 231c-20 27-22 54-11 73 17 10 61 10 88 0 11-19 9-46-11-73l-33 24Z" fill="${bg}" stroke="${b}" stroke-width="2"/>
+ <path d="M150 256v47m-18-38 18 17 18-17" fill="none" stroke="${b}" stroke-width="1.4" opacity=".9"/>
+ <path d="M130 122c5-27 35-31 47-7" fill="none" stroke="${b}" stroke-width="2"/>
+ <ellipse cx="150" cy="112" rx="34" ry="10" fill="none" stroke="${b}" stroke-width="2"/>
+ </g>`;
+ const ornament=Array.from({length:12},(_,i)=>{let angle=i*Math.PI/6,x=150+Math.cos(angle)*116,y=205+Math.sin(angle)*150;return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.2" fill="${b}" opacity=".8"/>`}).join("");
+ const stars=`<g fill="${b}" opacity=".8"><path d="M49 82l3 8 8 3-8 3-3 8-3-8-8-3 8-3Zm203 24 2 6 6 2-6 2-2 6-2-6-6-2 6-2ZM58 306l3 7 7 3-7 3-3 7-3-7-7-3 7-3Zm184-12 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/></g>`;
+ return `<svg viewBox="0 0 300 440" role="img" aria-label="${esc(card.name)} 塔罗牌插画">
+ <defs><linearGradient id="${uid}bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${bg}"/><stop offset=".55" stop-color="${a}" stop-opacity=".48"/><stop offset="1" stop-color="#f4e9d9"/></linearGradient><radialGradient id="${uid}halo"><stop stop-color="${b}" stop-opacity=".5"/><stop offset="1" stop-color="${b}" stop-opacity="0"/></radialGradient></defs>
+ <rect width="300" height="440" fill="url(#${uid}bg)"/><circle cx="150" cy="180" r="116" fill="url(#${uid}halo)"/>
+ <rect x="8" y="8" width="284" height="424" rx="8" fill="none" stroke="${b}" stroke-width="2"/><rect x="15" y="15" width="270" height="410" rx="5" fill="none" stroke="${b}" stroke-width=".8" opacity=".7"/>
+ <path d="M27 58Q150 22 273 58M27 378Q150 414 273 378" stroke="${b}" fill="none" opacity=".55"/>
+ ${stars}${ornament}
+ <circle cx="150" cy="185" r="91" fill="none" stroke="${b}" stroke-width="1.4" opacity=".55"/><circle cx="150" cy="185" r="82" fill="none" stroke="${b}" stroke-dasharray="2 6" opacity=".6"/>
+ ${figureOnCard?angel:""}
+ ${pips}${courtMark}
+ <g transform="translate(0 4)">${motifSvg(card.motif,b)}</g>
+ <path d="M32 342h236" stroke="${b}" opacity=".6"/><text x="150" y="33" fill="${b}" text-anchor="middle" font-size="11" letter-spacing="4" font-family="Georgia,serif">${esc(card.roman||"✧")}</text>
+ <text x="150" y="369" fill="#fff2d8" text-anchor="middle" font-size="${card.name.length>8?13:16}" letter-spacing="2" font-family="Georgia,'Noto Serif SC',serif">${esc(card.name)}</text>
+ <text x="150" y="393" fill="${b}" text-anchor="middle" font-size="8" letter-spacing="2" font-family="Arial,sans-serif">${card.major?"MAJOR ARCANA":esc(card.suit.toUpperCase())+" · "+esc(card.element)}</text>
+ <path d="M135 408l15-8 15 8-15 8Z" fill="none" stroke="${b}" opacity=".7"/>
+ </svg>`;
+}
+function cardBack(uid="back"){
+ const gid="back-"+slug(uid);
+ return `<svg viewBox="0 0 120 180" aria-hidden="true"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8c6d9"/><stop offset=".52" stop-color="#a18caf"/><stop offset="1" stop-color="#796b85"/></linearGradient></defs><rect x="2" y="2" width="116" height="176" rx="7" fill="url(#${gid})" stroke="#c6a16c" stroke-width="2"/><rect x="8" y="8" width="104" height="164" rx="4" fill="none" stroke="#f5e5c8" stroke-width="1.2"/><rect x="14" y="14" width="92" height="152" rx="3" fill="none" stroke="#f5e5c8" stroke-dasharray="2 4"/><circle cx="60" cy="88" r="35" fill="none" stroke="#f7e8c9" stroke-width="1.3"/><circle cx="60" cy="88" r="26" fill="none" stroke="#f7e8c9" stroke-dasharray="2 4"/><path d="M60 43c-20 20-20 47 0 68 20-21 20-48 0-68Z" fill="#e8d7e9" stroke="#f7e8c9"/><path d="M60 58c-16-17-35-2-22 14 6 7 14 9 22 4 8 5 16 3 22-4 13-16-6-31-22-14Z" fill="#d9b8ce" stroke="#f7e8c9"/><path d="M60 18v12m0 116v16M19 88h12m58 0h12M31 36l8 8m42 88 8 8m0-104-8 8m-42 88-8 8" stroke="#f7e8c9" stroke-width="1.5"/></svg>`;
+}
+function makeContext(card,question,reversed){
+ const q=question.trim();
+ const rel=/(爱|恋|感情|喜欢|暧昧|脱单|复合|对象|关系|相处|他会|她会|对方)/.test(q);
+ const study=/(学业|学习|考试|成绩|考研|论文|课程|竞赛|升学|学校)/.test(q);
+ const work=/(工作|事业|实习|求职|面试|职业|项目|创业|职场)/.test(q);
+ const choice=/(要不要|该不该|是否|能不能|会不会|选择|决定|怎么办)/.test(q);
+ if(card.major){
+  const m={
+   "愚者":["感情里，新鲜感和自由空间很重要；先看彼此是否愿意真实地认识对方，而不是急着给关系命名。","学习或工作上适合尝试新方法、投递新机会，但要给冒险配上基本准备。"],
+   "魔术师":["关系能否推进，取决于表达和行动是否一致。你可以主动创造交流机会，但不要替对方完成回应。","这是把能力组织起来的牌：明确目标、展示作品、把已有资源转成具体成果。"],
+   "女祭司":["感情中的信息还不完整。留意细节，但不要把沉默直接解释成喜欢或拒绝；一次坦诚沟通比反复猜测更可靠。","适合观察、研究和积累信息，暂时不必急着公开结论。"],
+   "皇后":["关系需要被滋养：关注相处是否舒服、是否有照顾与回应，而不是单方面付出。","创造力与成长环境是优势，给计划稳定投入，也记得照顾自己的精力。"],
+   "皇帝":["关系中的边界和责任需要说清楚；稳定不是控制，真正可靠的人会尊重彼此的选择。","适合建立计划、规则和可执行的节奏，承担责任会带来进展。"],
+   "教皇":["看双方对承诺、价值观和关系定义是否接近；也可以听取可信赖者的意见，但别盲从。","学习、资格、导师或制度化路径可能是关键，循序渐进会比走捷径稳妥。"],
+   "恋人":["吸引力之外，更重要的是价值观与选择是否一致。关系的答案藏在双方愿不愿意坦诚并承担选择里。","面对选择时，先确认哪条路真正符合你的价值，而不是只选看起来最讨好的那条。"],
+   "战车":["关系可能需要有人明确表达方向，但推进不能靠强迫；看双方是否愿意朝同一方向努力。","行动力和目标感是优势，集中精力突破一个关键关口。"],
+   "力量":["温柔而稳定的态度比试探和拉扯更有力量；不要为了得到回应而压低自己的需求。","耐心、练习和情绪管理会成为你的底气，稳住节奏比硬撑更有效。"],
+   "隐士":["对方可能更需要空间，或这段关系目前适合观察而非催促。也请分辨尊重空间与长期回避的区别。","适合独立钻研、补足短板、寻找自己的判断标准；暂时不必追随外界节奏。"],
+   "命运之轮":["关系可能出现转折或节奏变化，但变化本身不保证结果；留意对方实际做出的选择。","时机与环境正在变化，保持准备，机会出现时及时回应。"],
+   "正义":["把感受与事实放在一起看：双方是否对等、承诺是否兑现、边界是否公平。","结果会受到准备、规则与过往选择影响，按标准检查细节，承担该承担的部分。"],
+   "倒吊人":["暂时停下来观察关系中的付出是否失衡。等待只有在带来新理解时才有意义，不必无限期牺牲自己。","换个角度看问题，暂缓不等于失败；找出真正卡住的环节，再决定是否调整路径。"],
+   "死神":["旧的相处模式需要结束或彻底改变；这不必然等于关系结束，但不能指望一切照旧却自然变好。","一个阶段可能已经完成，放下不再适用的方法，才有空间进入下一阶段。"],
+   "节制":["关系需要时间和磨合，观察彼此能否在差异中找到舒服的节奏。","把不同能力与资源整合起来，稳定推进；不必用极端方式逼出结果。"],
+   "恶魔":["强烈吸引也可能夹杂依赖、占有或不平等。问问自己：这段关系让你更自由，还是越来越害怕失去？","留意短期诱惑、过度承诺或让你失去主动权的安排，先守住边界。"],
+   "高塔":["某个误解或不稳固的期待可能被打破。与其维护表面平静，不如正视已经出现的事实。","计划可能需要调整，尤其是建立在错误假设上的部分；先处理真正的问题，再重建。"],
+   "星星":["这张牌带来修复和重新信任的空间，但希望需要真实互动来承接，不必把愿望当作对方的承诺。","适合恢复信心、寻找灵感、重新建立长期愿景；一步步做，别急于证明。"],
+   "月亮":["暧昧、不安或投射可能让你看不清。不要凭猜测替对方写好内心戏，等待更多事实浮现。","信息可能不完整，焦虑会放大风险。把担忧拆成可核实的问题，再决定行动。"],
+   "太阳":["关系中的坦率、快乐和被看见很重要；若双方都愿意自然表达，这是积极的信号。","成果、清晰度与自信正在增强，适合展示自己、享受努力带来的回报。"],
+   "审判":["过去的事可能需要被重新谈起。关系能否进入新阶段，取决于双方是否愿意承认问题并作出改变。","复盘经验、回应真正重要的召唤；别再用旧标准评价已经成长的自己。"],
+   "世界":["关系可能走向更完整的阶段，也可能意味着一段经历已经圆满收束；看你们是否都准备好进入下一章。","一个阶段有机会完成，整合经验、收尾并为新目标腾出空间。"]
+  };
+  return m[card.name]?.[0] && rel ? m[card.name][0] : (m[card.name]?.[1] && (study||work) ? m[card.name][1] : (m[card.name]?.[1] || m[card.name]?.[0] || ""));
  }
- return pairs.sort((a,b)=>b.score-a.score);
+ const suitRel={
+  "权杖":"在关系里，权杖看的是热度、主动性和持续行动。留意对方是否只在兴致高时靠近，还是愿意把热情落实成稳定的联系。",
+  "圣杯":"在关系里，圣杯看的是情感流动与回应。感受很重要，但别只凭一次温柔就推断承诺；观察情绪是否能被认真接住。",
+  "宝剑":"在关系里，宝剑把沟通和事实摆到前面。暧昧的地方需要问清，尖锐的话也要看它是否揭示了真实分歧。",
+  "星币":"在关系里，星币看的是可靠、投入和现实安排。比起漂亮的话，持续出现、兑现约定和愿意花时间更有分量。"
+ };
+ const suitStudy={
+  "权杖":"放在学业上，它强调主动尝试、竞赛、表达和把兴趣变成项目；关键是持续，而不只是开头的兴奋。",
+  "圣杯":"放在学业上，它提醒你找到真正愿意投入的方向，也留意情绪状态是否影响专注；适合把兴趣和学习结合。",
+  "宝剑":"放在学业上，它强调分析、论证、信息筛选与清晰表达；把复杂任务拆开，避免陷入反复担忧。",
+  "星币":"放在学业上，它强调规律、练习和可见积累；稳定完成小任务，比临时冲刺更能带来可靠进步。"
+ };
+ const suitWork={
+  "权杖":"放在工作上，它强调发起、创造和争取机会；要让热情有明确目标，也要估算精力与风险。",
+  "圣杯":"放在工作上，它强调合作氛围、共情和创造性；确认情绪劳动是否公平，别把照顾团队变成独自承担。",
+  "宝剑":"放在工作上，它强调沟通、判断、谈判和专业表达；重要信息要留痕，决策要有依据。",
+  "星币":"放在工作上，它强调技能、资源、报酬与长期发展；把成果做实，评估投入是否换来相称回报。"
+ };
+ const suitDefault={
+  "权杖":"这张权杖牌把重点放在你愿不愿意行动，以及能否把热情维持到真正见到成果的那一天。",
+  "圣杯":"这张圣杯牌提醒你认真对待感受，同时分清内心期待与外界实际给出的回应。",
+  "宝剑":"这张宝剑牌要求你把事情想清楚、说清楚；事实比猜测可靠，清醒也不等于苛刻。",
+  "星币":"这张星币牌把注意力带回现实：时间、资源、身体状态和长期投入，都会影响事情如何发展。"
+ };
+ const idx=card.rankIndex-1;
+ const stageLine=[
+  "一件新事物刚露出苗头，先辨认它是否值得投入。",
+  "两种选择或两股力量并存，需要重新分配注意力。",
+  "事情开始向外发展，交流、协作或反馈会改变进度。",
+  "基础正在形成，稳定感既是支持，也可能变成惯性。",
+  "摩擦暴露出真正的问题，冲突背后往往有未被满足的需要。",
+  "经验与资源开始流动，留意给予和接收是否平衡。",
+  "现在更适合评估、守住立场或等待结果成熟，而非盲目加码。",
+  "节奏加快或技能进入反复练习的阶段，细节决定质量。",
+  "你已经走过一段路，独立与韧性正在显现，也要留意疲惫。",
+  "一个阶段的成果或负担达到高点，需要决定如何收尾和分配。",
+  "以学习者的姿态接近新机会，先观察、试验，再形成判断。",
+  "行动意愿很强，速度是优势，但要给判断留下空间。",
+  "这股力量已经成熟，重点是稳定地运用它，而不是证明自己。",
+  "你有能力承担更大的责任，真正的成熟也包括听见他人的需要。"
+ ][idx];
+ const orientationLine=reversed
+  ? "逆位让这股力量不容易顺畅表达：可能是被压住、走得太急、用力过度，或现实条件还没配合。它指出的是需要调整的地方，不是对你下结论。"
+  : "正位表示这股力量目前较容易发挥，但它仍需要现实行动承接；牌面给出的是方向，不是自动兑现的保证。";
+ const context=rel?suitRel[card.suit]:study?suitStudy[card.suit]:work?suitWork[card.suit]:suitDefault[card.suit];
+ return `${stageLine} ${context} ${orientationLine}`;
 }
-
-function connectionsText(){
- const positions=SPREADS[spread].positions;
- const pairs=evaluateAllPairs();
- const selected=pairs.slice(0,Math.min(4,pairs.length));
- const total=pairs.length;
- const majorCount=drawn.filter(x=>x.card.major).length;
- const suitCountsLocal=suitCounts();
- const strongest=Object.entries(suitCountsLocal).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1])[0];
- const opening=spread==="three"
-  ? `这三张牌不是三个独立预言：过去位置解释事情从哪里来，现在位置说明力量如何交锋，未来位置则呈现当前路径继续下去的方向。`
-  : spread==="love"
-  ? `这组关系牌要同时看双方位置和关系本身：一方的感受不能替代另一方的行动，连接牌与阻碍牌尤其重要。`
-  : spread==="cross"
-  ? `凯尔特十字的重点不是十张牌各说一句，而是现状与挑战、深层根基与显意识目标、外部环境与内心期待之间如何互相牵动。`
-  : `单张牌没有组合关系可供比较，因此重点放在牌面细节、正逆位和它所处的问题语境。`;
- const lines=selected.length?selected.map((p,i)=>`<li><span class="pair-index">0${i+1}</span><p>${safe(p.text)}</p></li>`).join(""):"";
- const pattern=strongest?`本次出现最多的是${strongest[0]}（${strongest[1]}张），所以${SUITS[strongest[0]].element}元素所代表的${SUITS[strongest[0]].focus}是理解整组牌的重要入口。`:
- `这组牌以大阿尔卡那为主，讨论的是阶段、选择与内在转变，而不只是某个日常细节。`;
- return `<div class="reading pair-reading"><div class="badge">THE CARD DIALOGUE · 牌与牌之间</div><h3>把牌放在一起读</h3><p>${safe(opening)}</p>${total?`<div class="pair-count">本次共检视 ${total} 组两两关系，以下列出关联度较高的几组。</div><ol class="pair-list">${lines}</ol>`:""}<p>${safe(pattern)}</p></div>`;
+function cardAdvice(card,reversed){
+ if(card.major)return card.advice;
+ const advice={
+  "权杖":["先做一个小规模尝试，让热情遇到真实反馈。","把选择写下来，比较每条路需要的行动与代价。","找一个可以合作或展示成果的场合。","庆祝已经完成的部分，再安排下一阶段。","把争论带回共同目标，避免为了赢而消耗。","接受认可，但继续确认自己真正想抵达的地方。","守住边界，同时区分必要坚持与无谓防御。","及时处理消息和任务，别因速度牺牲准确。","安排休息，别把一直警惕当成坚强。","删减不必要的责任，学会分工和拒绝。","允许自己好奇，先试着做，不急于给它定性。","行动前确认目标与后果，不要只靠冲劲。","相信自己的能力，也给别人表达空间。","把愿景拆成团队听得懂、能执行的计划。"],
+  "圣杯":["给感受一个真实出口，也留意自己是否愿意接纳回应。","坦诚表达好感与期待，观察对方是否同样投入。","把快乐分享给值得的人，不必独自消化所有情绪。","先休息，确认自己是真的不想要，还是暂时没有力气回应。","允许失落存在，同时看看还有哪些连接值得珍惜。","温柔回望过去，但不要让回忆替现在作决定。","把愿望与事实分开，选一个真正可行的方向。","离开消耗你的情境前，先确认自己想寻找什么。","享受成果，也留意满足感是否需要更深层的支撑。","把幸福落实在日常相处与可靠支持上。","对新感受保持开放，但先看清讯息与行动。","表达欣赏，也用持续行动证明诚意。","照顾别人之前先确认自己的情绪容量。","保持温柔与稳定，同时清楚表达边界。"],
+  "宝剑":["把事实说清楚，重要决定不要建立在模糊信息上。","暂时放下僵持，主动寻找缺失的那条信息。","承认受伤，不急着原谅，也别把伤口变成唯一的答案。","给自己一段真正不被打扰的休息时间。","问问自己：赢得争论是否值得失去信任？","选择更平静的环境，允许恢复需要时间。","策略可以保护自己，但别用隐瞒破坏长期信任。","把“我不能”拆成具体障碍，先处理其中一个。","把担忧写成事实清单，必要时向可信任的人求助。","接受某个阶段已经结束，先照顾好自己再重建。","核对信息来源，避免因急于表达而误伤。","让行动有方向，不要把果断变成鲁莽。","坚持清晰判断，也保留理解复杂处境的余地。","用证据和逻辑作决定，不要把冷静当作不必体谅。"],
+  "星币":["把机会变成可执行的第一步，先盘点手里的资源。","做好时间与金钱分配，避免同时抓住所有事情。","向有经验的人学习，重视合作中的分工和标准。","确认安全感来自稳健安排，而不是拒绝所有变化。","主动寻求支持，不必把暂时的困难等同于个人失败。","让帮助与回报保持尊重和透明。","评估投入是否值得继续，耐心不等于无限等待。","专注练习一项关键技能，持续积累可见成果。","享受独立成果，也为未来保留弹性。","考虑长期影响，照顾好资源与关系的传承。","把学习计划落到日程，持续积累经验。","稳步推进，可靠的节奏本身就是竞争力。","让生活品质与自我照顾成为成果的一部分。","管理资源时保持长远眼光，也别忽略人的感受。"]
+ };
+ let line=advice[card.suit][card.rankIndex-1];
+ if(reversed)line={
+  "权杖":"先暂停扩张，重新安排优先级；恢复精力后再决定是否继续。",
+  "圣杯":"不要为了维持表面和谐而忽略真实感受，试着说出需要。",
+  "宝剑":"先停止反复推演，找出一个可以核实或直接沟通的问题。",
+  "星币":"回到最基本的资源和时间安排，先修补现实基础。"
+ }[card.suit];
+ return line;
 }
-
-function actionText(){
- const positions=SPREADS[spread].positions;
- const lead=drawn[0],tail=drawn[drawn.length-1];
- const advice=tail.card.advice||(tail.card.suit?SUITS[tail.card.suit].advice:"先把最重要的事实弄清楚，再决定下一步。");
- const caution=drawn.find(x=>x.reversed);
- const cautionText=caution?`${caution.card.name}逆位是这组牌里需要留意的地方：${caution.card.rev}`:`这组牌没有明显逆位，不必额外制造阻碍；更值得做的是把牌面提示落实到具体情境。`;
- return `<div class="analysis-grid"><div class="insight"><h4>牌面给出的行动方向</h4><p>${safe(advice)}</p></div><div class="insight"><h4>最需要留意的部分</h4><p>${safe(cautionText)}</p></div><div class="insight"><h4>从第一张走到最后一张</h4><p>${safe(lead.card.name)}位于「${positions[0][0]}」，而${tail.card.name}落在「${positions[drawn.length-1][0]}」。先回应前者指出的处境，再用后者提示的方向检验下一步是否合适。</p></div></div>`;
+function getBinaryTendency(card,reversed){
+ const map={
+  "愚者":.55,"魔术师":.72,"女祭司":.45,"皇后":.75,"皇帝":.68,"教皇":.62,"恋人":.72,"战车":.78,"力量":.66,"隐士":.42,"命运之轮":.58,"正义":.55,"倒吊人":.35,"死神":.28,"节制":.64,"恶魔":.34,"高塔":.2,"星星":.8,"月亮":.35,"太阳":.9,"审判":.7,"世界":.86
+ };
+ const minorScores={
+  "权杖":[.68,.56,.72,.78,.36,.82,.55,.8,.58,.34,.62,.68,.78,.82],
+  "圣杯":[.75,.84,.78,.44,.28,.68,.4,.34,.86,.9,.62,.72,.78,.8],
+  "宝剑":[.65,.4,.24,.48,.25,.62,.34,.3,.22,.18,.55,.56,.6,.65],
+  "星币":[.78,.52,.76,.62,.28,.68,.58,.78,.86,.9,.62,.74,.82,.86]
+ };
+ let v=card.major?map[card.name]:minorScores[card.suit][card.rankIndex-1];
+ if(reversed)v=.5-(v-.5)*.85;
+ if(v>=.68)return {label:"牌面倾向：较支持",detail:"这张牌的象征更偏向打开机会、推动进展或形成稳定结果。它不是保证；仍要看现实中的行动是否跟上。"};
+ if(v<=.32)return {label:"牌面倾向：暂不支持",detail:"这张牌更强调阻碍、结束、失衡或条件尚未成熟。它不等于永远没有可能，而是提醒你先处理眼前真正卡住的部分。"};
+ return {label:"牌面倾向：仍需观察",detail:"这张牌没有给出简单的肯定或否定。结果取决于尚未明确的选择、沟通或现实条件，先把关键变量看清楚。"};
 }
-
-function isBinaryQuestion(q){
- return /(?:吗[？?]?$|能否|会否|能不能|会不会|是否|可不可以|行不行|该不该|要不要|有没有|值不值得)/.test((q||"").trim());
+function makeReading(card,reversed,question){
+ const isRev=reversed;
+ const meaning=isRev?card.rev:card.up;
+ const context=makeContext(card,question,isRev);
+ const keywords=card.major?card.keywords:card.keywords;
+ const q=question.trim();
+ const isBinary=/(是否|会不会|能不能|可不可以|要不要|该不该|有没有可能|有机会吗|能否)/.test(q);
+ const binary=isBinary?getBinaryTendency(card,isRev):null;
+ const mainTitle=isRev?"逆位：力量受阻的地方":"正位：正在生长的力量";
+ const prompt=isRev
+  ? "请留意：你是在保护自己，还是因为害怕再次失望而提前关上了门？"
+  : "请留意：这张牌指出的力量，已经在你的生活里以什么具体形式出现？";
+ const scene=card.scene||card.image;
+ const readingQuestion=q
+  ? `你问的是「${q}」。${context}`
+  : `${context} 如果暂时没有明确的问题，就把它当作一面镜子：看看哪一句最贴近你此刻的处境，哪一处又让你想起某个具体的人或决定。`;
+ const traditional=card.major
+  ? (isRev?`逆位常见方向：受阻、过度、延迟，或能量向内收缩。`:`正位常见方向：${card.keywords}。`)
+  : (isRev?`${MINOR_REVERSED[card.suit][card.rankIndex-1]}。${card.traditionalRev}`:card.traditionalUp);
+ return `
+ <section class="reading-section">
+  <div class="reading-kicker">I · THE CARD ITSELF</div><h3>传统牌意</h3>
+  <div class="keyword-row">${keywords.split(/[、·，,]/).filter(Boolean).slice(0,6).map(k=>`<span class="keyword">${esc(k.trim())}</span>`).join("")}</div>
+  <p>${esc(traditional)}</p>
+ </section>
+ <section class="reading-section">
+  <div class="reading-kicker">II · SYMBOLS IN THE PAINTING</div><h3>牌面意象</h3>
+  <p>${esc(scene)}</p>
+  <p>${card.major?"这张大阿尔卡那谈的是一段更深的人生课题。":"这张"+card.suit+"牌把象征带回具体生活：它关乎"+SUITS[card.suit].focus+"。"} 画面里的动作、方向和环境并不是装饰，它们共同指出了这张牌的力量如何发生。</p>
+ </section>
+ <section class="reading-section">
+  <div class="reading-kicker">III · THE READING</div><h3>${mainTitle}</h3>
+  <p>${esc(meaning)}</p>
+  <div class="question-answer"><strong>放在你的问题里</strong><p>${esc(readingQuestion)}</p></div>
+ </section>
+ ${binary?`<section class="reading-section"><div class="reading-kicker">IV · A DIRECT TENDENCY</div><h3>${binary.label}</h3><p>${binary.detail}</p></section>`:""}
+ <section class="reading-section">
+  <div class="reading-kicker">${binary?"V":"IV"} · A GENTLE COUNSEL</div><h3>给你的指引</h3>
+  <p>${esc(card.major?card.advice:cardAdvice(card,isRev))}</p>
+  <p>${prompt}</p>
+ </section>`;
 }
-function oracleChibi(mood="hope"){
- const mouth=mood==="caution"?'<path d="M92 104q8-7 16 0" stroke="#704c68" stroke-width="3" fill="none" stroke-linecap="round"/>':'<path d="M91 100q9 11 18 0" stroke="#704c68" stroke-width="3" fill="none" stroke-linecap="round"/>';
- const cheek=mood==="caution"?"#e9a2a2":"#f2a6b7";
- return `<div class="chibi-oracle" aria-label="Q版天使占卜师"><svg viewBox="0 0 200 190" role="img" aria-label="Q版天使占卜师">
- <ellipse cx="100" cy="176" rx="56" ry="8" fill="#080512" opacity=".3"/>
- <path d="M72 92C25 39 12 85 46 119c13 13 26 12 42 2M128 92c47-53 60-7 26 27-13 13-26 12-42 2" fill="#e7d5ff" stroke="#f4d9a5" stroke-width="3"/>
- <path d="M100 12c-20 0-31 13-31 34 0 27 13 43 31 43s31-16 31-43c0-21-11-34-31-34Z" fill="#f4d9bd" stroke="#f6dfb3" stroke-width="3"/>
- <path d="M68 44c-2-31 16-42 34-42 22 0 35 17 30 47-8-8-14-19-16-29-12 15-28 23-48 24Z" fill="#4c3267" stroke="#e8cba1" stroke-width="3"/>
- <ellipse cx="100" cy="8" rx="26" ry="7" fill="none" stroke="#f4d9a5" stroke-width="3"/>
- <path d="M84 68q5 7 10 0m12 0q5 7 10 0" stroke="#533b5a" stroke-width="3" fill="none" stroke-linecap="round"/>
- ${mouth}<ellipse cx="76" cy="83" rx="9" ry="5" fill="${cheek}" opacity=".65"/><ellipse cx="124" cy="83" rx="9" ry="5" fill="${cheek}" opacity=".65"/>
- <path d="M78 92c-12 12-19 35-18 62 22 16 58 16 80 0-1-27-8-50-20-62-12 10-30 10-42 0Z" fill="#b99add" stroke="#f2d7a5" stroke-width="3"/>
- <path d="M100 100v52m-17-39 17 14 17-14" stroke="#f8e8c8" stroke-width="2" fill="none"/>
- <path d="M87 126l13-9 13 9-13 10Z" fill="#f2d7a5"/>
- <path d="M50 151q-12 8-8 19 12 7 25-2m83-17q12 8 8 19-12 7-25-2" fill="#f4d9bd" stroke="#f6dfb3" stroke-width="2"/>
- <path d="M100 1v-7m-4 0h8" stroke="#f4d9a5" stroke-width="2" stroke-linecap="round"/>
- </svg></div>`;
+function makeReadingCard(item){
+ const card=item.card;
+ $("resultArt").innerHTML=cardArt(card);
+ $("resultName").textContent=card.name;
+ $("resultOrientation").textContent=(item.reversed?"逆位":"正位")+" · "+(card.major?"大阿尔卡那":card.suit+" / "+card.element+"元素");
+ $("resultQuestion").textContent=item.question?`「${item.question}」`:"给此刻的自己一份指引";
+ $("readingPaper").innerHTML=makeReading(card,item.reversed,item.question);
+ $("saveBtn").textContent=isSaved(card.id)?"♥ 已收藏":"♡ 收藏这张牌";
 }
-
-function questionVerdict(){
- if(!question.trim()||!isBinaryQuestion(question))return "";
- const verdicts=drawn.map(item=>item.card.yesNo?.[item.reversed?"reversed":"upright"]||"").filter(v=>["yes","no","maybe"].includes(v));
- if(!verdicts.length)return "";
- const yes=verdicts.filter(v=>v==="yes").length,no=verdicts.filter(v=>v==="no").length,maybe=verdicts.filter(v=>v==="maybe").length;
- let label="倾向尚不明朗",tone="hope",detail="牌面同时出现支持与保留的讯号。与其急着把它压成肯定或否定，不如看清哪一个条件仍未成熟。";
- if(yes>no){label="目前偏向肯定";tone="hope";detail="支持这件事发生的牌面讯号较多。它更像一扇打开的门，而不是自动兑现的承诺；接下来要看你是否能接住机会。";}
- if(no>yes){label="目前偏向暂缓";tone="caution";detail="阻力、延迟或条件不足的讯号较多。与其把它当成永远不可能，不如先辨认最具体的阻碍是什么。";}
- return `<div class="verdict-card"><div class="verdict-eyebrow">✧ THE CARDS ANSWER ✧</div><div class="verdict-label">针对「${safe(question)}」的牌面倾向</div>${oracleChibi(tone)}<div class="verdict-answer">${label}</div><p>${safe(detail)}</p><div class="verdict-stats"><span>支持 ${yes}</span><span>未定 ${maybe}</span><span>阻力 ${no}</span></div><p class="verdict-disclaimer">倾向来自本次牌面象征的归纳，不是现实概率或结果保证。</p></div>`;
+function isSaved(id){try{return JSON.parse(localStorage.getItem("celestia-saved")||"[]").some(x=>x.id===id)}catch(e){return false}}
+function saveCurrent(){
+ const saved=JSON.parse(localStorage.getItem("celestia-saved")||"[]");
+ const id=current.card.id;
+ const index=saved.findIndex(x=>x.id===id);
+ if(index>=0)saved.splice(index,1);else saved.unshift({id,name:current.card.name,reversed:current.reversed,date:new Date().toLocaleDateString("zh-CN")});
+ localStorage.setItem("celestia-saved",JSON.stringify(saved.slice(0,78)));
+ $("saveBtn").textContent=isSaved(id)?"♥ 已收藏":"♡ 收藏这张牌";
 }
-
-function showResults(){
- showSection("result");
- $("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 留给内心的一次探索";
- $("allcards").innerHTML=drawn.map((x,i)=>cardNode(x,SPREADS[spread].positions[i][0],i*70)).join("");
- attachImageFallback($("allcards"));
- $("questionVerdict").innerHTML=questionVerdict();
- $("overall").innerHTML=overallText();
- $("meanings").innerHTML=drawn.map((x,i)=>interpretItem(x,SPREADS[spread].positions[i],i)).join("");
- $("connections").innerHTML=connectionsText();
- $("actions").innerHTML=actionText();
- const major=drawn.filter(x=>x.card.major).length;
- const rev=drawn.filter(x=>x.reversed).length;
- $("summary").textContent=`愿你把这次抽牌当作一面温柔而诚实的镜子。它呈现了${major?` ${major} 张大阿尔卡那所指向的深层课题，以及`:""}${rev?`${rev} 张逆位所提示的调整空间`:"牌面中可以运用的行动资源"}。不必急着把每一张牌都变成答案；有些理解会在你真正生活、沟通和行动之后慢慢清晰。你始终拥有重新选择的能力。`;
+let current=null,question="";
+const stages=["home","questionStage","ritual","drawStage","reveal","result"];
+function transition(to){
+ const curtain=$("curtain");curtain.classList.remove("play");void curtain.offsetWidth;curtain.classList.add("play");
+ const currentStage=stages.find(id=>$(id).classList.contains("active"));
+ if(currentStage)$(currentStage).classList.remove("active");
+ setTimeout(()=>{$(to).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})},260);
 }
-document.querySelectorAll(".spread").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".spread").forEach(x=>x.classList.remove("active"));b.classList.add("active")}));
-$("begin").addEventListener("click",beginReading);
-$("cutDeck").addEventListener("click",startDraw);
-$("readNow").addEventListener("click",revealAndRead);
-$("again").addEventListener("click",()=>{drawn=[];question="";step=0;$("question").value="";$("readNow").classList.add("hidden");showSection("setup")});
-renderAmbient();
-ensureArtwork();
+function spawnPetals(n=18){
+ for(let i=0;i<n;i++){
+  const p=document.createElement("span");p.className="petal";p.textContent=["✿","❀","✧","❧"][Math.floor(Math.random()*4)];
+  p.style.left=Math.random()*100+"vw";p.style.setProperty("--drift",(Math.random()*180-90)+"px");
+  p.style.animationDuration=(6+Math.random()*7)+"s";p.style.animationDelay=(Math.random()*1.8)+"s";
+  p.style.fontSize=(10+Math.random()*15)+"px";document.body.appendChild(p);setTimeout(()=>p.remove(),15000);
+ }
+}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+let shuffled=[];
+function buildFan(){
+ const fan=$("fan");fan.innerHTML="";
+ shuffled=shuffle(DECK);
+ const mobile=window.matchMedia("(max-width:760px)").matches;
+ shuffled.forEach((card,i)=>{
+  const b=document.createElement("button");b.className="fan-card";b.type="button";b.setAttribute("aria-label","选择第 "+(i+1)+" 张牌");
+  if(!mobile){
+   const angle=(i/(shuffled.length-1)-.5)*112;
+   const lift=Math.abs(i-(shuffled.length-1)/2)*1.65;
+   b.style.setProperty("--angle",angle+"deg");b.style.setProperty("--lift",lift+"px");
+   b.style.zIndex=String(10+Math.round(40-Math.abs(i-38.5)));
+  }
+  b.innerHTML=cardBack(card.id);b.addEventListener("click",()=>chooseCard(card,b));
+  fan.appendChild(b);
+ });
+}
+function chooseCard(card,button){
+ if(current)return;
+ current={card,reversed:Math.random()<.28,question};
+ button.classList.add("selected");button.disabled=true;
+ $("fanHint").textContent="牌已回应。请稍候，光芒正在汇聚。";
+ $("progress").style.width="100%";
+ setTimeout(()=>{
+  $("revealName").textContent=card.name;
+  $("revealArt").innerHTML=cardArt(card);
+  $("revealCard").classList.remove("turn");
+  $("revealStage").classList.add("flipping");
+  transition("reveal");
+  setTimeout(()=>{
+   $("revealCard").classList.add("turn");
+   $("revealName").textContent=card.name+" · "+(current.reversed?"逆位":"正位");
+   $("readBtn").disabled=false;
+   spawnPetals(24);
+  },900);
+ },450);
+}
+function reset(){
+ current=null;question="";$("questionInput").value="";$("progress").style.width="0%";
+ $("revealStage").classList.remove("flipping");$("revealCard").classList.remove("turn");
+ $("readBtn").disabled=true;transition("home");
+}
+function openLibrary(filter="all"){
+ const grid=$("libraryGrid");grid.innerHTML="";
+ DECK.filter(c=>filter==="all"||(filter==="major"?c.major:c.suit===filter)).forEach(card=>{
+  const b=document.createElement("button");b.className="library-item";b.innerHTML=cardArt(card)+`<span>${esc(card.name)}</span>`;
+  b.addEventListener("click",()=>{
+   $("libraryDrawer").classList.remove("open");
+   question="";current={card,reversed:false,question};
+   makeReadingCard(current);transition("result");
+  });
+  grid.appendChild(b);
+ });
+ $("libraryDrawer").classList.add("open");
+}
+$("enterBtn").addEventListener("click",()=>transition("questionStage"));
+$("libraryBtn").addEventListener("click",()=>openLibrary());
+$("closeLibrary").addEventListener("click",()=>$("libraryDrawer").classList.remove("open"));
+$("libraryDrawer").addEventListener("click",e=>{if(e.target===$("libraryDrawer"))$("libraryDrawer").classList.remove("open")});
+$("libraryFilters").addEventListener("click",e=>{
+ const b=e.target.closest("[data-filter]");if(!b)return;
+ document.querySelectorAll("#libraryFilters .question-chip").forEach(x=>x.classList.toggle("active",x===b));
+ openLibrary(b.dataset.filter);
+});
+document.querySelectorAll(".question-chip[data-prompt]").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll(".question-chip[data-prompt]").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");
+ const text=b.dataset.prompt;
+ const placeholders={"爱情与关系":"我想了解一段关系的走向与自己的感受……","学业与成长":"我目前的学习状态与接下来的方向……","工作与方向":"我正在面对的工作选择与发展……","关于自己":"我最近的状态，以及值得留意的事情……"};
+ $("questionInput").placeholder=placeholders[text];
+}));
+$("startRitual").addEventListener("click",()=>{
+ question=$("questionInput").value.trim();
+ transition("ritual");$("ritualTitle").textContent="让思绪慢慢安静下来";$("ritualText").textContent="78 张牌正在重新排列。";
+ $("cutBtn").textContent="切牌 · 展开牌堆";spawnPetals(10);
+});
+$("cutBtn").addEventListener("click",()=>{
+ $("cutBtn").disabled=true;$("cutBtn").textContent="牌已洗匀，正在展开……";
+ setTimeout(()=>{buildFan();$("cutBtn").disabled=false;transition("drawStage");$("cutBtn").textContent="切牌 · 展开牌堆";},650);
+});
+$("drawBack").addEventListener("click",()=>{current=null;transition("questionStage")});
+$("readBtn").addEventListener("click",()=>{if(!current)return;makeReadingCard(current);transition("result");});
+$("saveBtn").addEventListener("click",saveCurrent);
+$("againBtn").addEventListener("click",reset);
+window.addEventListener("resize",()=>{if($("drawStage").classList.contains("active")&&!current)buildFan()});
+spawnPetals(12);
 </script>
-</body></html>
+</body>
+</html>
