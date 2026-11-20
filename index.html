@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#211735">
+<title>Celestia · 天使秘境塔罗</title>
+<style>
+:root{--bg:#171126;--panel:#241a38;--panel2:#302244;--gold:#e8cf9b;--lilac:#d8bafa;--muted:#c3b4d5;--white:#fbf5ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#654b83 0,#2b2040 36%,#171126 75%);color:var(--white);font-family:"Noto Serif SC","Songti SC",Georgia,serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:radial-gradient(1px 1px at 12% 18%,#fff 98%,transparent),radial-gradient(2px 2px at 78% 14%,#f4dcae 98%,transparent),radial-gradient(1px 1px at 88% 70%,#fff 98%,transparent),radial-gradient(1px 1px at 30% 82%,#dcbaff 98%,transparent);background-size:230px 210px}
+header{text-align:center;padding:38px 18px 22px;position:relative}.wings{font-size:38px;color:#f0dcae;text-shadow:0 0 25px #d9b8ff}.brand{font-size:clamp(27px,5vw,42px);letter-spacing:8px;margin:8px 0}.en{font:11px Arial,sans-serif;letter-spacing:5px;color:#d6c0e8}.tagline{font-size:13px;color:#d9cce7;line-height:2;margin:18px auto 0;max-width:600px}
+main{max-width:1050px;margin:auto;padding:0 18px 60px;position:relative}.panel{background:#ffffff0a;border:1px solid #d9c2ee35;border-radius:18px;padding:22px;margin:16px 0;box-shadow:0 14px 40px #09061330;backdrop-filter:blur(8px)}
+.kicker{text-align:center;color:var(--lilac);font:10px Arial,sans-serif;letter-spacing:3px;margin-bottom:15px}
+label{display:block;color:#e8d9f4;font-size:13px;margin-bottom:9px}input{width:100%;padding:13px 14px;background:#100c1c88;border:1px solid #b99bd355;border-radius:10px;color:white;font-size:14px;outline:none}input:focus{border-color:var(--gold)}
+.spreads{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.spread{background:#ffffff08;color:#f6edff;border:1px solid #c7a7df55;border-radius:12px;padding:15px 8px;cursor:pointer;min-height:105px}.spread.active{background:#b38bd42c;border-color:var(--gold);box-shadow:0 0 20px #d6b4f32a}.spread b{display:block;font-size:13px;font-weight:normal;margin:8px 0 4px}.spread small{color:#c7b5d8;font:10px Arial}
+button{font-family:inherit}.primary{background:linear-gradient(135deg,#f0d8a5,#c6a3e8);color:#281b37;border:0;border-radius:30px;padding:13px 27px;letter-spacing:2px;cursor:pointer;font-size:13px;box-shadow:0 6px 20px #100a1d66}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.secondary{border:1px solid #c6a6dd88;background:#ffffff0a;color:#f4eaff;border-radius:25px;padding:10px 20px;cursor:pointer}
+.center{text-align:center}.deck{display:flex;justify-content:center;gap:9px;margin:22px auto}.back{height:135px;width:88px;border:1px solid #e4c98e;border-radius:9px;background:repeating-linear-gradient(45deg,#45305e,#45305e 5px,#50396b 5px,#50396b 6px);display:grid;place-items:center;color:#eed49e;font-size:32px;box-shadow:0 10px 25px #08051188;position:relative}.back:after{content:"";position:absolute;inset:6px;border:1px solid #dfc38b88;border-radius:5px}
+.hidden{display:none!important}.muted{color:#c5b5d5;font-size:12px;line-height:1.8}.progress{height:3px;background:#ffffff20;max-width:350px;margin:15px auto;border-radius:9px}.progress span{display:block;height:3px;background:var(--gold);width:0;transition:.3s}
+.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:13px;margin:24px 0}.tarot-card{width:145px;text-align:center;animation:appear .45s ease both}.face{height:214px;border:1px solid #e5c98f;border-radius:9px;padding:8px;background:linear-gradient(155deg,#594477,#251c3b 75%);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 9px 22px #08051188}.face:before{content:"";position:absolute;inset:5px;border:1px solid #d8bd8c88;border-radius:5px}.face:after{content:"✧  ·  ☾  ·  ✧";position:absolute;top:12px;font-size:9px;color:#e9d4a8;letter-spacing:3px}.glyph{font-size:57px;color:#f0d9aa;text-shadow:0 0 18px #d5aef8;z-index:1}.face .name{position:absolute;bottom:13px;font-size:10px;letter-spacing:1px;color:#fff0d2;z-index:1}.face.reversed .glyph{transform:rotate(180deg)}.cname{font-size:12px;margin-top:9px}.position{font:10px Arial;color:#c7b2db;margin-top:4px}
+.reading{background:#ffffff0a;border:1px solid #c5a5dc44;border-radius:13px;padding:16px;margin:11px 0}.reading h3{font-weight:normal;color:var(--gold);font-size:15px;margin:0 0 9px}.reading p{font:12px/1.9 Arial,"Noto Sans SC",sans-serif;color:#e0d4eb;margin:6px 0}.badge{font:10px Arial;color:var(--lilac);letter-spacing:2px;margin-bottom:8px}.resultTitle{text-align:center;font-size:23px;letter-spacing:3px;font-weight:normal;margin:25px 0 8px}
+footer{text-align:center;color:#9f8daf;font:10px Arial;letter-spacing:2px;padding:20px}
+@keyframes appear{from{opacity:0;transform:translateY(16px) rotateY(20deg)}to{opacity:1;transform:none}}
+@media(max-width:650px){.spreads{grid-template-columns:repeat(2,1fr)}.panel{padding:17px}.tarot-card{width:calc(33.33% - 10px);min-width:95px}.face{height:165px}.glyph{font-size:42px}.back{width:72px;height:115px}}
+</style>
+</head>
+<body>
+<header><div class="wings">༺ 🪽 ༻</div><div class="brand">天 使 秘 境</div><div class="en">CELESTIA · ANGEL TAROT SANCTUARY</div><p class="tagline">愿羽翼与星光，为你照亮心中的问题。<br>静下心来，选择牌阵，让 78 张塔罗牌带你探索另一种可能。</p></header>
+<main>
+<section id="setup">
+ <div class="panel"><div class="kicker">✧ YOUR QUESTION ✧</div><label for="question">在心中默念你的问题（选填）</label><input id="question" maxlength="120" placeholder="例如：我该如何面对最近的变化？"></div>
+ <div class="panel"><div class="kicker">✧ CHOOSE YOUR SPREAD · 选择牌阵 ✧</div><div class="spreads" id="spreads">
+ <button class="spread active" data-id="one"><span>☾</span><b>单张指引</b><small>1 张 · 当下启示</small></button>
+ <button class="spread" data-id="three"><span>✧</span><b>时间之流</b><small>3 张 · 过去现在未来</small></button>
+ <button class="spread" data-id="love"><span>♡</span><b>爱情关系</b><small>5 张 · 双向关系</small></button>
+ <button class="spread" data-id="cross"><span>✥</span><b>凯尔特十字</b><small>10 张 · 深度探索</small></button></div></div>
+ <div class="panel center"><div class="kicker">✧ THE DECK OF 78 ✧</div><div class="deck"><div class="back">☾</div><div class="back" style="transform:rotate(-8deg) translateY(-8px)">🪽</div><div class="back" style="transform:rotate(8deg)">✧</div></div><p class="muted">22 张大阿尔卡那 · 56 张小阿尔卡那<br>权杖、圣杯、宝剑、星币四个花色</p><button class="primary" id="start">✧　洗牌并开始　✧</button></div>
+</section>
+<section id="draw" class="hidden"><div class="panel center"><div class="kicker">✧ REVEAL YOUR CARDS ✧</div><h2 class="resultTitle" id="drawTitle"></h2><p class="muted" id="drawDesc"></p><div class="progress"><span id="bar"></span></div><div class="deck"><div class="back">🪽</div><div class="back" style="transform:rotate(8deg)">☾</div><div class="back" style="transform:rotate(-8deg)">✧</div></div><p class="muted" id="instruction">集中精神，翻开第一张牌</p><div class="cards" id="drawn"></div><button class="primary" id="next">翻开第一张牌　✧</button></div></section>
+<section id="result" class="hidden"><div class="panel"><div class="kicker">✧ A MESSAGE FROM THE STARS ✧</div><h2 class="resultTitle">你的专属塔罗解读</h2><p class="muted center" id="qtext"></p><div class="cards" id="allcards"></div><div id="meanings"></div><div class="reading center"><div class="badge">✧ ANGEL'S GENTLE REMINDER ✧</div><h3>来自天使秘境的温柔提醒</h3><p id="summary"></p></div><p class="muted center">塔罗是一种象征性自我探索工具，并非确定预言。请将解读作为思考参考，重要决定仍应结合现实信息与自己的判断。</p><div class="center"><button class="primary" id="again">重新占卜　☾</button></div></div></section>
+<footer>CELESTIA · FOLLOW THE LIGHT WITHIN YOU</footer>
+</main>
+<script>
+const majors=[
+["愚者","0","🪽","新的开始、自由、冒险","勇敢迈出第一步，给未知一点空间。","先确认准备是否充分，避免一时冲动。"],
+["魔术师","I","✦","行动力、创造力、资源","你拥有启动计划所需的能力与资源。","能力尚未充分发挥，留意分心或沟通落差。"],
+["女祭司","II","☾","直觉、秘密、内在智慧","安静下来，倾听直觉，也留意尚未明朗的信息。","信息仍有遮蔽，避免只凭猜测下结论。"],
+["皇后","III","❀","丰盛、滋养、创造","让关系与计划自然生长，也别忘了照顾自己。","留意过度付出，重新平衡给予与接收。"],
+["皇帝","IV","♜","秩序、稳定、责任","建立清晰边界与计划，稳健行动会带来安全感。","避免过度控制，给变化留一点余地。"],
+["教皇","V","✧","传统、学习、指引","从经验、学习与可靠建议中寻找方向。","重新审视旧规则，选择真正适合自己的方式。"],
+["恋人","VI","♡","选择、吸引、契合","真诚沟通，关注彼此价值观是否一致。","关系或选择中存在分歧，需要诚实面对。"],
+["战车","VII","✧","意志、前进、胜利","明确方向并保持行动，你比想象中更有力量。","方向可能分散，先找回节奏再加速。"],
+["力量","VIII","🦁","勇气、温柔、内在力量","温柔而坚定地面对挑战，不必用强硬证明自己。","给自己更多耐心，照顾情绪与自信。"],
+["隐士","IX","☾","独处、思考、寻找答案","暂时放慢脚步，独立思考会带来清晰。","不要把自己封闭太久，适时寻求支持。"],
+["命运之轮","X","☸","转变、机遇、周期","局势正在变化，保持开放，留意新的可能。","面对变化感到不安时，先专注可掌控之事。"],
+["正义","XI","⚖","公平、理性、因果","诚实面对事实，理性选择并承担相应责任。","信息或判断可能失衡，重新核对事实。"],
+["倒吊人","XII","◇","暂停、换位思考、等待","换个角度看问题，暂时停顿也有价值。","避免无谓牺牲，考虑调整当前做法。"],
+["死神","XIII","🦋","结束、蜕变、重生","一个阶段正在落幕，结束也为新生腾出空间。","抗拒改变会消耗力量，尝试逐步放下旧模式。"],
+["节制","XIV","☯","平衡、疗愈、协调","找到适合自己的节奏，让不同部分慢慢协调。","生活节奏可能失衡，先从小处调整。"],
+["恶魔","XV","♧","欲望、束缚、执念","看见让自己受困的模式，你仍然拥有选择权。","正在辨认依赖与束缚，练习建立健康界限。"],
+["高塔","XVI","⚡","突破、真相、结构变化","旧有结构受到挑战，真实会帮助你重新建立基础。","变化带来不安时，先稳住自己，再逐步修复。"],
+["星星","XVII","☆","希望、疗愈、灵感","经历低谷后仍有光亮，给希望一点生长的时间。","信心暂时不足，允许自己慢慢恢复。"],
+["月亮","XVIII","☾","潜意识、迷雾、情绪","未知尚未散去，别让猜测替代真实信息。","逐渐识别恐惧与误解，寻找清晰证据。"],
+["太阳","XIX","☀","快乐、成功、活力","坦然接纳积极时刻，让热情照亮行动。","短暂挫折不代表失败，重新找回轻盈感。"],
+["审判","XX","🕊","觉醒、反思、新阶段","回顾过去，听见内心真正重视的召唤。","放下过度自责，允许自己重新选择。"],
+["世界","XXI","🌐","完成、圆满、整合","一个阶段有望收尾，你正在走向更完整的自己。","仍有细节待完成，耐心收尾再开启下一程。"]
+];
+const suits=[
+ {name:"权杖",symbol:"🔥",theme:"行动、热情、创造与事业",cards:["火花","萌芽","远望","庆祝","竞争","胜利","防守","迅速","坚持","负担","讯息","探索者","行动者","领袖"]},
+ {name:"圣杯",symbol:"💧",theme:"情感、关系、直觉与内心",cards:["新情感","相遇","欢聚","沉思","失落","回忆","幻想","离开","满足","圆满","讯息","浪漫者","知心者","慈爱者"]},
+ {name:"宝剑",symbol:"🌬️",theme:"思想、沟通、判断与挑战",cards:["清晰","抉择","心痛","休憩","冲突","过渡","策略","束缚","忧虑","终结","观察者","挑战者","独立者","理性者"]},
+ {name:"星币",symbol:"🌿",theme:"现实、学业、财富与长期积累",cards:["新机会","合作","技艺","守护","匮乏","慷慨","耕耘","学习","丰收","传承","学徒","实践者","经营者","守成者"]}
+];
+const deck=[...majors.map((c,i)=>({name:c[0],num:c[1],glyph:c[2],keywords:c[3],up:c[4],rev:c[5],major:true})),...suits.flatMap((s,si)=>s.cards.map((rank,i)=>{let num=i<10?["Ace","二","三","四","五","六","七","八","九","十"][i]:["侍从","骑士","王后","国王"][i-10];let themes=[["开端与潜能","平衡与规划","拓展与协作","稳定与基础","压力与冲突","进展与认可","坚持与考验","迅速行动","毅力与韧性","责任与负担","消息与灵感","探索与尝试","主动与热情","领导与远见"],["情感萌芽","选择与平衡","友谊与喜悦","情绪停滞","失落与接纳","温暖与回忆","想象与选择","离开与寻找","满足与感恩","情感圆满","直觉消息","浪漫与邀请","共情与倾听","成熟与包容"],["清晰与突破","选择与权衡","失望与疗愈","休息与恢复","冲突与立场","过渡与前行","策略与谨慎","限制与自省","焦虑与担忧","结束与释怀","观察与消息","行动与挑战","独立与洞察","理性与判断"],["资源与机会","合作与规划","技能与协作","安全与掌控","现实压力","给予与支持","耐心与成长","学习与精进","独立与丰盛","长期成果","学习与新计划","踏实与实践","务实与滋养","稳定与守护"]];return {name:s.name+"·"+num,num:String(i+1),glyph:s.symbol,keywords:themes[si][i],up:`这张牌强调${themes[si][i]}。${s.theme}是当前值得关注的方向。把目标拆解成可执行的小步骤，留意现实中的资源与反馈。`,rev:`这张牌提醒你重新审视${themes[si][i]}。${s.theme}方面可能存在尚未处理的顾虑或失衡。放慢节奏，确认自己的真实需求，再决定下一步。`,major:false,suit:s.name}}))];
+const spreads={one:{title:"单张指引",desc:"一张牌，照亮当下的方向",pos:["当下的指引"]},three:{title:"时间之流",desc:"从过去、现在到未来，观察事情的发展",pos:["过去 · 根源","现在 · 核心","未来 · 趋势"]},love:{title:"爱情关系",desc:"从自己、对方到关系本身，理解情感的流动",pos:["你的内心","对方的状态","你们之间的连接","关系中的阻碍","未来的发展趋势"]},cross:{title:"凯尔特十字",desc:"从现状、挑战到潜在影响，探索问题全貌",pos:["当前处境","面临的挑战","潜意识 · 深层动机","过去的影响","理想目标 · 显意识","近期发展","你自身的状态","外部环境","希望与恐惧","最终发展趋势"]}};
+let spread="one",picked=[],step=0,question="";
+const $=id=>document.getElementById(id);
+document.querySelectorAll(".spread").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".spread").forEach(x=>x.classList.remove("active"));b.classList.add("active");spread=b.dataset.id}));
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function cardHTML(p,pos){return `<div class="tarot-card"><div class="face ${p.rev?"reversed":""}"><span class="glyph">${p.c.glyph}</span><span class="name">${p.c.name}</span></div><div class="cname">${p.c.name} · ${p.rev?"逆位":"正位"}</div><div class="position">${pos||""}</div></div>`}
+$("start").onclick=()=>{question=$("question").value.trim();picked=shuffle(deck).slice(0,spreads[spread].pos.length).map(c=>({c,rev:Math.random()<.28}));step=0;$("setup").classList.add("hidden");$("result").classList.add("hidden");$("draw").classList.remove("hidden");$("drawTitle").textContent=spreads[spread].title;$("drawDesc").textContent=spreads[spread].desc;$("drawn").innerHTML="";$("bar").style.width="0%";$("next").textContent="翻开第一张牌　✧";$("instruction").textContent="集中精神，翻开第一张牌";$("next").onclick=reveal};
+function reveal(){if(step>=picked.length)return;let p=picked[step];$("drawn").insertAdjacentHTML("beforeend",cardHTML(p,spreads[spread].pos[step]));step++;$("bar").style.width=step/picked.length*100+"%";$("instruction").textContent=step<picked.length?"请继续揭开下一张牌":"所有牌已经揭晓，准备查看解读";$("next").textContent=step<picked.length?"翻开下一张牌　✧":"查看完整解读　☾";if(step===picked.length)$("next").onclick=showResults}
+function showResults(){$("draw").classList.add("hidden");$("result").classList.remove("hidden");$("qtext").textContent=question?`你的问题：「${question}」`:"本次占卜 · 聆听内心的声音";$("allcards").innerHTML=picked.map((p,i)=>cardHTML(p,spreads[spread].pos[i])).join("");$("meanings").innerHTML=picked.map((p,i)=>{let c=p.c;return `<div class="reading"><div class="badge">CARD ${String(i+1).padStart(2,"0")} · ${spreads[spread].pos[i]}</div><h3>${c.name}　${p.rev?"逆位":"正位"}</h3><p><b>核心主题：</b>${c.keywords}${c.suit?" · "+c.suit:" · 大阿尔卡那"}</p><p>${p.rev?c.rev:c.up}</p><p>${p.rev?"逆位提示：先照顾内在感受，辨认阻碍，再决定是否调整方向。":"正位提示：可以顺着这份能量采取适度行动，同时保持对现实情况的观察。"}</p></div>`}).join("");let names=picked.map(p=>p.c.keywords.split("、")[0]);$("summary").textContent=`这组牌呈现的主题包括：${names.join("、")}。它们邀请你同时看见期待与现实：不必急着得到唯一答案，可以先厘清最重要的需求，选择一个温和而具体的行动。愿你带着清醒与善意，走向自己的下一步。`}
+$("next").onclick=reveal;$("again").onclick=()=>{$("result").classList.add("hidden");$("draw").classList.add("hidden");$("setup").classList.remove("hidden");$("next").onclick=reveal};
+</script>
+</body></html>
