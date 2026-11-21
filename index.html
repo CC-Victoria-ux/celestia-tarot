@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#e9d9c8">
 <meta name="description" content="Celestia Tarot · 在古典星辰殿堂中，抽取一张属于此刻的塔罗指引。">
-<title>Celestia Tarot · 星辰塔罗殿堂</title>
+<title>Celestia Tarot 4.1 · 星辰塔罗殿堂</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
 :root{
@@ -30,9 +30,48 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .stage{min-height:100vh;position:relative;display:none;overflow:hidden}
 .stage.active{display:flex;animation:stageIn 1.15s cubic-bezier(.16,1,.3,1) both}
 @keyframes stageIn{0%{opacity:0;transform:scale(1.035);filter:blur(8px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1)}}
-.stage-curtain{position:fixed;inset:0;z-index:100;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,#fff8e8 0,#d6b4c2 34%,#8e7a9e 100%);transform:scale(.1);border-radius:50%}
-.stage-curtain.play{animation:curtainBloom 1.15s cubic-bezier(.2,.75,.15,1) both}
-@keyframes curtainBloom{0%{opacity:0;transform:scale(.05);border-radius:50%}25%{opacity:.95}70%{opacity:.75;transform:scale(1.8);border-radius:30%}100%{opacity:0;transform:scale(2.5);border-radius:0}}
+/* Each chapter has its own full-screen transition. The overlay never intercepts clicks. */
+.transition-fx{position:fixed;inset:0;z-index:9999;visibility:hidden;opacity:0;pointer-events:none;overflow:hidden;perspective:1600px;isolation:isolate}
+.transition-fx.play{visibility:visible;opacity:1}
+.transition-fx:before,.transition-fx:after{content:"";position:absolute;inset:0;pointer-events:none}
+.transition-fx.fx-bloom:before{inset:-42vmax;border-radius:50%;background:repeating-conic-gradient(from -8deg,#fff8df 0 5deg,#e9c9c7 6deg 10deg,#b9a4c5 11deg 15deg,transparent 16deg 25deg);filter:blur(2px);animation:fxBloom 1.65s cubic-bezier(.18,.72,.2,1) both}
+.transition-fx.fx-bloom:after{background:radial-gradient(circle at 50% 50%,#fffdf0 0,#f4dfc9cc 17%,#b9a2c9aa 40%,transparent 72%);animation:fxBloomLight 1.55s ease-out both}
+@keyframes fxBloom{0%{opacity:0;transform:scale(.015) rotate(-40deg)}22%{opacity:.98}65%{opacity:.9;transform:scale(.9) rotate(35deg)}100%{opacity:0;transform:scale(1.25) rotate(95deg)}}
+@keyframes fxBloomLight{0%{opacity:0}28%{opacity:1}70%{opacity:.8}100%{opacity:0}}
+.fx-wing{display:none;position:absolute;top:7%;width:72vw;height:86vh;opacity:0;filter:drop-shadow(0 18px 28px #8e6c4c66);background:repeating-linear-gradient(128deg,#fff9e8dd 0 2px,#d8bd9caa 3px 5px,transparent 6px 17px),linear-gradient(145deg,#fff7e8,#d8c1d4 48%,#b79675);clip-path:polygon(100% 48%,88% 36%,72% 18%,52% 5%,28% 0,8% 12%,18% 30%,28% 49%,43% 66%,65% 84%,88% 100%)}
+.fx-wing-left{left:-18%;transform-origin:100% 52%}
+.fx-wing-right{right:-18%;transform-origin:0 52%;transform:scaleX(-1)}
+.fx-wings .fx-wing{display:block;animation:fxWingSweep 1.7s cubic-bezier(.2,.75,.12,1) both}
+.fx-wings .fx-wing-right{animation-name:fxWingSweepRight}
+@keyframes fxWingSweep{0%{opacity:0;transform:translateX(-65%) rotate(-24deg) scale(.55)}28%{opacity:.95}62%{opacity:.9;transform:translateX(13%) rotate(5deg) scale(1.08)}100%{opacity:0;transform:translateX(70%) rotate(24deg) scale(1.2)}}
+@keyframes fxWingSweepRight{0%{opacity:0;transform:translateX(65%) scaleX(-1) rotate(-24deg) scale(.55)}28%{opacity:.95}62%{opacity:.9;transform:translateX(-13%) scaleX(-1) rotate(5deg) scale(1.08)}100%{opacity:0;transform:translateX(-70%) scaleX(-1) rotate(24deg) scale(1.2)}}
+.fx-card-stack{display:none;position:absolute;inset:0;transform-style:preserve-3d}
+.fx-card{position:absolute;left:50%;top:50%;width:clamp(92px,12vw,170px);aspect-ratio:2/3;border:2px solid #f4dfb7;border-radius:12px;background:radial-gradient(circle at 50% 45%,#f4dba6 0 3%,transparent 4%),repeating-radial-gradient(circle at 50% 50%,#e8d4b6 0 1px,transparent 2px 9px),linear-gradient(145deg,#8d739d,#4b3c62);box-shadow:0 22px 60px #4b2d3d66,inset 0 0 0 6px #fff5e2;display:grid;place-items:center;color:#fff0c8;font:clamp(30px,5vw,58px) var(--serif);text-shadow:0 0 22px #fff}
+.fx-cards .fx-card-stack{display:block}
+.fx-cards .fx-card{animation:fxCardFlight 1.55s cubic-bezier(.18,.7,.16,1) both;animation-delay:var(--delay)}
+.fx-cards .fx-card:nth-child(1){--dx:-65vw;--rz:-52deg}.fx-cards .fx-card:nth-child(2){--dx:-49vw;--rz:-38deg}.fx-cards .fx-card:nth-child(3){--dx:-33vw;--rz:-24deg}.fx-cards .fx-card:nth-child(4){--dx:-16vw;--rz:-11deg}.fx-cards .fx-card:nth-child(5){--dx:0vw;--rz:0deg}.fx-cards .fx-card:nth-child(6){--dx:16vw;--rz:11deg}.fx-cards .fx-card:nth-child(7){--dx:33vw;--rz:24deg}.fx-cards .fx-card:nth-child(8){--dx:49vw;--rz:38deg}.fx-cards .fx-card:nth-child(9){--dx:65vw;--rz:52deg}
+@keyframes fxCardFlight{0%{opacity:0;transform:translate3d(var(--dx),110vh,0) rotateX(65deg) rotateZ(var(--rz)) scale(.5)}32%{opacity:1}58%{opacity:1;transform:translate3d(0,-4vh,180px) rotateX(0) rotateZ(calc(var(--rz)*-.18)) scale(1.08)}100%{opacity:0;transform:translate3d(0,-115vh,-120px) rotateX(-50deg) rotateZ(0deg) scale(.65)}}
+.fx-orbits{display:none;position:absolute;left:50%;top:50%;width:min(76vw,850px);aspect-ratio:1;transform:translate(-50%,-50%)}
+.fx-orbits i{position:absolute;inset:0;border:2px solid #fff0c8;border-radius:50%;box-shadow:0 0 24px #e9c58b99,inset 0 0 24px #fff5d988}
+.fx-orbits i:nth-child(2){inset:10%;border-style:dashed;border-width:1px}.fx-orbits i:nth-child(3){inset:22%;border-width:3px;border-color:#f2d9b1}
+.fx-portal .fx-orbits{display:block;animation:fxPortal 1.75s cubic-bezier(.16,.8,.15,1) both}
+.fx-portal .fx-orbits i:nth-child(1){animation:fxOrbitSpin 1.6s linear both}.fx-portal .fx-orbits i:nth-child(2){animation:fxOrbitSpin 1.25s linear reverse both}.fx-portal:after{background:radial-gradient(circle,#fffdf0 0,#f5dfb6aa 13%,#d2b6d8aa 35%,transparent 68%);animation:fxBloomLight 1.65s ease-out both}
+@keyframes fxPortal{0%{opacity:0;transform:translate(-50%,-50%) scale(.03) rotate(-40deg)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(50deg)}}
+@keyframes fxOrbitSpin{to{transform:rotate(270deg)}}
+.fx-page{display:none;position:absolute;inset:-5%;background:linear-gradient(100deg,#bda17d 0%,#f8efdf 18%,#fff8eb 50%,#e6d4c1 83%,#a8876a 100%);border:8px double #b58b58;box-shadow:0 0 0 12px #fff4dfaa,0 0 90px #fff1d6;transform-origin:right center}
+.fx-page:before{content:"✧  ❧  ✧";position:absolute;inset:22px;border:2px solid #c6a16c;display:grid;place-items:center;color:#b78c59;font:clamp(38px,8vw,100px) var(--serif);letter-spacing:24px}
+.fx-page:after{content:"";position:absolute;inset:36px;border:1px solid #c6a16c}
+.fx-pageTurn .fx-page{display:block;animation:fxPageTurn 1.65s cubic-bezier(.22,.7,.12,1) both}
+@keyframes fxPageTurn{0%{opacity:0;transform:rotateY(92deg) translateX(18%) scale(.9)}22%{opacity:1}48%{transform:rotateY(0) translateX(0) scale(1.02)}100%{opacity:0;transform:rotateY(-96deg) translateX(-20%) scale(.92)}}
+.fx-veil{display:none;position:absolute;inset:-35%;border:2px solid #f4dfb7;border-radius:50%;background:radial-gradient(ellipse,#fff8e6 0,#e8d1dfaa 26%,#9c84a788 58%,transparent 72%);box-shadow:0 0 80px #fff3d8;}
+.fx-moonveil .fx-veil{display:block;animation:fxVeil 1.55s cubic-bezier(.2,.8,.1,1) both}
+@keyframes fxVeil{0%{opacity:0;transform:scale(1.8) rotate(0)}35%{opacity:1}100%{opacity:0;transform:scale(.05) rotate(170deg)}}
+.fx-petals{display:none;position:absolute;inset:0}
+.fx-return .fx-petals{display:block}
+.fx-petals i{position:absolute;left:var(--left);top:-12%;color:#bd8f83;font-size:clamp(18px,3vw,36px);text-shadow:0 2px 10px #fff;animation:fxPetalReturn 1.65s ease-in both;animation-delay:var(--delay)}
+@keyframes fxPetalReturn{0%{opacity:0;transform:translateY(-15vh) rotate(-60deg) scale(.3)}30%{opacity:1}100%{opacity:0;transform:translate3d(var(--drift),115vh,0) rotate(520deg) scale(1.5)}}
+.fx-library:before{background:radial-gradient(ellipse at 50% 100%,#fff9e9 0,#e7d4c5dd 35%,#b49ab5aa 65%,transparent 78%);animation:fxBloomLight 1.3s ease-out both}
+@media(prefers-reduced-motion:reduce){.transition-fx *,.transition-fx:before,.transition-fx:after{animation-duration:.01ms!important}}
 .ornate-frame{position:relative;border:1px solid #b78e5b;padding:clamp(22px,4vw,48px);background:linear-gradient(135deg,#fff9eeeb,#f2e4d3e8);box-shadow:0 18px 60px var(--shadow),inset 0 0 0 5px #fff8ef,inset 0 0 0 6px #c6a475}
 .ornate-frame:before,.ornate-frame:after{content:"✧ ❧ ✧";position:absolute;left:50%;transform:translateX(-50%);color:#b78e5b;background:#f7ecdd;padding:0 14px;letter-spacing:8px;font-size:15px}
 .ornate-frame:before{top:-10px}.ornate-frame:after{bottom:-10px}
@@ -131,7 +170,15 @@ h1,h2,h3,p{margin-top:0}
 .card-back:after{content:"✧";position:absolute;inset:0;display:grid;place-items:center;color:#f9e8ca;font:76px var(--serif)}
 .card-front{transform:rotateY(180deg);background:#f4ead8;border:2px solid #c5a16c;padding:7px}
 .card-front-inner{height:100%;border:1px solid #b99361;position:relative;overflow:hidden;background:linear-gradient(180deg,#f8edda,#e7d6cb)}
-.card-front-inner svg{width:100%;height:100%;display:block}.classic-card-image{width:100%;height:100%;object-fit:cover;display:block}
+.card-front-inner svg{width:100%;height:100%;display:block}
+.classic-card-frame{width:100%;height:100%;position:relative;overflow:hidden;background:#f4ead8;border:1px solid #b99361;box-shadow:inset 0 0 0 4px #fff7e9}
+.classic-card-frame:after{content:"";position:absolute;inset:5px;border:1px solid #c5a16c;box-shadow:inset 0 0 16px #74513a20;pointer-events:none}
+.classic-card-image{width:100%;height:100%;object-fit:contain;background:#f4ead8;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.classic-card-frame.reversed .classic-card-image,.classic-card-frame.reversed>svg{transform:rotate(180deg)}
+.classic-card-frame>svg{width:100%;height:100%;display:block}
+.result-card .classic-card-frame{width:100%;height:100%;border:2px solid #c5a16c;padding:5px}
+.library-item .classic-card-frame{width:100%;height:100px;margin-bottom:6px;border:1px solid #c5a16c;padding:2px}
+.library-item .classic-card-image{object-fit:contain}
 .reveal-caption{font:italic 24px var(--serif);letter-spacing:2px;color:#80644c;margin:6px 0}
 .reveal-cta{margin-top:10px}
 .reveal-stage.flipping .reveal-card{animation:cardLift 1.2s cubic-bezier(.2,.8,.15,1) both}
@@ -164,6 +211,11 @@ h1,h2,h3,p{margin-top:0}
 .note{font-size:11px;color:#a18c78;line-height:1.8;margin-top:18px}
 .history-drawer{position:fixed;inset:0;z-index:80;background:#4b3b3b66;display:none;align-items:flex-end;justify-content:center;padding:16px}
 .history-drawer.open{display:flex;animation:fadeIn .3s}
+.history-drawer.open .drawer-panel{animation:libraryRise .72s cubic-bezier(.16,1,.3,1) both;transform-origin:50% 100%}
+@keyframes libraryRise{0%{opacity:0;transform:translateY(90px) rotateX(18deg) scale(.94)}65%{opacity:1;transform:translateY(-8px) rotateX(-2deg) scale(1.01)}100%{opacity:1;transform:none}}
+.site-credit{position:relative;z-index:2;padding:20px 14px 28px;text-align:center;color:#9b836e;font-size:10px;line-height:2;letter-spacing:1px;background:linear-gradient(180deg,transparent,#e9dccc88)}
+.site-credit span{display:block}
+.site-credit a{color:#8d6d4e;text-decoration:underline;text-underline-offset:3px}
 .drawer-panel{background:#f7ecdc;border:1px solid #c6a16c;box-shadow:0 15px 50px #35251e55;width:min(760px,100%);max-height:78vh;overflow:auto;padding:24px}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .library-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:18px}
@@ -202,7 +254,14 @@ h1,h2,h3,p{margin-top:0}
 </head>
 <body>
 <div id="app">
- <div class="stage-curtain" id="curtain"></div>
+ <div class="transition-fx" id="transitionFx" aria-hidden="true">
+  <div class="fx-wing fx-wing-left"></div><div class="fx-wing fx-wing-right"></div>
+  <div class="fx-card-stack"><span class="fx-card" style="--i:0;--delay:0.000s">✧</span><span class="fx-card" style="--i:1;--delay:0.045s">✧</span><span class="fx-card" style="--i:2;--delay:0.090s">✧</span><span class="fx-card" style="--i:3;--delay:0.135s">✧</span><span class="fx-card" style="--i:4;--delay:0.180s">✧</span><span class="fx-card" style="--i:5;--delay:0.225s">✧</span><span class="fx-card" style="--i:6;--delay:0.270s">✧</span><span class="fx-card" style="--i:7;--delay:0.315s">✧</span><span class="fx-card" style="--i:8;--delay:0.360s">✧</span></div>
+  <div class="fx-orbits"><i></i><i></i><i></i></div>
+  <div class="fx-page"></div>
+  <div class="fx-veil"></div>
+  <div class="fx-petals"><i style="--i:0;--left:1.0%;--drift:-16.0vw;--delay:0.000s">✿</i><i style="--i:1;--left:6.7%;--drift:-14.0vw;--delay:0.035s">✿</i><i style="--i:2;--left:12.4%;--drift:-12.0vw;--delay:0.070s">✿</i><i style="--i:3;--left:18.1%;--drift:-10.0vw;--delay:0.105s">✿</i><i style="--i:4;--left:23.8%;--drift:-8.0vw;--delay:0.140s">✿</i><i style="--i:5;--left:29.5%;--drift:-6.0vw;--delay:0.175s">✿</i><i style="--i:6;--left:35.2%;--drift:-4.0vw;--delay:0.210s">✿</i><i style="--i:7;--left:40.9%;--drift:-2.0vw;--delay:0.245s">✿</i><i style="--i:8;--left:46.6%;--drift:0.0vw;--delay:0.280s">✿</i><i style="--i:9;--left:52.3%;--drift:2.0vw;--delay:0.315s">✿</i><i style="--i:10;--left:58.0%;--drift:4.0vw;--delay:0.350s">✿</i><i style="--i:11;--left:63.7%;--drift:6.0vw;--delay:0.385s">✿</i><i style="--i:12;--left:69.4%;--drift:8.0vw;--delay:0.420s">✿</i><i style="--i:13;--left:75.1%;--drift:10.0vw;--delay:0.455s">✿</i><i style="--i:14;--left:80.8%;--drift:12.0vw;--delay:0.490s">✿</i><i style="--i:15;--left:86.5%;--drift:14.0vw;--delay:0.525s">✿</i><i style="--i:16;--left:92.2%;--drift:16.0vw;--delay:0.560s">✿</i><i style="--i:17;--left:97.9%;--drift:18.0vw;--delay:0.595s">✿</i></div>
+ </div>
  <section class="stage active" id="home">
   <div class="home-halo"></div>
   <div class="home-content">
@@ -325,6 +384,11 @@ h1,h2,h3,p{margin-top:0}
    <div class="library-grid" id="libraryGrid"></div>
   </div>
  </div>
+ <footer class="site-credit">
+  <span id="artStatus">经典牌面将在进入占卜或打开图鉴时载入。</span>
+  <span>Card data by <a href="https://tarostarot.com/tarot-card-data" target="_blank" rel="noopener">Taro's Tarot</a> · CC BY 4.0</span>
+  <span>1909 Rider–Waite–Smith card artwork · Public Domain</span>
+ </footer>
 </div>
 
 <script>
@@ -468,6 +532,38 @@ function makeDeck(){
 }
 const DECK=makeDeck();
 
+// Public-domain scans of the 1909 Rider–Waite–Smith deck, supplied by Taro's Tarot.
+// The card data is CC BY 4.0; the original 1909 card artwork is public domain.
+const TAROT_DATA_URL="https://tarostarot.com/tarot-card-data/tarot-cards.json";
+const SUIT_EN={"权杖":"wands","圣杯":"cups","宝剑":"swords","星币":"pentacles"};
+let artworkPromise=null;
+async function ensureArtwork(){
+ if(!artworkPromise)artworkPromise=(async()=>{
+  const status=$("artStatus");
+  try{
+   if(status)status.textContent="正在连接 1909 年经典牌面…";
+   const response=await fetch(TAROT_DATA_URL,{cache:"force-cache",mode:"cors"});
+   if(!response.ok)throw new Error("HTTP "+response.status);
+   const payload=await response.json();
+   const records=Array.isArray(payload)?payload:(payload.cards||payload.data||[]);
+   if(!records.length)throw new Error("empty card data");
+   let matched=0;
+   for(const card of DECK){
+    const record=records.find(x=>card.major
+     ? x.arcana==="major"&&Number(x.number)===Number(card.id.split("-")[1])
+     : x.arcana==="minor"&&(x.suit||"").toLowerCase()===SUIT_EN[card.suit]&&Number(x.number)===Number(card.rankIndex));
+    if(record&&typeof record.image==="string"&&record.image.startsWith("https://")){card.artImage=record.image;matched++;}
+   }
+   if(status)status.textContent=`经典牌面已连接 · ${matched}/78 张 · 1909 Rider–Waite–Smith`;
+   return matched>=70;
+  }catch(error){
+   if(status)status.textContent="经典牌面暂时无法连接，已启用备用牌面；请检查网络后刷新。";
+   return false;
+  }
+ })();
+ return artworkPromise;
+}
+
 function esc(s){return escapeHTML(s)}
 function cardPalette(card){return card.major?SUIT_COLORS.major:SUIT_COLORS[card.suit]}
 function slug(s){return Array.from(String(s)).map(c=>c.codePointAt(0).toString(16)).join("-");}
@@ -501,7 +597,7 @@ function motifSvg(motif,color){
  };
  return motifs[motif]||motifs.star;
 }
-function cardArt(card){
+function cardArtFallback(card){
  const suit=card.suit?SUITS[card.suit]:null;
  const colors=suit?suit.color:({butterfly:["#c3a8c9","#f2ddb3","#7b647f"],moon:["#aab5cf","#f0dfc1","#66718b"],heart:["#d7a4ae","#f5dfc0","#865c65"],sun:["#e6c27e","#fff0c6","#8b7049"],tower:["#b3a1bd","#f1d7a8","#76617d"],star:["#a2bdc8","#f0dfbd","#5f7985"]}[card.motif]||["#aa91c8","#f0d8a4","#332747"]);
  const [a,b,bg]=colors,uid="g"+slug(card.id)+"-"+Math.random().toString(36).slice(2,8);
@@ -539,6 +635,26 @@ function cardArt(card){
  <path d="M135 408l15-8 15 8-15 8Z" fill="none" stroke="${b}" opacity=".7"/>
  </svg>`;
 }
+function cardArt(card,reversed=false){
+ const orientation=reversed?" reversed":"";
+ if(card.artImage){
+  return `<div class="classic-card-frame${orientation}"><img class="classic-card-image" data-card-id="${esc(card.id)}" src="${esc(card.artImage)}" alt="${esc(card.name)}" loading="eager" decoding="async"></div>`;
+ }
+ return `<div class="classic-card-frame${orientation} fallback-art">${cardArtFallback(card)}</div>`;
+}
+// If a CDN image fails, preserve the card slot and fall back to the built-in illustration.
+document.addEventListener("error",event=>{
+ const img=event.target;
+ if(!img||!img.classList||!img.classList.contains("classic-card-image"))return;
+ const card=DECK.find(item=>item.id===img.dataset.cardId);
+ if(!card)return;
+ const holder=document.createElement("div");holder.innerHTML=cardArtFallback(card);
+ const fallback=holder.firstElementChild;
+ if(img.parentElement&&img.parentElement.classList.contains("reversed"))fallback.style.transform="rotate(180deg)";
+ img.replaceWith(fallback);
+ const status=$("artStatus");if(status)status.textContent="部分经典牌图无法加载，已为该牌启用备用图案。";
+},true);
+
 function cardBack(uid="back"){
  const gid="back-"+slug(uid);
  return `<svg viewBox="0 0 120 180" aria-hidden="true"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8c6d9"/><stop offset=".52" stop-color="#a18caf"/><stop offset="1" stop-color="#796b85"/></linearGradient></defs><rect x="2" y="2" width="116" height="176" rx="7" fill="url(#${gid})" stroke="#c6a16c" stroke-width="2"/><rect x="8" y="8" width="104" height="164" rx="4" fill="none" stroke="#f5e5c8" stroke-width="1.2"/><rect x="14" y="14" width="92" height="152" rx="3" fill="none" stroke="#f5e5c8" stroke-dasharray="2 4"/><circle cx="60" cy="88" r="35" fill="none" stroke="#f7e8c9" stroke-width="1.3"/><circle cx="60" cy="88" r="26" fill="none" stroke="#f7e8c9" stroke-dasharray="2 4"/><path d="M60 43c-20 20-20 47 0 68 20-21 20-48 0-68Z" fill="#e8d7e9" stroke="#f7e8c9"/><path d="M60 58c-16-17-35-2-22 14 6 7 14 9 22 4 8 5 16 3 22-4 13-16-6-31-22-14Z" fill="#d9b8ce" stroke="#f7e8c9"/><path d="M60 18v12m0 116v16M19 88h12m58 0h12M31 36l8 8m42 88 8 8m0-104-8 8m-42 88-8 8" stroke="#f7e8c9" stroke-width="1.5"/></svg>`;
@@ -700,7 +816,7 @@ function makeReading(card,reversed,question){
 }
 function makeReadingCard(item){
  const card=item.card;
- $("resultArt").innerHTML=cardArt(card);
+ $("resultArt").innerHTML=cardArt(card,item.reversed);
  $("resultName").textContent=card.name;
  $("resultOrientation").textContent=(item.reversed?"逆位":"正位")+" · "+(card.major?"大阿尔卡那":card.suit+" / "+card.element+"元素");
  $("resultQuestion").textContent=item.question?`「${item.question}」`:"给此刻的自己一份指引";
@@ -718,11 +834,32 @@ function saveCurrent(){
 }
 let current=null,question="";
 const stages=["home","questionStage","ritual","drawStage","reveal","result"];
+const transitionRoutes={
+ "home>questionStage":"bloom",
+ "questionStage>ritual":"wings",
+ "ritual>drawStage":"cards",
+ "drawStage>reveal":"portal",
+ "reveal>result":"pageTurn",
+ "result>home":"return",
+ "drawStage>questionStage":"moonveil",
+ "home>result":"library",
+ "questionStage>home":"return",
+ "ritual>questionStage":"moonveil",
+ "result>questionStage":"wings"
+};
+let transitionSwapTimer=null,transitionEndTimer=null;
 function transition(to){
- const curtain=$("curtain");curtain.classList.remove("play");void curtain.offsetWidth;curtain.classList.add("play");
  const currentStage=stages.find(id=>$(id).classList.contains("active"));
+ if(currentStage===to)return;
+ const effect=transitionRoutes[`${currentStage||"home"}>${to}`]||(to==="home"?"return":to==="result"?"pageTurn":"bloom");
+ const fx=$("transitionFx");
+ if(transitionSwapTimer)clearTimeout(transitionSwapTimer);
+ if(transitionEndTimer)clearTimeout(transitionEndTimer);
+ fx.className="transition-fx";void fx.offsetWidth;fx.classList.add("play","fx-"+effect);
  if(currentStage)$(currentStage).classList.remove("active");
- setTimeout(()=>{$(to).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})},260);
+ const swapDelay=effect==="cards"?470:effect==="pageTurn"?500:430;
+ transitionSwapTimer=setTimeout(()=>{$(to).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})},swapDelay);
+ transitionEndTimer=setTimeout(()=>{fx.className="transition-fx"},1780);
 }
 function spawnPetals(n=18){
  for(let i=0;i<n;i++){
@@ -758,7 +895,7 @@ function chooseCard(card,button){
  $("progress").style.width="100%";
  setTimeout(()=>{
   $("revealName").textContent=card.name;
-  $("revealArt").innerHTML=cardArt(card);
+  $("revealArt").innerHTML=cardArt(card,current.reversed);
   $("revealCard").classList.remove("turn");
   $("revealStage").classList.add("flipping");
   transition("reveal");
@@ -775,7 +912,8 @@ function reset(){
  $("revealStage").classList.remove("flipping");$("revealCard").classList.remove("turn");
  $("readBtn").disabled=true;transition("home");
 }
-function openLibrary(filter="all"){
+async function openLibrary(filter="all"){
+ await ensureArtwork();
  const grid=$("libraryGrid");grid.innerHTML="";
  DECK.filter(c=>filter==="all"||(filter==="major"?c.major:c.suit===filter)).forEach(card=>{
   const b=document.createElement("button");b.className="library-item";b.innerHTML=cardArt(card)+`<span>${esc(card.name)}</span>`;
@@ -804,8 +942,11 @@ document.querySelectorAll(".question-chip[data-prompt]").forEach(b=>b.addEventLi
  const placeholders={"爱情与关系":"我想了解一段关系的走向与自己的感受……","学业与成长":"我目前的学习状态与接下来的方向……","工作与方向":"我正在面对的工作选择与发展……","关于自己":"我最近的状态，以及值得留意的事情……"};
  $("questionInput").placeholder=placeholders[text];
 }));
-$("startRitual").addEventListener("click",()=>{
+$("startRitual").addEventListener("click",async()=>{
+ const startButton=$("startRitual");startButton.disabled=true;startButton.textContent="正在唤醒经典牌面…";
+ await ensureArtwork();
  question=$("questionInput").value.trim();
+ startButton.disabled=false;startButton.textContent="开始洗牌";
  transition("ritual");$("ritualTitle").textContent="让思绪慢慢安静下来";$("ritualText").textContent="78 张牌正在重新排列。";
  $("cutBtn").textContent="切牌 · 展开牌堆";spawnPetals(10);
 });
